@@ -194,6 +194,7 @@ public class ProjectGenerator {
 	protected File generateProjectStructure(ProjectRequest request,
 			Map<String, Object> model) {
 		File rootDir;
+        StringBuilder appProperties = new StringBuilder();
 		try {
 			rootDir = File.createTempFile("tmp", "", getTemporaryDirectory());
 		}
@@ -242,11 +243,11 @@ public class ProjectGenerator {
 		write(new File(test, applicationName + "Tests." + extension),
 				"ApplicationTests." + extension, model);
 
-        writeCamelEndpoints(request, model, src);
+        writeCamelEndpoints(request, model, src, appProperties);
 
 		File resources = new File(dir, "src/main/resources");
 		resources.mkdirs();
-		writeText(new File(resources, "application.properties"), "");
+		writeText(new File(resources, "application.properties"), appProperties.toString());
 
 		if (request.hasWebFacet()) {
 			new File(dir, "src/main/resources/templates").mkdirs();
@@ -256,8 +257,7 @@ public class ProjectGenerator {
 	}
 
 
-    private void writeCamelEndpoints(ProjectRequest request, Map<String, Object> model, File src) {
-        StringBuilder appProperties = new StringBuilder();
+    private void writeCamelEndpoints(ProjectRequest request, Map<String, Object> model, File src, StringBuilder appProperties) {
         try {
             if (request.hasFacet("rest-endpoint")) {
                 appendRouter("Rest", src, model);
