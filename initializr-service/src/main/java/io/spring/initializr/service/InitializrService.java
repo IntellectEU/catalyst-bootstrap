@@ -61,7 +61,7 @@ public class InitializrService {
 			ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
 			executor.setCorePoolSize(1);
 			executor.setMaxPoolSize(5);
-			executor.setThreadNamePrefix("initializr-");
+			executor.setThreadNamePrefix("catalyst-");
 			executor.initialize();
 			return executor;
 		}
