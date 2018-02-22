@@ -6,7 +6,6 @@ jdk:
 env:
   global:
     secure: nvS1NoIVQcraLM5NPmTqtYSu2eBX5SdP4euy2ByyOtzrkkxG1oIYZ+JoQPQWE+Vew7C1s18MQb8p//OT0BfvJ2pWxtReeItcTK4Vfa46BRWsS3XYpu2miczXCvBSxJ9Aj94FtRzXlpb7NsYBe9vRhR4cupFSROocWhxepSgt53Cr5ams0RUlHMJAWVXum6kgDUG7/a3bec+OQ3rMm8Jh+BtGnoSeDL1WvuMkfbT3NKOw4VlgZnYa1fIjETHr5JPswRne51em1GFwKHB/Mp6Ek1zZRZJ9RFLsuvPx75Z44yKWrgFQep64dreIamqphMpao6zpO2MVPQmOSw+coE9l717/v1hpoY2byNPrpUyoMmA+D2ueovApxrRUuQ8NrTMFso2HbLu+0hd127JDLwMDuOHsUBjFtuvDnd1Ez7nxW7cMtDmKjuLx88YJKhZyqfoKr99oF0YHu5k4NnE4hH0elPrTKT7la83tJJhl2LXjuifehnYhoJBBelFY48XaHe6t9ZqU56Kp19grA4kftIovVK9J2++WUGLUvV4/QmiP13ef0mMFT6v59C/i4ShtuBza9+Ym477QqFxUfCGGVDnkgto+3g5P2EoACdZ+K2qWXzWCBBQB98ASLLg+GwTzFnJFOwL9VP8WVoaC/X1DBTj9k8iU2yzrDbuj8U60AosE+XY=
-#    - HEROKU_API_KEY="6dbf52d0-96e7-4ae2-a964-c1a31cdaffa8"
 
 notifications:
   email: true
@@ -26,6 +25,5 @@ deploy:
     - mvn -f initializr-service/pom.xml heroku:deploy -DskipTests
   app: catalyst-bootstrap
   on:
-    all_branches: true
-#    branch: master
+    branch: master
 
