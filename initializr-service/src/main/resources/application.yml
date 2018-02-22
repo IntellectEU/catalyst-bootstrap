@@ -186,7 +186,7 @@ initializr:
               description: Using Apache Camel with Spring Boot
         - name: Camel File Endpoint
           id: camel-file-endpoint
-          description: Camel file endpoint
+          description: "Access to file systems, allowing files to be processed by any other Camel Components"
           groupId: org.apache.camel
           artifactId: camel-spring-boot-starter
           version: ${camel.version}
@@ -199,7 +199,7 @@ initializr:
         - name: Camel Rest Endpoint
           id: camel-rest-endpoint
           groupId: org.apache.camel
-          description: Camel rest endpoint
+          description: "REST styled DSL to allow defining REST services with verbs such as GET, POST, DELETE etc"
           artifactId: camel-servlet-starter
           version: ${camel.version}
           facets:
@@ -208,7 +208,7 @@ initializr:
             - rel: guide
               href: http://camel.apache.org/rest-dsl.html
         - name: Camel MQTT Endpoint
-          description: Camel MQTT endpoint
+          description: "Communicate with MQTT compliant message brokers, like Apache ActiveMQ or Mosquitto"
           id: camel-mqtt-endpoint
           groupId: org.apache.camel
           artifactId: camel-mqtt
