@@ -216,6 +216,17 @@ initializr:
           links:
             - rel: guide
               href: http://camel.apache.org/mqtt.html
+        - name: Camel SQL Endpoint
+          id: camel-sql-endpoint
+          groupId: org.apache.camel
+          description: Camel sql endpoint
+          artifactId: camel-sql
+          version: ${camel.version}
+          facets:
+            - sql-endpoint
+          links:
+            - rel: guide
+              href: http://camel.apache.org/sql-component.html
     - name: Core
       content:
         - name: DevTools

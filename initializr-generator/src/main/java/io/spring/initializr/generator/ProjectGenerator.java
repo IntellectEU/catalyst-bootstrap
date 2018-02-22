@@ -269,6 +269,12 @@ public class ProjectGenerator {
 
                 appendProperties("File", appProperties);
             }
+
+            if (request.hasFacet("sql-endpoint")) {
+                appendRouter("Sql", src, model);
+                appendProperties("Sql", appProperties);
+            }
+
         } catch (IOException ex) {
             throw new InitializrException("Failure while processing Camel Endpoints", ex);
         }
