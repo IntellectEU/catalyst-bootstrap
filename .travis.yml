@@ -25,4 +25,6 @@ deploy:
   script:
     - mvn -f initializr-service/pom.xml heroku:deploy -DskipTests
   app: catalyst-bootstrap
+    all_branches: true
 #  on: master
+
