@@ -1,0 +1,4 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.intellecteu.catalyst.actuate.autoconfigure.InitializrActuatorEndpointsAutoConfiguration,\
+com.intellecteu.catalyst.actuate.autoconfigure.InitializrStatsAutoConfiguration,\
+com.intellecteu.catalyst.actuate.autoconfigure.InitializrMetricsConfiguration

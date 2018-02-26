@@ -11,6 +11,7 @@ Technologically, Catalyst is built on top of two major frameworks:
 - Apache Camel - https://camel.apache.org
 - Spring Initializr - https://start.spring.io
 
+
 :boot-doc: http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle
 
 == Supported interfaces
@@ -69,11 +70,11 @@ profile:
 === Running the app locally
 
 Once you have <<building, built the library>>, you can easily start the app as any
-other Spring Boot app from the `initializr-service` directory:
+other Spring Boot app from the `catalyst-service` directory:
 
 [indent=0]
 ----
-    $ cd initializr-service
+    $ cd catalyst-service
     $ ../mvnw spring-boot:run
 ----
 
