@@ -1,1 +1,1 @@
-web: java -jar target/catalyst-initializr.jar
+web: java -jar target/catalyst-service.jar
