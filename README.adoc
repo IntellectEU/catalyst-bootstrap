@@ -11,6 +11,7 @@ Technologically, Catalyst is built on top of two major frameworks:
 - Apache Camel - https://camel.apache.org
 - Spring Initializr - https://start.spring.io
 
+
 :boot-doc: http://docs.spring.io/spring-boot/docs/current/reference/htmlsingle
 
 == Supported interfaces
