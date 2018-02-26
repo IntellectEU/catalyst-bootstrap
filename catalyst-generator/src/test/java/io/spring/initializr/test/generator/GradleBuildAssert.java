@@ -16,7 +16,7 @@
 
 package io.spring.initializr.test.generator;
 
-import io.spring.initializr.generator.ProjectRequest;
+import com.intellecteu.catalyst.generator.ProjectRequest;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;

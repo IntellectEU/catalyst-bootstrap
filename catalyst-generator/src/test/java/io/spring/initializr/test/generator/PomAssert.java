@@ -21,11 +21,11 @@ import java.net.URL;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import io.spring.initializr.generator.ProjectRequest;
-import io.spring.initializr.metadata.BillOfMaterials;
-import io.spring.initializr.metadata.Dependency;
-import io.spring.initializr.metadata.InitializrConfiguration.Env.Maven.ParentPom;
-import io.spring.initializr.metadata.Repository;
+import com.intellecteu.catalyst.generator.ProjectRequest;
+import com.intellecteu.catalyst.metadata.BillOfMaterials;
+import com.intellecteu.catalyst.metadata.Dependency;
+import com.intellecteu.catalyst.metadata.InitializrConfiguration.Env.Maven.ParentPom;
+import com.intellecteu.catalyst.metadata.Repository;
 import org.custommonkey.xmlunit.SimpleNamespaceContext;
 import org.custommonkey.xmlunit.XMLUnit;
 import org.custommonkey.xmlunit.XpathEngine;

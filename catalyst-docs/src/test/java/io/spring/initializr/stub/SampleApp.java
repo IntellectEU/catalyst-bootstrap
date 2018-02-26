@@ -1,7 +1,7 @@
 package io.spring.initializr.stub;
 
-import io.spring.initializr.actuate.autoconfigure.InitializrActuatorEndpointsAutoConfiguration;
-import io.spring.initializr.web.autoconfigure.InitializrAutoConfiguration;
+import com.intellecteu.catalyst.actuate.autoconfigure.InitializrActuatorEndpointsAutoConfiguration;
+import com.intellecteu.catalyst.web.autoconfigure.InitializrAutoConfiguration;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 

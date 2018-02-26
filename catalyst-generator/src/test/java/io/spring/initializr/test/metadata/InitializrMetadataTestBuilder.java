@@ -20,16 +20,16 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
 
-import io.spring.initializr.metadata.BillOfMaterials;
-import io.spring.initializr.metadata.DefaultMetadataElement;
-import io.spring.initializr.metadata.Dependency;
-import io.spring.initializr.metadata.DependencyGroup;
-import io.spring.initializr.metadata.InitializrConfiguration.Env.Kotlin;
-import io.spring.initializr.metadata.InitializrConfiguration.Env.Maven.ParentPom;
-import io.spring.initializr.metadata.InitializrMetadata;
-import io.spring.initializr.metadata.InitializrMetadataBuilder;
-import io.spring.initializr.metadata.Repository;
-import io.spring.initializr.metadata.Type;
+import com.intellecteu.catalyst.metadata.BillOfMaterials;
+import com.intellecteu.catalyst.metadata.DefaultMetadataElement;
+import com.intellecteu.catalyst.metadata.Dependency;
+import com.intellecteu.catalyst.metadata.DependencyGroup;
+import com.intellecteu.catalyst.metadata.InitializrConfiguration.Env.Kotlin;
+import com.intellecteu.catalyst.metadata.InitializrConfiguration.Env.Maven.ParentPom;
+import com.intellecteu.catalyst.metadata.InitializrMetadata;
+import com.intellecteu.catalyst.metadata.InitializrMetadataBuilder;
+import com.intellecteu.catalyst.metadata.Repository;
+import com.intellecteu.catalyst.metadata.Type;
 
 import org.springframework.util.StringUtils;
 

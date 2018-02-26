@@ -1,5 +1,5 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-io.spring.initializr.web.autoconfigure.InitializrAutoConfiguration
+com.intellecteu.catalyst.web.autoconfigure.InitializrAutoConfiguration
 
 org.springframework.boot.env.EnvironmentPostProcessor=\
-io.spring.initializr.web.autoconfigure.CloudfoundryEnvironmentPostProcessor
+com.intellecteu.catalyst.web.autoconfigure.CloudfoundryEnvironmentPostProcessor
