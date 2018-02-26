@@ -1,4 +1,4 @@
-package io.spring.initializr.stub;
+package com.intellecteu.catalyst.stub;
 
 import com.intellecteu.catalyst.actuate.autoconfigure.InitializrActuatorEndpointsAutoConfiguration;
 import com.intellecteu.catalyst.web.autoconfigure.InitializrAutoConfiguration;

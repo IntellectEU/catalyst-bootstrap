@@ -1,4 +1,4 @@
-package io.spring.initializr.stub;
+package com.intellecteu.catalyst.stub;
 
 import java.net.URI;
 
