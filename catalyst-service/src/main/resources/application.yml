@@ -217,7 +217,7 @@ initializr:
         - name: Camel SQL Endpoint
           id: camel-sql-endpoint
           groupId: org.apache.camel
-          description: The sql: component allows you to work with databases using JDBC queries.
+          description: The sql component allows you to work with databases using JDBC queries.
           artifactId: camel-sql
           version: ${camel.version}
           facets:
