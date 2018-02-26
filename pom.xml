@@ -31,7 +31,6 @@
 
 	<modules>
 		<module>catalyst-actuator</module>
-		<module>catalyst-docs</module>
 		<module>catalyst-generator</module>
 		<module>catalyst-web</module>
 	</modules>
