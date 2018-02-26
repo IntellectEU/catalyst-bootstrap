@@ -19,7 +19,7 @@ package com.intellecteu.catalyst.generator;
 import com.intellecteu.catalyst.metadata.Dependency;
 import com.intellecteu.catalyst.metadata.InitializrMetadata;
 import com.intellecteu.catalyst.metadata.Type;
-import io.spring.initializr.test.metadata.InitializrMetadataTestBuilder;
+import com.intellecteu.catalyst.test.metadata.InitializrMetadataTestBuilder;
 import com.intellecteu.catalyst.util.TemplateRenderer;
 import org.junit.Before;
 import org.junit.Test;

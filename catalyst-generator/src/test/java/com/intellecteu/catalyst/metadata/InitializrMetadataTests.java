@@ -19,7 +19,7 @@ package com.intellecteu.catalyst.metadata;
 import java.util.Arrays;
 import java.util.List;
 
-import io.spring.initializr.test.metadata.InitializrMetadataTestBuilder;
+import com.intellecteu.catalyst.test.metadata.InitializrMetadataTestBuilder;
 import com.intellecteu.catalyst.util.Version;
 import org.junit.Rule;
 import org.junit.Test;

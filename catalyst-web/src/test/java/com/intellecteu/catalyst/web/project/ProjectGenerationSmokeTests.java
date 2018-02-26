@@ -21,7 +21,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 
 import com.intellecteu.catalyst.web.AbstractFullStackInitializrIntegrationTests;
-import io.spring.initializr.test.generator.ProjectAssert;
+import com.intellecteu.catalyst.test.generator.ProjectAssert;
 import org.junit.After;
 import org.junit.Assume;
 import org.junit.Before;

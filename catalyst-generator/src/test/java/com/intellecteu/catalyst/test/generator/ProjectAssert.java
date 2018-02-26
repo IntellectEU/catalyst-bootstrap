@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.spring.initializr.test.generator;
+package com.intellecteu.catalyst.test.generator;
 
 import java.io.File;
 import java.io.FileInputStream;

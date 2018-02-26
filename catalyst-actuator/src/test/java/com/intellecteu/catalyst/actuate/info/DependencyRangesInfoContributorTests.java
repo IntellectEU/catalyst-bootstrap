@@ -22,7 +22,7 @@ import com.intellecteu.catalyst.metadata.BillOfMaterials;
 import com.intellecteu.catalyst.metadata.Dependency;
 import com.intellecteu.catalyst.metadata.InitializrMetadata;
 import com.intellecteu.catalyst.metadata.SimpleInitializrMetadataProvider;
-import io.spring.initializr.test.metadata.InitializrMetadataTestBuilder;
+import com.intellecteu.catalyst.test.metadata.InitializrMetadataTestBuilder;
 import org.junit.Test;
 
 import org.springframework.boot.actuate.info.Info;

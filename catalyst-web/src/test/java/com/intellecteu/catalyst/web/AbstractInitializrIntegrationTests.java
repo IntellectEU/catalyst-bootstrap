@@ -31,7 +31,7 @@ import com.intellecteu.catalyst.metadata.InitializrMetadata;
 import com.intellecteu.catalyst.metadata.InitializrMetadataBuilder;
 import com.intellecteu.catalyst.metadata.InitializrMetadataProvider;
 import com.intellecteu.catalyst.metadata.InitializrProperties;
-import io.spring.initializr.test.generator.ProjectAssert;
+import com.intellecteu.catalyst.test.generator.ProjectAssert;
 import com.intellecteu.catalyst.web.AbstractInitializrIntegrationTests.Config;
 import com.intellecteu.catalyst.web.mapper.InitializrMetadataVersion;
 import com.intellecteu.catalyst.web.support.DefaultInitializrMetadataProvider;

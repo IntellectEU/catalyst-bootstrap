@@ -20,7 +20,7 @@ import com.intellecteu.catalyst.generator.ProjectRequest;
 import com.intellecteu.catalyst.metadata.InitializrMetadata;
 import com.intellecteu.catalyst.metadata.InitializrMetadataProvider;
 import com.intellecteu.catalyst.metadata.SimpleInitializrMetadataProvider;
-import io.spring.initializr.test.metadata.InitializrMetadataTestBuilder;
+import com.intellecteu.catalyst.test.metadata.InitializrMetadataTestBuilder;
 
 /**
  * @author Stephane Nicoll

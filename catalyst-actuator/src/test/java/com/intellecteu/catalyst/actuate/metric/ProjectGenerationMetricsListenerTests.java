@@ -25,7 +25,7 @@ import com.intellecteu.catalyst.generator.ProjectGeneratedEvent;
 import com.intellecteu.catalyst.generator.ProjectRequest;
 import com.intellecteu.catalyst.metadata.Dependency;
 import com.intellecteu.catalyst.metadata.InitializrMetadata;
-import io.spring.initializr.test.metadata.InitializrMetadataTestBuilder;
+import com.intellecteu.catalyst.test.metadata.InitializrMetadataTestBuilder;
 import org.junit.Before;
 import org.junit.Test;
 

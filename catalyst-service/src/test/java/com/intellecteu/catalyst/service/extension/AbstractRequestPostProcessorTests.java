@@ -23,8 +23,8 @@ import com.intellecteu.catalyst.generator.ProjectRequest;
 import com.intellecteu.catalyst.generator.ProjectRequestPostProcessor;
 import com.intellecteu.catalyst.metadata.Dependency;
 import com.intellecteu.catalyst.metadata.InitializrMetadataProvider;
-import io.spring.initializr.test.generator.GradleBuildAssert;
-import io.spring.initializr.test.generator.PomAssert;
+import com.intellecteu.catalyst.test.generator.GradleBuildAssert;
+import com.intellecteu.catalyst.test.generator.PomAssert;
 import org.junit.runner.RunWith;
 
 import org.springframework.beans.factory.annotation.Autowired;

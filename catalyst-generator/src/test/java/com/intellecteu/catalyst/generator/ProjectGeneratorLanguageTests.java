@@ -16,15 +16,15 @@
 
 package com.intellecteu.catalyst.generator;
 
-import io.spring.initializr.test.generator.ProjectAssert;
+import com.intellecteu.catalyst.test.generator.ProjectAssert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
 import org.springframework.core.io.ClassPathResource;
 
-import static io.spring.initializr.test.generator.ProjectAssert.DEFAULT_APPLICATION_NAME;
-import static io.spring.initializr.test.generator.ProjectAssert.DEFAULT_PACKAGE_NAME;
+import static com.intellecteu.catalyst.test.generator.ProjectAssert.DEFAULT_APPLICATION_NAME;
+import static com.intellecteu.catalyst.test.generator.ProjectAssert.DEFAULT_PACKAGE_NAME;
 
 /**
  * Project generator tests for supported languages.

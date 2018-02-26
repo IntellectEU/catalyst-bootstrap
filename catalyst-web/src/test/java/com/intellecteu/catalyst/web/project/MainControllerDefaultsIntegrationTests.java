@@ -17,7 +17,7 @@
 package com.intellecteu.catalyst.web.project;
 
 import com.intellecteu.catalyst.web.AbstractInitializrControllerIntegrationTests;
-import io.spring.initializr.test.generator.PomAssert;
+import com.intellecteu.catalyst.test.generator.PomAssert;
 import org.junit.Test;
 
 import org.springframework.test.context.ActiveProfiles;

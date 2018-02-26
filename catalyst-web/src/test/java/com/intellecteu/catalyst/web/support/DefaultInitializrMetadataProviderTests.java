@@ -21,7 +21,7 @@ import java.util.List;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.intellecteu.catalyst.metadata.DefaultMetadataElement;
 import com.intellecteu.catalyst.metadata.InitializrMetadata;
-import io.spring.initializr.test.metadata.InitializrMetadataTestBuilder;
+import com.intellecteu.catalyst.test.metadata.InitializrMetadataTestBuilder;
 import org.junit.Before;
 import org.junit.Test;
 

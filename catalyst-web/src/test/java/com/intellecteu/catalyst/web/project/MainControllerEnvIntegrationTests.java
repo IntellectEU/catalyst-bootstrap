@@ -19,7 +19,7 @@ package com.intellecteu.catalyst.web.project;
 import java.net.URI;
 
 import com.intellecteu.catalyst.web.AbstractInitializrControllerIntegrationTests;
-import io.spring.initializr.test.generator.ProjectAssert;
+import com.intellecteu.catalyst.test.generator.ProjectAssert;
 import org.junit.Test;
 
 import org.springframework.http.HttpStatus;

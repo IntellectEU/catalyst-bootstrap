@@ -21,7 +21,7 @@ import com.intellecteu.catalyst.metadata.Dependency;
 import com.intellecteu.catalyst.metadata.DependencyMetadata;
 import com.intellecteu.catalyst.metadata.DependencyMetadataProvider;
 import com.intellecteu.catalyst.metadata.InitializrMetadata;
-import io.spring.initializr.test.metadata.InitializrMetadataTestBuilder;
+import com.intellecteu.catalyst.test.metadata.InitializrMetadataTestBuilder;
 import com.intellecteu.catalyst.util.Version;
 import org.junit.Test;
 

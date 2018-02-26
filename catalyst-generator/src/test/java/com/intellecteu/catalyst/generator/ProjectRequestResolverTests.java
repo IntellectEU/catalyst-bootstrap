@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.intellecteu.catalyst.metadata.InitializrMetadata;
-import io.spring.initializr.test.metadata.InitializrMetadataTestBuilder;
+import com.intellecteu.catalyst.test.metadata.InitializrMetadataTestBuilder;
 import com.intellecteu.catalyst.util.VersionProperty;
 import org.junit.Before;
 import org.junit.Test;
