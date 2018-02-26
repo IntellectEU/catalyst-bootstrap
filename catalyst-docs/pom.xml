@@ -2,7 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>io.spring.initializr</groupId>
+		<groupId>com.intellecteu.catalyst</groupId>
 		<artifactId>catalyst</artifactId>
 		<version>0.6.0.BUILD-SNAPSHOT</version>
 	</parent>
@@ -15,17 +15,17 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>io.spring.initializr</groupId>
+			<groupId>com.intellecteu.catalyst</groupId>
 			<artifactId>catalyst-generator</artifactId>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
-			<groupId>io.spring.initializr</groupId>
+			<groupId>com.intellecteu.catalyst</groupId>
 			<artifactId>catalyst-web</artifactId>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
-			<groupId>io.spring.initializr</groupId>
+			<groupId>com.intellecteu.catalyst</groupId>
 			<artifactId>catalyst-actuator</artifactId>
 			<optional>true</optional>
 		</dependency>
@@ -82,7 +82,7 @@
 								<configuration>
 									<artifactItems>
 										<artifactItem>
-											<groupId>io.spring.initializr</groupId>
+											<groupId>com.intellecteu.catalyst</groupId>
 											<artifactId>catalyst-web</artifactId>
 											<version>${project.version}</version>
 											<classifier>snippets</classifier>

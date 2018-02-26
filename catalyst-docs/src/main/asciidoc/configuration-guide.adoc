@@ -29,7 +29,7 @@ Create a new project with the `web` dependency and add the following dependency:
 [source,xml,indent=0,subs="verbatim,attributes"]
 ----
 	<dependency>
-		<groupId>io.spring.initializr</groupId>
+		<groupId>com.intellecteu.catalyst</groupId>
 		<artifactId>catalyst-web</artifactId>
 		<version>{spring-initializr-version}</version>
 	</dependency>

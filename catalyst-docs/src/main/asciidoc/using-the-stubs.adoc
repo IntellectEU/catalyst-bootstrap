@@ -21,7 +21,7 @@ A convenient way to consume the stubs in your project is to add a test dependenc
 [source,xml,indent=0,subs="attributes,specialchars"]
 ----
 	<dependency>
-		<groupId>io.spring.initializr</groupId>
+		<groupId>com.intellecteu.catalyst</groupId>
 		<artifactId>catalyst-web</artifactId>
 		<classifier>stubs</classifier>
 		<version>{project-version}</version>

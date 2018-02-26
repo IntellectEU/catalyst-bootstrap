@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>io.spring.initializr</groupId>
+	<groupId>com.intellecteu.catalyst</groupId>
 	<artifactId>catalyst</artifactId>
 	<version>0.6.0.BUILD-SNAPSHOT</version>
 	<packaging>pom</packaging>
@@ -39,28 +39,28 @@
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
-				<groupId>io.spring.initializr</groupId>
+				<groupId>com.intellecteu.catalyst</groupId>
 				<artifactId>catalyst-actuator</artifactId>
 				<version>0.6.0.BUILD-SNAPSHOT</version>
 			</dependency>
 			<dependency>
-				<groupId>io.spring.initializr</groupId>
+				<groupId>com.intellecteu.catalyst</groupId>
 				<artifactId>catalyst-generator</artifactId>
 				<version>0.6.0.BUILD-SNAPSHOT</version>
 			</dependency>
 			<dependency>
-				<groupId>io.spring.initializr</groupId>
+				<groupId>com.intellecteu.catalyst</groupId>
 				<artifactId>catalyst-generator</artifactId>
 				<version>0.6.0.BUILD-SNAPSHOT</version>
 				<type>test-jar</type>
 			</dependency>
 			<dependency>
-				<groupId>io.spring.initializr</groupId>
+				<groupId>com.intellecteu.catalyst</groupId>
 				<artifactId>catalyst-web</artifactId>
 				<version>0.6.0.BUILD-SNAPSHOT</version>
 			</dependency>
 			<dependency>
-				<groupId>io.spring.initializr</groupId>
+				<groupId>com.intellecteu.catalyst</groupId>
 				<artifactId>catalyst-web</artifactId>
 				<version>0.6.0.BUILD-SNAPSHOT</version>
 				<type>test-jar</type>
