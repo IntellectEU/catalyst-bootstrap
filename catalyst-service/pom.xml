@@ -5,8 +5,8 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>io.spring.initializr</groupId>
-		<artifactId>initializr</artifactId>
-		<version>0.5.0.BUILD-SNAPSHOT</version>
+		<artifactId>catalyst</artifactId>
+		<version>0.6.0.BUILD-SNAPSHOT</version>
 	</parent>
 	<artifactId>catalyst-initializr</artifactId>
 	<name>Catalyst initializr</name>
@@ -19,11 +19,11 @@
 
 		<dependency>
 			<groupId>io.spring.initializr</groupId>
-			<artifactId>initializr-web</artifactId>
+			<artifactId>catalyst-web</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>io.spring.initializr</groupId>
-			<artifactId>initializr-actuator</artifactId>
+			<artifactId>catalyst-actuator</artifactId>
 		</dependency>
 
 		<dependency>
@@ -48,7 +48,7 @@
 		</dependency>
 		<dependency>
 			<groupId>io.spring.initializr</groupId>
-			<artifactId>initializr-generator</artifactId>
+			<artifactId>catalyst-generator</artifactId>
 			<type>test-jar</type>
 			<scope>test</scope>
 		</dependency>

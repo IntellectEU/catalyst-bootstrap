@@ -3,11 +3,11 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>io.spring.initializr</groupId>
-		<artifactId>initializr</artifactId>
-		<version>0.5.0.BUILD-SNAPSHOT</version>
+		<artifactId>catalyst</artifactId>
+		<version>0.6.0.BUILD-SNAPSHOT</version>
 	</parent>
-	<artifactId>initializr-docs</artifactId>
-	<name>Spring Initializr :: Docs</name>
+	<artifactId>catalyst-docs</artifactId>
+	<name>Catalyst :: Docs</name>
 
 	<properties>
 		<snippets.location>${project.build.directory}/snippets</snippets.location>
@@ -16,17 +16,17 @@
 	<dependencies>
 		<dependency>
 			<groupId>io.spring.initializr</groupId>
-			<artifactId>initializr-generator</artifactId>
+			<artifactId>catalyst-generator</artifactId>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>io.spring.initializr</groupId>
-			<artifactId>initializr-web</artifactId>
+			<artifactId>catalyst-web</artifactId>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>io.spring.initializr</groupId>
-			<artifactId>initializr-actuator</artifactId>
+			<artifactId>catalyst-actuator</artifactId>
 			<optional>true</optional>
 		</dependency>
 
@@ -83,7 +83,7 @@
 									<artifactItems>
 										<artifactItem>
 											<groupId>io.spring.initializr</groupId>
-											<artifactId>initializr-web</artifactId>
+											<artifactId>catalyst-web</artifactId>
 											<version>${project.version}</version>
 											<classifier>snippets</classifier>
 											<type>zip</type>

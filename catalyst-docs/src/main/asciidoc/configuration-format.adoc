@@ -6,7 +6,7 @@ particular instance and <<metadata-format.adoc#metadata-format,the project metad
 format>>.
 
 TIP: A good way to get started with the configuration is to look at the
-{sc-initializr-service}/resources/application.yml[configuration of the production
+{sc-catalyst-service}/resources/application.yml[configuration of the production
 instance] and check the end-result on https://start.spring.io
 
 The configuration is split in several sections:

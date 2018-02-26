@@ -25,7 +25,7 @@ import static org.springframework.boot.test.context.SpringBootTest.*;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.NONE)
 @AutoConfigureStubRunner(
-		ids = "io.spring.initializr:initializr-web:${project.version}",
+		ids = "io.spring.initializr:catalyst-web:${project.version}",
 		workOffline = true)
 // tag::test[]
 public class ClientApplicationTests {
@@ -49,7 +49,7 @@ public class ClientApplicationTests {
 	}
 
 	private URI createUri(String path) {
-		String url = this.stubFinder.findStubUrl("initializr-web").toString();
+		String url = this.stubFinder.findStubUrl("catalyst-web").toString();
 		return URI.create(url + path);
 	}
 

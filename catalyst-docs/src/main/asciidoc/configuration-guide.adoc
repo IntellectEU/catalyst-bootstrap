@@ -15,10 +15,10 @@ Boot generation.
 == Creating your own instance
 Spring Initializr is split across three main modules:
 
-* `initializr-generator`: standalone project generation library that can be reused in
+* `catalyst-generator`: standalone project generation library that can be reused in
 many environments (including embedded in your own project)
-* `initializr-web`: API endpoints and web interface
-* `initializr-actuator`: optional module to provide statistics and metrics on project
+* `catalyst-web`: API endpoints and web interface
+* `catalyst-actuator`: optional module to provide statistics and metrics on project
 generation
 
 Because it contains several auto-configurations, creating your own instance is quite easy,
@@ -30,7 +30,7 @@ Create a new project with the `web` dependency and add the following dependency:
 ----
 	<dependency>
 		<groupId>io.spring.initializr</groupId>
-		<artifactId>initializr-web</artifactId>
+		<artifactId>catalyst-web</artifactId>
 		<version>{spring-initializr-version}</version>
 	</dependency>
 ----
@@ -39,7 +39,7 @@ Or if you are using Gradle:
 
 [source,groovy,indent=0,subs="verbatim,quotes,attributes"]
 ----
-compile("io.spring.initializr:initializr-web:{spring-initializr-version}")
+compile("io.spring.initializr:catalyst-web:{spring-initializr-version}")
 ----
 
 If you start the application, you'll see the familiar interface but none of the drop down

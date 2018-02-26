@@ -22,7 +22,7 @@ A convenient way to consume the stubs in your project is to add a test dependenc
 ----
 	<dependency>
 		<groupId>io.spring.initializr</groupId>
-		<artifactId>initializr-web</artifactId>
+		<artifactId>catalyst-web</artifactId>
 		<classifier>stubs</classifier>
 		<version>{project-version}</version>
 		<scope>test</scope>
@@ -38,7 +38,7 @@ with it like this:
 	@RunWith(SpringRunner.class)
 	@SpringBootTest
 	@AutoConfigureWireMock(port = 0,
-		stubs="classpath:META-INF/io.spring.initializr/initializr-web/{spring-initializr-version}")
+		stubs="classpath:META-INF/io.spring.initializr/catalyst-web/{spring-initializr-version}")
 	public class ClientApplicationTests {
 
 		@Value("${wiremock.server.port}")
@@ -87,7 +87,7 @@ The test should use `@AutoConfigureStubRunner` instead:
 	@RunWith(SpringRunner.class)
 	@SpringBootTest(webEnvironment = WebEnvironment.NONE)
 	@AutoConfigureStubRunner(
-		ids = "io.spring.initializr:initializr-web:{spring-initializr-version}",
+		ids = "io.spring.initializr:catalyst-web:{spring-initializr-version}",
 		repositoryRoot = "https://repo.spring.io/{initializr-repo}")
 	public class ClientApplicationTests {
 
@@ -132,5 +132,5 @@ stubs into WireMock, so you don't necessarily need to know the names of the stub
 also register stubs one by one, though, in which case it would help to scan the stubs jar
 and compare the file names with the test methods. For instance, if you look in the stubs
 jar, you will see a file called `metadataWithV2AcceptHeader.json` and, in the
-initializr-web project, a test method called `metadataWithV2AcceptHeader` which generated
+catalyst-web project, a test method called `metadataWithV2AcceptHeader` which generated
 it.

@@ -25,7 +25,7 @@ script:
 deploy:
   provider: script
   script:
-    - mvn -f initializr-service/pom.xml heroku:deploy -DskipTests
+    - mvn -f catalyst-service/pom.xml heroku:deploy -DskipTests
   app: catalyst-bootstrap
   on:
     branch: master
