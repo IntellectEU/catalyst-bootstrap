@@ -16,11 +16,10 @@
 
 package com.intellecteu.catalyst.metadata;
 
-import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
-
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * A {@link ServiceCapabilityType#SINGLE_SELECT single select} capability.
@@ -28,49 +27,49 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @author Stephane Nicoll
  */
 public class SingleSelectCapability
-		extends ServiceCapability<List<DefaultMetadataElement>>
-		implements Defaultable<DefaultMetadataElement> {
+    extends ServiceCapability<List<DefaultMetadataElement>>
+    implements Defaultable<DefaultMetadataElement> {
 
-	private final List<DefaultMetadataElement> content = new CopyOnWriteArrayList<>();
+  private final List<DefaultMetadataElement> content = new CopyOnWriteArrayList<>();
 
-	@JsonCreator
-	SingleSelectCapability(@JsonProperty("id") String id) {
-		this(id, null, null);
-	}
+  @JsonCreator
+  SingleSelectCapability(@JsonProperty("id") String id) {
+    this(id, null, null);
+  }
 
-	public SingleSelectCapability(String id, String title, String description) {
-		super(id, ServiceCapabilityType.SINGLE_SELECT, title, description);
-	}
+  public SingleSelectCapability(String id, String title, String description) {
+    super(id, ServiceCapabilityType.SINGLE_SELECT, title, description);
+  }
 
-	@Override
-	public List<DefaultMetadataElement> getContent() {
-		return content;
-	}
+  @Override
+  public List<DefaultMetadataElement> getContent() {
+    return content;
+  }
 
-	/**
-	 * Return the default element of this capability.
-	 */
-	@Override
-	public DefaultMetadataElement getDefault() {
-		return content.stream().filter(DefaultMetadataElement::isDefault).findFirst()
-				.orElse(null);
-	}
+  /**
+   * Return the default element of this capability.
+   */
+  @Override
+  public DefaultMetadataElement getDefault() {
+    return content.stream().filter(DefaultMetadataElement::isDefault).findFirst()
+        .orElse(null);
+  }
 
-	/**
-	 * Return the element with the specified id or {@code null} if no such element exists.
-	 */
-	public DefaultMetadataElement get(String id) {
-		return content.stream().filter(it -> id.equals(it.getId())).findFirst()
-				.orElse(null);
-	}
+  /**
+   * Return the element with the specified id or {@code null} if no such element exists.
+   */
+  public DefaultMetadataElement get(String id) {
+    return content.stream().filter(it -> id.equals(it.getId())).findFirst()
+        .orElse(null);
+  }
 
-	@Override
-	public void merge(List<DefaultMetadataElement> otherContent) {
-		otherContent.forEach(it -> {
-			if (get(it.getId()) == null) {
-				content.add(it);
-			}
-		});
-	}
+  @Override
+  public void merge(List<DefaultMetadataElement> otherContent) {
+    otherContent.forEach(it -> {
+      if (get(it.getId()) == null) {
+        content.add(it);
+      }
+    });
+  }
 
 }

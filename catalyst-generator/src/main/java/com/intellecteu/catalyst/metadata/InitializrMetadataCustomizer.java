@@ -23,10 +23,10 @@ package com.intellecteu.catalyst.metadata;
  */
 public interface InitializrMetadataCustomizer {
 
-	/**
-	 * Customize the {@link InitializrMetadata}, updating or moving around
-	 * capabilities before they are validated.
-	 */
-	void customize(InitializrMetadata metadata);
+  /**
+   * Customize the {@link InitializrMetadata}, updating or moving around capabilities before they
+   * are validated.
+   */
+  void customize(InitializrMetadata metadata);
 
 }

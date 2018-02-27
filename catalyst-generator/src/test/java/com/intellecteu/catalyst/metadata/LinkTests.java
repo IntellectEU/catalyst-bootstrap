@@ -16,18 +16,17 @@
 
 package com.intellecteu.catalyst.metadata;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.net.URI;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
-
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 /**
  * Tests for {@link Link}.
@@ -36,70 +35,70 @@ import static org.junit.Assert.assertTrue;
  */
 public class LinkTests {
 
-	@Rule
-	public final ExpectedException thrown = ExpectedException.none();
+  @Rule
+  public final ExpectedException thrown = ExpectedException.none();
 
-	@Test
-	public void resolveInvalidLinkNoRel() {
-		Link link = new Link();
-		link.setHref("https://example.com");
-		thrown.expect(InvalidInitializrMetadataException.class);
-		link.resolve();
-	}
+  @Test
+  public void resolveInvalidLinkNoRel() {
+    Link link = new Link();
+    link.setHref("https://example.com");
+    thrown.expect(InvalidInitializrMetadataException.class);
+    link.resolve();
+  }
 
-	@Test
-	public void resolveInvalidLinkNoHref() {
-		Link link = Link.create("reference", null, "foo doc");
-		thrown.expect(InvalidInitializrMetadataException.class);
-		link.resolve();
-	}
+  @Test
+  public void resolveInvalidLinkNoHref() {
+    Link link = Link.create("reference", null, "foo doc");
+    thrown.expect(InvalidInitializrMetadataException.class);
+    link.resolve();
+  }
 
-	@Test
-	public void resolveLinkNoVariables() {
-		Link link = Link.create("reference", "https://example.com/2");
-		link.resolve();
-		assertFalse(link.isTemplated());
-		assertEquals(0, link.getTemplateVariables().size());
-	}
+  @Test
+  public void resolveLinkNoVariables() {
+    Link link = Link.create("reference", "https://example.com/2");
+    link.resolve();
+    assertFalse(link.isTemplated());
+    assertEquals(0, link.getTemplateVariables().size());
+  }
 
-	@Test
-	public void resolveLinkWithVariables() {
-		Link link = Link.create("reference", "https://example.com/{a}/2/{b}");
-		link.resolve();
-		assertTrue(link.isTemplated());
-		assertEquals(2, link.getTemplateVariables().size());
-		assertTrue(link.getTemplateVariables().contains("a"));
-		assertTrue(link.getTemplateVariables().contains("b"));
-	}
+  @Test
+  public void resolveLinkWithVariables() {
+    Link link = Link.create("reference", "https://example.com/{a}/2/{b}");
+    link.resolve();
+    assertTrue(link.isTemplated());
+    assertEquals(2, link.getTemplateVariables().size());
+    assertTrue(link.getTemplateVariables().contains("a"));
+    assertTrue(link.getTemplateVariables().contains("b"));
+  }
 
-	@Test
-	public void expandLink() throws Exception {
-		Link link = Link.create("reference", "https://example.com/{a}/2/{b}");
-		link.resolve();
-		Map<String, String> map = new LinkedHashMap<>();
-		map.put("a", "test");
-		map.put("b", "another");
-		assertEquals(new URI("https://example.com/test/2/another"), link.expand(map));
-	}
+  @Test
+  public void expandLink() throws Exception {
+    Link link = Link.create("reference", "https://example.com/{a}/2/{b}");
+    link.resolve();
+    Map<String, String> map = new LinkedHashMap<>();
+    map.put("a", "test");
+    map.put("b", "another");
+    assertEquals(new URI("https://example.com/test/2/another"), link.expand(map));
+  }
 
-	@Test
-	public void expandLinkWithSameAttributeAtTwoPlaces() throws Exception {
-		Link link = Link.create("reference", "https://example.com/{a}/2/{a}");
-		link.resolve();
-		Map<String, String> map = new LinkedHashMap<>();
-		map.put("a", "test");
-		map.put("b", "another");
-		assertEquals(new URI("https://example.com/test/2/test"), link.expand(map));
-	}
+  @Test
+  public void expandLinkWithSameAttributeAtTwoPlaces() throws Exception {
+    Link link = Link.create("reference", "https://example.com/{a}/2/{a}");
+    link.resolve();
+    Map<String, String> map = new LinkedHashMap<>();
+    map.put("a", "test");
+    map.put("b", "another");
+    assertEquals(new URI("https://example.com/test/2/test"), link.expand(map));
+  }
 
-	@Test
-	public void expandLinkMissingVariable() {
-		Link link = Link.create("reference", "https://example.com/{a}/2/{b}");
-		link.resolve();
+  @Test
+  public void expandLinkMissingVariable() {
+    Link link = Link.create("reference", "https://example.com/{a}/2/{b}");
+    link.resolve();
 
-		thrown.expect(IllegalArgumentException.class);
-		thrown.expectMessage("missing value for 'b'");
-		link.expand(Collections.singletonMap("a", "test"));
-	}
+    thrown.expect(IllegalArgumentException.class);
+    thrown.expectMessage("missing value for 'b'");
+    link.expand(Collections.singletonMap("a", "test"));
+  }
 
 }

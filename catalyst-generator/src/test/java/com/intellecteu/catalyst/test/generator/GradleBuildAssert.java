@@ -16,10 +16,10 @@
 
 package com.intellecteu.catalyst.test.generator;
 
-import com.intellecteu.catalyst.generator.ProjectRequest;
-
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+
+import com.intellecteu.catalyst.generator.ProjectRequest;
 
 /**
  * Very simple assertions for the gradle build.
@@ -28,58 +28,58 @@ import static org.junit.Assert.assertTrue;
  */
 public class GradleBuildAssert {
 
-	private final String content;
+  private final String content;
 
-	public GradleBuildAssert(String content) {
-		this.content = content;
-	}
+  public GradleBuildAssert(String content) {
+    this.content = content;
+  }
 
-	/**
-	 * Validate that this generated gradle build validates against its request.
-	 */
-	public GradleBuildAssert validateProjectRequest(ProjectRequest request) {
-		return hasVersion(request.getVersion()).hasBootVersion(request.getBootVersion())
-				.hasJavaVersion(request.getJavaVersion());
-	}
+  /**
+   * Validate that this generated gradle build validates against its request.
+   */
+  public GradleBuildAssert validateProjectRequest(ProjectRequest request) {
+    return hasVersion(request.getVersion()).hasBootVersion(request.getBootVersion())
+        .hasJavaVersion(request.getJavaVersion());
+  }
 
-	public GradleBuildAssert hasArtifactId(String artifactId) {
-		return contains("baseName = '" + artifactId + "'");
-	}
+  public GradleBuildAssert hasArtifactId(String artifactId) {
+    return contains("baseName = '" + artifactId + "'");
+  }
 
-	public GradleBuildAssert hasVersion(String version) {
-		return contains("version = '" + version + "'");
-	}
+  public GradleBuildAssert hasVersion(String version) {
+    return contains("version = '" + version + "'");
+  }
 
-	public GradleBuildAssert hasBootVersion(String bootVersion) {
-		return contains("springBootVersion = '" + bootVersion + "'");
-	}
+  public GradleBuildAssert hasBootVersion(String bootVersion) {
+    return contains("springBootVersion = '" + bootVersion + "'");
+  }
 
-	public GradleBuildAssert hasJavaVersion(String javaVersion) {
-		return contains("sourceCompatibility = " + javaVersion);
-	}
+  public GradleBuildAssert hasJavaVersion(String javaVersion) {
+    return contains("sourceCompatibility = " + javaVersion);
+  }
 
-	public GradleBuildAssert hasSnapshotRepository() {
-		return contains("https://repo.spring.io/snapshot");
-	}
+  public GradleBuildAssert hasSnapshotRepository() {
+    return contains("https://repo.spring.io/snapshot");
+  }
 
-	public GradleBuildAssert hasRepository(String url) {
-		return contains("maven { url \"" + url + "\" }");
-	}
+  public GradleBuildAssert hasRepository(String url) {
+    return contains("maven { url \"" + url + "\" }");
+  }
 
-	public GradleBuildAssert contains(String expression) {
-		assertTrue(expression + " has not been found in gradle build " + content,
-				content.contains(expression));
-		return this;
-	}
+  public GradleBuildAssert contains(String expression) {
+    assertTrue(expression + " has not been found in gradle build " + content,
+        content.contains(expression));
+    return this;
+  }
 
-	public GradleBuildAssert doesNotContain(String expression) {
-		assertFalse(expression + " is not expected in gradle build " + content,
-				content.contains(expression));
-		return this;
-	}
+  public GradleBuildAssert doesNotContain(String expression) {
+    assertFalse(expression + " is not expected in gradle build " + content,
+        content.contains(expression));
+    return this;
+  }
 
-	public String getGradleBuild() {
-		return this.content;
-	}
+  public String getGradleBuild() {
+    return this.content;
+  }
 
 }

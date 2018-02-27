@@ -25,26 +25,26 @@ package com.intellecteu.catalyst.generator;
  */
 public abstract class ProjectRequestEvent {
 
-	private final ProjectRequest projectRequest;
-	private final long timestamp;
+  private final ProjectRequest projectRequest;
+  private final long timestamp;
 
-	protected ProjectRequestEvent(ProjectRequest projectRequest) {
-		this.projectRequest = projectRequest;
-		this.timestamp = System.currentTimeMillis();
-	}
+  protected ProjectRequestEvent(ProjectRequest projectRequest) {
+    this.projectRequest = projectRequest;
+    this.timestamp = System.currentTimeMillis();
+  }
 
-	/**
-	 * Return the {@link ProjectRequest} used to generate the project.
-	 */
-	public ProjectRequest getProjectRequest() {
-		return projectRequest;
-	}
+  /**
+   * Return the {@link ProjectRequest} used to generate the project.
+   */
+  public ProjectRequest getProjectRequest() {
+    return projectRequest;
+  }
 
-	/**
-	 * Return the timestamp at which the request was processed.
-	 */
-	public long getTimestamp() {
-		return timestamp;
-	}
+  /**
+   * Return the timestamp at which the request was processed.
+   */
+  public long getTimestamp() {
+    return timestamp;
+  }
 
 }

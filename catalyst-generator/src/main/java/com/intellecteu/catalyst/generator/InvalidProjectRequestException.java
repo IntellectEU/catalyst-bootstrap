@@ -26,12 +26,12 @@ import com.intellecteu.catalyst.InitializrException;
 @SuppressWarnings("serial")
 public class InvalidProjectRequestException extends InitializrException {
 
-	public InvalidProjectRequestException(String message, Throwable cause) {
-		super(message, cause);
-	}
+  public InvalidProjectRequestException(String message, Throwable cause) {
+    super(message, cause);
+  }
 
-	public InvalidProjectRequestException(String message) {
-		super(message);
-	}
+  public InvalidProjectRequestException(String message) {
+    super(message);
+  }
 
 }

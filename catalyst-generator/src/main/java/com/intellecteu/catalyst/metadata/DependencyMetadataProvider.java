@@ -25,9 +25,9 @@ import com.intellecteu.catalyst.util.Version;
  */
 public interface DependencyMetadataProvider {
 
-	/**
-	 * Return the dependency metadata to use for the specified {@code bootVersion}.
-	 */
-	DependencyMetadata get(InitializrMetadata metadata, Version bootVersion);
+  /**
+   * Return the dependency metadata to use for the specified {@code bootVersion}.
+   */
+  DependencyMetadata get(InitializrMetadata metadata, Version bootVersion);
 
 }

@@ -18,6 +18,6 @@ package com.intellecteu.catalyst.metadata;
 
 public interface Defaultable<T> {
 
-	T getDefault();
+  T getDefault();
 
 }

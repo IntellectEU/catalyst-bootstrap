@@ -16,9 +16,8 @@
 
 package com.intellecteu.catalyst.metadata;
 
-import java.util.Map;
-
 import com.intellecteu.catalyst.util.Version;
+import java.util.Map;
 
 /**
  * Dependency metadata for a given spring boot {@link Version}.
@@ -27,40 +26,40 @@ import com.intellecteu.catalyst.util.Version;
  */
 public class DependencyMetadata {
 
-	final Version bootVersion;
+  final Version bootVersion;
 
-	final Map<String, Dependency> dependencies;
+  final Map<String, Dependency> dependencies;
 
-	final Map<String, Repository> repositories;
+  final Map<String, Repository> repositories;
 
-	final Map<String, BillOfMaterials> boms;
+  final Map<String, BillOfMaterials> boms;
 
-	public DependencyMetadata() {
-		this(null, null, null, null);
-	}
+  public DependencyMetadata() {
+    this(null, null, null, null);
+  }
 
-	public DependencyMetadata(Version bootVersion, Map<String, Dependency> dependencies,
-			Map<String, Repository> repositories, Map<String, BillOfMaterials> boms) {
-		this.bootVersion = bootVersion;
-		this.dependencies = dependencies;
-		this.repositories = repositories;
-		this.boms = boms;
-	}
+  public DependencyMetadata(Version bootVersion, Map<String, Dependency> dependencies,
+      Map<String, Repository> repositories, Map<String, BillOfMaterials> boms) {
+    this.bootVersion = bootVersion;
+    this.dependencies = dependencies;
+    this.repositories = repositories;
+    this.boms = boms;
+  }
 
-	public Version getBootVersion() {
-		return bootVersion;
-	}
+  public Version getBootVersion() {
+    return bootVersion;
+  }
 
-	public Map<String, Dependency> getDependencies() {
-		return dependencies;
-	}
+  public Map<String, Dependency> getDependencies() {
+    return dependencies;
+  }
 
-	public Map<String, Repository> getRepositories() {
-		return repositories;
-	}
+  public Map<String, Repository> getRepositories() {
+    return repositories;
+  }
 
-	public Map<String, BillOfMaterials> getBoms() {
-		return boms;
-	}
+  public Map<String, BillOfMaterials> getBoms() {
+    return boms;
+  }
 
 }

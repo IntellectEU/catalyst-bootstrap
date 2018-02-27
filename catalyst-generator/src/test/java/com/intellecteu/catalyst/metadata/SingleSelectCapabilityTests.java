@@ -16,53 +16,53 @@
 
 package com.intellecteu.catalyst.metadata;
 
-import org.junit.Test;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+
+import org.junit.Test;
 
 /**
  * @author Stephane Nicoll
  */
 public class SingleSelectCapabilityTests {
 
-	@Test
-	public void defaultEmpty() {
-		SingleSelectCapability capability = new SingleSelectCapability("test");
-		assertNull(capability.getDefault());
-	}
+  @Test
+  public void defaultEmpty() {
+    SingleSelectCapability capability = new SingleSelectCapability("test");
+    assertNull(capability.getDefault());
+  }
 
-	@Test
-	public void defaultNoDefault() {
-		SingleSelectCapability capability = new SingleSelectCapability("test");
-		capability.getContent().add(DefaultMetadataElement.create("foo", false));
-		capability.getContent().add(DefaultMetadataElement.create("bar", false));
-		assertNull(capability.getDefault());
-	}
+  @Test
+  public void defaultNoDefault() {
+    SingleSelectCapability capability = new SingleSelectCapability("test");
+    capability.getContent().add(DefaultMetadataElement.create("foo", false));
+    capability.getContent().add(DefaultMetadataElement.create("bar", false));
+    assertNull(capability.getDefault());
+  }
 
-	@Test
-	public void defaultType() {
-		SingleSelectCapability capability = new SingleSelectCapability("test");
-		capability.getContent().add(DefaultMetadataElement.create("foo", false));
-		DefaultMetadataElement second = DefaultMetadataElement.create("bar", true);
-		capability.getContent().add(second);
-		assertEquals(second, capability.getDefault());
-	}
+  @Test
+  public void defaultType() {
+    SingleSelectCapability capability = new SingleSelectCapability("test");
+    capability.getContent().add(DefaultMetadataElement.create("foo", false));
+    DefaultMetadataElement second = DefaultMetadataElement.create("bar", true);
+    capability.getContent().add(second);
+    assertEquals(second, capability.getDefault());
+  }
 
-	@Test
-	public void mergeAddEntry() {
-		SingleSelectCapability capability = new SingleSelectCapability("test");
-		DefaultMetadataElement foo = DefaultMetadataElement.create("foo", false);
-		capability.getContent().add(foo);
+  @Test
+  public void mergeAddEntry() {
+    SingleSelectCapability capability = new SingleSelectCapability("test");
+    DefaultMetadataElement foo = DefaultMetadataElement.create("foo", false);
+    capability.getContent().add(foo);
 
-		SingleSelectCapability anotherCapability = new SingleSelectCapability("test");
-		DefaultMetadataElement bar = DefaultMetadataElement.create("bar", false);
-		anotherCapability.getContent().add(bar);
+    SingleSelectCapability anotherCapability = new SingleSelectCapability("test");
+    DefaultMetadataElement bar = DefaultMetadataElement.create("bar", false);
+    anotherCapability.getContent().add(bar);
 
-		capability.merge(anotherCapability);
-		assertEquals(2, capability.getContent().size());
-		assertEquals(foo, capability.get("foo"));
-		assertEquals(bar, capability.get("bar"));
-	}
+    capability.merge(anotherCapability);
+    assertEquals(2, capability.getContent().size());
+    assertEquals(foo, capability.get("foo"));
+    assertEquals(bar, capability.get("bar"));
+  }
 
 }

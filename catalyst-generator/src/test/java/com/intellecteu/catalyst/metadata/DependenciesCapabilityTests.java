@@ -16,14 +16,14 @@
 
 package com.intellecteu.catalyst.metadata;
 
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
+
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 /**
  * Tests for {@link DependenciesCapability}.
@@ -32,144 +32,144 @@ import static org.junit.Assert.assertSame;
  */
 public class DependenciesCapabilityTests {
 
-	@Rule
-	public final ExpectedException thrown = ExpectedException.none();
+  @Rule
+  public final ExpectedException thrown = ExpectedException.none();
 
-	@Test
-	public void indexedDependencies() {
-		Dependency dependency = Dependency.withId("first");
-		Dependency dependency2 = Dependency.withId("second");
-		DependenciesCapability capability = createDependenciesCapability("foo",
-				dependency, dependency2);
-		capability.validate();
+  private static DependenciesCapability createDependenciesCapability(String groupName,
+      Dependency... dependencies) {
+    DependenciesCapability capability = new DependenciesCapability();
+    DependencyGroup group = createDependencyGroup(groupName, dependencies);
+    capability.getContent().add(group);
+    return capability;
+  }
 
-		assertSame(dependency, capability.get("first"));
-		assertSame(dependency2, capability.get("second"));
-		assertNull(capability.get("anotherId"));
-	}
+  private static DependencyGroup createDependencyGroup(String groupName,
+      Dependency... dependencies) {
+    DependencyGroup group = DependencyGroup.create(groupName);
+    for (Dependency dependency : dependencies) {
+      group.getContent().add(dependency);
+    }
+    return group;
+  }
 
-	@Test
-	public void addTwoDependenciesWithSameId() {
-		Dependency dependency = Dependency.withId("conflict");
-		Dependency dependency2 = Dependency.withId("conflict");
-		DependenciesCapability capability = createDependenciesCapability("foo",
-				dependency, dependency2);
+  @Test
+  public void indexedDependencies() {
+    Dependency dependency = Dependency.withId("first");
+    Dependency dependency2 = Dependency.withId("second");
+    DependenciesCapability capability = createDependenciesCapability("foo",
+        dependency, dependency2);
+    capability.validate();
 
-		thrown.expect(IllegalArgumentException.class);
-		thrown.expectMessage("conflict");
-		capability.validate();
-	}
+    assertSame(dependency, capability.get("first"));
+    assertSame(dependency2, capability.get("second"));
+    assertNull(capability.get("anotherId"));
+  }
 
-	@Test
-	public void addDependencyWithAliases() {
-		Dependency dependency = Dependency.withId("first");
-		dependency.getAliases().add("alias1");
-		dependency.getAliases().add("alias2");
-		DependenciesCapability capability = createDependenciesCapability("foo",
-				dependency);
-		capability.validate();
+  @Test
+  public void addTwoDependenciesWithSameId() {
+    Dependency dependency = Dependency.withId("conflict");
+    Dependency dependency2 = Dependency.withId("conflict");
+    DependenciesCapability capability = createDependenciesCapability("foo",
+        dependency, dependency2);
 
-		assertSame(dependency, capability.get("first"));
-		assertSame(dependency, capability.get("alias1"));
-		assertSame(dependency, capability.get("alias2"));
-	}
+    thrown.expect(IllegalArgumentException.class);
+    thrown.expectMessage("conflict");
+    capability.validate();
+  }
 
-	@Test
-	public void aliasClashWithAnotherDependency() {
-		Dependency dependency = Dependency.withId("first");
-		dependency.getAliases().add("alias1");
-		dependency.getAliases().add("alias2");
-		Dependency dependency2 = Dependency.withId("alias2");
+  @Test
+  public void addDependencyWithAliases() {
+    Dependency dependency = Dependency.withId("first");
+    dependency.getAliases().add("alias1");
+    dependency.getAliases().add("alias2");
+    DependenciesCapability capability = createDependenciesCapability("foo",
+        dependency);
+    capability.validate();
 
-		DependenciesCapability capability = new DependenciesCapability();
-		capability.getContent().add(createDependencyGroup("foo", dependency));
-		capability.getContent().add(createDependencyGroup("bar", dependency2));
+    assertSame(dependency, capability.get("first"));
+    assertSame(dependency, capability.get("alias1"));
+    assertSame(dependency, capability.get("alias2"));
+  }
 
-		thrown.expect(IllegalArgumentException.class);
-		thrown.expectMessage("alias2");
-		capability.validate();
-	}
+  @Test
+  public void aliasClashWithAnotherDependency() {
+    Dependency dependency = Dependency.withId("first");
+    dependency.getAliases().add("alias1");
+    dependency.getAliases().add("alias2");
+    Dependency dependency2 = Dependency.withId("alias2");
 
-	@Test
-	public void mergeAddEntry() {
-		DependenciesCapability capability = createDependenciesCapability("foo",
-				Dependency.withId("first"), Dependency.withId("second"));
+    DependenciesCapability capability = new DependenciesCapability();
+    capability.getContent().add(createDependencyGroup("foo", dependency));
+    capability.getContent().add(createDependencyGroup("bar", dependency2));
 
-		DependenciesCapability anotherCapability = createDependenciesCapability("foo",
-				Dependency.withId("bar"), Dependency.withId("biz"));
-		anotherCapability.getContent()
-				.add(createDependencyGroup("bar", Dependency.withId("third")));
+    thrown.expect(IllegalArgumentException.class);
+    thrown.expectMessage("alias2");
+    capability.validate();
+  }
 
-		capability.merge(anotherCapability);
-		assertEquals(2, capability.getContent().size());
-		assertNotNull(capability.get("first"));
-		assertNotNull(capability.get("second"));
-		assertNotNull(capability.get("third"));
-	}
+  @Test
+  public void mergeAddEntry() {
+    DependenciesCapability capability = createDependenciesCapability("foo",
+        Dependency.withId("first"), Dependency.withId("second"));
 
-	@Test
-	public void addDefaultVersionRange() {
-		Dependency first = Dependency.withId("first");
-		Dependency second = Dependency.withId("second");
-		second.setVersionRange("1.2.3.RELEASE");
-		DependencyGroup group = createDependencyGroup("test", first, second);
-		group.setVersionRange("1.2.0.RELEASE");
+    DependenciesCapability anotherCapability = createDependenciesCapability("foo",
+        Dependency.withId("bar"), Dependency.withId("biz"));
+    anotherCapability.getContent()
+        .add(createDependencyGroup("bar", Dependency.withId("third")));
 
-		DependenciesCapability capability = new DependenciesCapability();
-		capability.getContent().add(group);
-		capability.validate();
+    capability.merge(anotherCapability);
+    assertEquals(2, capability.getContent().size());
+    assertNotNull(capability.get("first"));
+    assertNotNull(capability.get("second"));
+    assertNotNull(capability.get("third"));
+  }
 
-		assertEquals("1.2.0.RELEASE", capability.get("first").getVersionRange());
-		assertEquals("1.2.3.RELEASE", capability.get("second").getVersionRange());
-	}
+  @Test
+  public void addDefaultVersionRange() {
+    Dependency first = Dependency.withId("first");
+    Dependency second = Dependency.withId("second");
+    second.setVersionRange("1.2.3.RELEASE");
+    DependencyGroup group = createDependencyGroup("test", first, second);
+    group.setVersionRange("1.2.0.RELEASE");
 
-	@Test
-	public void addDefaultBom() {
-		Dependency first = Dependency.withId("first");
-		Dependency second = Dependency.withId("second");
-		second.setBom("da-bom");
-		DependencyGroup group = createDependencyGroup("test", first, second);
-		group.setBom("test-bom");
+    DependenciesCapability capability = new DependenciesCapability();
+    capability.getContent().add(group);
+    capability.validate();
 
-		DependenciesCapability capability = new DependenciesCapability();
-		capability.getContent().add(group);
-		capability.validate();
+    assertEquals("1.2.0.RELEASE", capability.get("first").getVersionRange());
+    assertEquals("1.2.3.RELEASE", capability.get("second").getVersionRange());
+  }
 
-		assertEquals("test-bom", capability.get("first").getBom());
-		assertEquals("da-bom", capability.get("second").getBom());
-	}
+  @Test
+  public void addDefaultBom() {
+    Dependency first = Dependency.withId("first");
+    Dependency second = Dependency.withId("second");
+    second.setBom("da-bom");
+    DependencyGroup group = createDependencyGroup("test", first, second);
+    group.setBom("test-bom");
 
-	@Test
-	public void addDefaultRepository() {
-		Dependency first = Dependency.withId("first");
-		Dependency second = Dependency.withId("second");
-		second.setRepository("da-repo");
-		DependencyGroup group = createDependencyGroup("test", first, second);
-		group.setRepository("test-repo");
+    DependenciesCapability capability = new DependenciesCapability();
+    capability.getContent().add(group);
+    capability.validate();
 
-		DependenciesCapability capability = new DependenciesCapability();
-		capability.getContent().add(group);
-		capability.validate();
+    assertEquals("test-bom", capability.get("first").getBom());
+    assertEquals("da-bom", capability.get("second").getBom());
+  }
 
-		assertEquals("test-repo", capability.get("first").getRepository());
-		assertEquals("da-repo", capability.get("second").getRepository());
-	}
+  @Test
+  public void addDefaultRepository() {
+    Dependency first = Dependency.withId("first");
+    Dependency second = Dependency.withId("second");
+    second.setRepository("da-repo");
+    DependencyGroup group = createDependencyGroup("test", first, second);
+    group.setRepository("test-repo");
 
-	private static DependenciesCapability createDependenciesCapability(String groupName,
-			Dependency... dependencies) {
-		DependenciesCapability capability = new DependenciesCapability();
-		DependencyGroup group = createDependencyGroup(groupName, dependencies);
-		capability.getContent().add(group);
-		return capability;
-	}
+    DependenciesCapability capability = new DependenciesCapability();
+    capability.getContent().add(group);
+    capability.validate();
 
-	private static DependencyGroup createDependencyGroup(String groupName,
-			Dependency... dependencies) {
-		DependencyGroup group = DependencyGroup.create(groupName);
-		for (Dependency dependency : dependencies) {
-			group.getContent().add(dependency);
-		}
-		return group;
-	}
+    assertEquals("test-repo", capability.get("first").getRepository());
+    assertEquals("da-repo", capability.get("second").getRepository());
+  }
 
 }
