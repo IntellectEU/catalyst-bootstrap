@@ -16,12 +16,14 @@
 
 package com.intellecteu.catalyst.actuate.autoconfigure;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+
 import com.intellecteu.catalyst.actuate.stat.ProjectGenerationStatPublisher;
 import com.intellecteu.catalyst.metadata.InitializrMetadataProvider;
 import org.assertj.core.api.Assertions;
 import org.junit.After;
 import org.junit.Test;
-
 import org.springframework.beans.DirectFieldAccessor;
 import org.springframework.boot.autoconfigure.web.WebClientAutoConfiguration;
 import org.springframework.boot.test.util.EnvironmentTestUtils;
@@ -34,9 +36,6 @@ import org.springframework.context.annotation.Import;
 import org.springframework.web.client.ResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-
 /**
  * Tests for {@link InitializrStatsAutoConfiguration}.
  *
@@ -44,59 +43,59 @@ import static org.mockito.Mockito.mock;
  */
 public class InitializrStatsAutoConfigurationTests {
 
-	private ConfigurableApplicationContext context;
+  private ConfigurableApplicationContext context;
 
-	@After
-	public void close() {
-		if (this.context != null) {
-			this.context.close();
-		}
-	}
+  @After
+  public void close() {
+    if (this.context != null) {
+      this.context.close();
+    }
+  }
 
-	@Test
-	public void customRestTemplateBuilderIsUsed() {
-		load(CustomRestTemplateConfiguration.class,
-				"initializr.stats.elastic.uri=http://localhost:9200");
-		Assertions.assertThat(this.context.getBeansOfType(ProjectGenerationStatPublisher.class))
-				.hasSize(1);
-		RestTemplate restTemplate = (RestTemplate) new DirectFieldAccessor(
-				this.context.getBean(ProjectGenerationStatPublisher.class))
-				.getPropertyValue("restTemplate");
-		assertThat(restTemplate.getErrorHandler()).isSameAs(
-				CustomRestTemplateConfiguration.errorHandler);
-	}
+  @Test
+  public void customRestTemplateBuilderIsUsed() {
+    load(CustomRestTemplateConfiguration.class,
+        "initializr.stats.elastic.uri=http://localhost:9200");
+    Assertions.assertThat(this.context.getBeansOfType(ProjectGenerationStatPublisher.class))
+        .hasSize(1);
+    RestTemplate restTemplate = (RestTemplate) new DirectFieldAccessor(
+        this.context.getBean(ProjectGenerationStatPublisher.class))
+        .getPropertyValue("restTemplate");
+    assertThat(restTemplate.getErrorHandler()).isSameAs(
+        CustomRestTemplateConfiguration.errorHandler);
+  }
 
-	private void load(Class<?> config, String... environment) {
-		AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext();
-		EnvironmentTestUtils.addEnvironment(ctx, environment);
-		if (config != null) {
-			ctx.register(config);
-		}
-		ctx.register(WebClientAutoConfiguration.class,
-				InitializrStatsAutoConfiguration.class);
-		ctx.refresh();
-		this.context = ctx;
-	}
+  private void load(Class<?> config, String... environment) {
+    AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext();
+    EnvironmentTestUtils.addEnvironment(ctx, environment);
+    if (config != null) {
+      ctx.register(config);
+    }
+    ctx.register(WebClientAutoConfiguration.class,
+        InitializrStatsAutoConfiguration.class);
+    ctx.refresh();
+    this.context = ctx;
+  }
 
-	@Configuration
-	static class InfrastructureConfiguration {
+  @Configuration
+  static class InfrastructureConfiguration {
 
-		@Bean
-		public InitializrMetadataProvider initializrMetadataProvider() {
-			return mock(InitializrMetadataProvider.class);
-		}
-	}
+    @Bean
+    public InitializrMetadataProvider initializrMetadataProvider() {
+      return mock(InitializrMetadataProvider.class);
+    }
+  }
 
-	@Configuration
-	@Import(InfrastructureConfiguration.class)
-	static class CustomRestTemplateConfiguration {
+  @Configuration
+  @Import(InfrastructureConfiguration.class)
+  static class CustomRestTemplateConfiguration {
 
-		private static final ResponseErrorHandler errorHandler = mock(ResponseErrorHandler.class);
+    private static final ResponseErrorHandler errorHandler = mock(ResponseErrorHandler.class);
 
-		@Bean
-		public RestTemplateCustomizer testRestTemplateCustomizer() {
-			return b -> b.setErrorHandler(errorHandler);
-		}
-	}
+    @Bean
+    public RestTemplateCustomizer testRestTemplateCustomizer() {
+      return b -> b.setErrorHandler(errorHandler);
+    }
+  }
 
 }

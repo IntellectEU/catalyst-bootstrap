@@ -18,7 +18,6 @@ package com.intellecteu.catalyst.actuate.test;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import org.springframework.boot.actuate.metrics.CounterService;
 
 /**
@@ -28,29 +27,29 @@ import org.springframework.boot.actuate.metrics.CounterService;
  */
 public class TestCounterService implements CounterService {
 
-	private final Map<String, Long> values = new HashMap<>();
+  private final Map<String, Long> values = new HashMap<>();
 
-	@Override
-	public void increment(String metricName) {
-		Long value = getValues().get(metricName);
-		Long valueToSet = value != null ? ++value : 1;
-		getValues().put(metricName, valueToSet);
-	}
+  @Override
+  public void increment(String metricName) {
+    Long value = getValues().get(metricName);
+    Long valueToSet = value != null ? ++value : 1;
+    getValues().put(metricName, valueToSet);
+  }
 
-	@Override
-	public void decrement(String metricName) {
-		Long value = getValues().get(metricName);
-		Long valueToSet = value != null ? +--value : -1;
-		getValues().put(metricName, valueToSet);
-	}
+  @Override
+  public void decrement(String metricName) {
+    Long value = getValues().get(metricName);
+    Long valueToSet = value != null ? +--value : -1;
+    getValues().put(metricName, valueToSet);
+  }
 
-	@Override
-	public void reset(String metricName) {
-		getValues().put(metricName, 0L);
-	}
+  @Override
+  public void reset(String metricName) {
+    getValues().put(metricName, 0L);
+  }
 
-	public Map<String, Long> getValues() {
-		return values;
-	}
+  public Map<String, Long> getValues() {
+    return values;
+  }
 
 }

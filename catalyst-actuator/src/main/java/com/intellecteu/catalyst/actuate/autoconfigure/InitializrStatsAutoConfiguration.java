@@ -16,13 +16,11 @@
 
 package com.intellecteu.catalyst.actuate.autoconfigure;
 
-import java.util.Collections;
-
 import com.intellecteu.catalyst.actuate.stat.ProjectGenerationStatPublisher;
 import com.intellecteu.catalyst.actuate.stat.ProjectRequestDocumentFactory;
 import com.intellecteu.catalyst.actuate.stat.StatsProperties;
 import com.intellecteu.catalyst.metadata.InitializrMetadataProvider;
-
+import java.util.Collections;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -36,8 +34,8 @@ import org.springframework.retry.policy.SimpleRetryPolicy;
 import org.springframework.retry.support.RetryTemplate;
 
 /**
- * {@link org.springframework.boot.autoconfigure.EnableAutoConfiguration
- * Auto-configuration} to publish statistics of each generated project.
+ * {@link org.springframework.boot.autoconfigure.EnableAutoConfiguration Auto-configuration} to
+ * publish statistics of each generated project.
  *
  * @author Stephane Nicoll
  */
@@ -47,34 +45,34 @@ import org.springframework.retry.support.RetryTemplate;
 @AutoConfigureAfter(WebClientAutoConfiguration.class)
 class InitializrStatsAutoConfiguration {
 
-	private final StatsProperties statsProperties;
+  private final StatsProperties statsProperties;
 
-	public InitializrStatsAutoConfiguration(StatsProperties statsProperties) {
-		this.statsProperties = statsProperties;
-	}
+  public InitializrStatsAutoConfiguration(StatsProperties statsProperties) {
+    this.statsProperties = statsProperties;
+  }
 
-	@Bean
-	public ProjectGenerationStatPublisher projectRequestStatHandler(
-			InitializrMetadataProvider provider,
-			RestTemplateBuilder restTemplateBuilder) {
-		return new ProjectGenerationStatPublisher(
-				new ProjectRequestDocumentFactory(provider), statsProperties,
-				restTemplateBuilder, statsRetryTemplate());
-	}
+  @Bean
+  public ProjectGenerationStatPublisher projectRequestStatHandler(
+      InitializrMetadataProvider provider,
+      RestTemplateBuilder restTemplateBuilder) {
+    return new ProjectGenerationStatPublisher(
+        new ProjectRequestDocumentFactory(provider), statsProperties,
+        restTemplateBuilder, statsRetryTemplate());
+  }
 
-	@Bean
-	@ConditionalOnMissingBean(name = "statsRetryTemplate")
-	public RetryTemplate statsRetryTemplate() {
-		RetryTemplate retryTemplate = new RetryTemplate();
-		ExponentialBackOffPolicy backOffPolicy = new ExponentialBackOffPolicy();
-		backOffPolicy.setInitialInterval(3000L);
-		backOffPolicy.setMultiplier(3);
-		SimpleRetryPolicy retryPolicy = new SimpleRetryPolicy(
-				statsProperties.getElastic().getMaxAttempts(),
-				Collections.singletonMap(Exception.class, true));
-		retryTemplate.setBackOffPolicy(backOffPolicy);
-		retryTemplate.setRetryPolicy(retryPolicy);
-		return retryTemplate;
-	}
+  @Bean
+  @ConditionalOnMissingBean(name = "statsRetryTemplate")
+  public RetryTemplate statsRetryTemplate() {
+    RetryTemplate retryTemplate = new RetryTemplate();
+    ExponentialBackOffPolicy backOffPolicy = new ExponentialBackOffPolicy();
+    backOffPolicy.setInitialInterval(3000L);
+    backOffPolicy.setMultiplier(3);
+    SimpleRetryPolicy retryPolicy = new SimpleRetryPolicy(
+        statsProperties.getElastic().getMaxAttempts(),
+        Collections.singletonMap(Exception.class, true));
+    retryTemplate.setBackOffPolicy(backOffPolicy);
+    retryTemplate.setRetryPolicy(retryPolicy);
+    return retryTemplate;
+  }
 
 }

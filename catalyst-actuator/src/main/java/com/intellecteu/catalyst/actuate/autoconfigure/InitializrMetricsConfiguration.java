@@ -17,24 +17,23 @@
 package com.intellecteu.catalyst.actuate.autoconfigure;
 
 import com.intellecteu.catalyst.actuate.metric.ProjectGenerationMetricsListener;
-
 import org.springframework.boot.actuate.metrics.CounterService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * {@link org.springframework.boot.autoconfigure.EnableAutoConfiguration
- * Auto-configuration} to handle the metrics of an initializr instance.
+ * {@link org.springframework.boot.autoconfigure.EnableAutoConfiguration Auto-configuration} to
+ * handle the metrics of an initializr instance.
  *
  * @author Dave Syer
  */
 @Configuration
 public class InitializrMetricsConfiguration {
 
-	@Bean
-	public ProjectGenerationMetricsListener metricsListener(
-			CounterService counterService) {
-		return new ProjectGenerationMetricsListener(counterService);
-	}
+  @Bean
+  public ProjectGenerationMetricsListener metricsListener(
+      CounterService counterService) {
+    return new ProjectGenerationMetricsListener(counterService);
+  }
 
 }
