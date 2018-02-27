@@ -16,14 +16,11 @@
 
 package com.intellecteu.catalyst.web.autoconfigure;
 
-import java.util.Collections;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
 import com.intellecteu.catalyst.util.Agent;
 import com.intellecteu.catalyst.util.Agent.AgentId;
-
+import java.util.Collections;
+import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.util.StringUtils;
@@ -41,41 +38,41 @@ import org.springframework.web.util.UrlPathHelper;
  */
 public class WebConfig extends WebMvcConfigurerAdapter {
 
-	@Override
-	public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
-		configurer.defaultContentTypeStrategy(new CommandLineContentNegotiationStrategy());
-	}
+  @Override
+  public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
+    configurer.defaultContentTypeStrategy(new CommandLineContentNegotiationStrategy());
+  }
 
-	/**
-	 * A command-line aware {@link ContentNegotiationStrategy} that forces the media type
-	 * to "text/plain" for compatible agents.
-	 */
-	private static class CommandLineContentNegotiationStrategy
-			implements ContentNegotiationStrategy {
+  /**
+   * A command-line aware {@link ContentNegotiationStrategy} that forces the media type to
+   * "text/plain" for compatible agents.
+   */
+  private static class CommandLineContentNegotiationStrategy
+      implements ContentNegotiationStrategy {
 
-		private final UrlPathHelper urlPathHelper = new UrlPathHelper();
+    private final UrlPathHelper urlPathHelper = new UrlPathHelper();
 
-		@Override
-		public List<MediaType> resolveMediaTypes(NativeWebRequest request)
-				throws HttpMediaTypeNotAcceptableException {
-			String path = urlPathHelper.getPathWithinApplication(
-					request.getNativeRequest(HttpServletRequest.class));
-			if (!StringUtils.hasText(path) || !path.equals("/")) {  // Only care about "/"
-				return Collections.emptyList();
-			}
-			String userAgent = request.getHeader(HttpHeaders.USER_AGENT);
-			if (userAgent != null) {
-				Agent agent = Agent.fromUserAgent(userAgent);
-				if (agent != null) {
-					if (AgentId.CURL.equals(agent.getId())
-							|| AgentId.HTTPIE.equals(agent.getId())) {
-						return Collections.singletonList(MediaType.TEXT_PLAIN);
-					}
-				}
-			}
-			return Collections.singletonList(MediaType.APPLICATION_JSON);
-		}
-	}
+    @Override
+    public List<MediaType> resolveMediaTypes(NativeWebRequest request)
+        throws HttpMediaTypeNotAcceptableException {
+      String path = urlPathHelper.getPathWithinApplication(
+          request.getNativeRequest(HttpServletRequest.class));
+      if (!StringUtils.hasText(path) || !path.equals("/")) {  // Only care about "/"
+        return Collections.emptyList();
+      }
+      String userAgent = request.getHeader(HttpHeaders.USER_AGENT);
+      if (userAgent != null) {
+        Agent agent = Agent.fromUserAgent(userAgent);
+        if (agent != null) {
+          if (AgentId.CURL.equals(agent.getId())
+              || AgentId.HTTPIE.equals(agent.getId())) {
+            return Collections.singletonList(MediaType.TEXT_PLAIN);
+          }
+        }
+      }
+      return Collections.singletonList(MediaType.APPLICATION_JSON);
+    }
+  }
 
 }
 

@@ -25,9 +25,9 @@ import com.intellecteu.catalyst.metadata.InitializrMetadata;
  */
 public interface InitializrMetadataJsonMapper {
 
-	/**
-	 * Write a json representation of the specified metadata.
-	 */
-	String write(InitializrMetadata metadata, String appUrl);
+  /**
+   * Write a json representation of the specified metadata.
+   */
+  String write(InitializrMetadata metadata, String appUrl);
 
 }

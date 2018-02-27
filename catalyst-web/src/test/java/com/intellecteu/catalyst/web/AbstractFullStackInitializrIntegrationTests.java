@@ -16,14 +16,13 @@
 
 package com.intellecteu.catalyst.web;
 
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
+
 import com.intellecteu.catalyst.web.AbstractInitializrIntegrationTests.Config;
 import org.junit.runner.RunWith;
-
 import org.springframework.boot.context.embedded.LocalServerPort;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
 /**
  * @author Stephane Nicoll
@@ -32,17 +31,17 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Config.class, webEnvironment = RANDOM_PORT)
 public abstract class AbstractFullStackInitializrIntegrationTests
-		extends AbstractInitializrIntegrationTests {
+    extends AbstractInitializrIntegrationTests {
 
-	@LocalServerPort
-	protected int port;
+  @LocalServerPort
+  protected int port;
 
-	protected String host = "localhost";
+  protected String host = "localhost";
 
-	@Override
-	protected String createUrl(String context) {
-		return "http://" + host + ":" + port
-				+ (context.startsWith("/") ? context : "/" + context);
-	}
+  @Override
+  protected String createUrl(String context) {
+    return "http://" + host + ":" + port
+        + (context.startsWith("/") ? context : "/" + context);
+  }
 
 }

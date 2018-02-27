@@ -16,25 +16,23 @@
 
 package com.intellecteu.catalyst.web.support;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
+import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.intellecteu.catalyst.metadata.DefaultMetadataElement;
 import com.intellecteu.catalyst.metadata.InitializrMetadata;
 import com.intellecteu.catalyst.metadata.InitializrMetadataBuilder;
+import java.io.IOException;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 import org.junit.Test;
-
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.web.client.RestTemplate;
-
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
-import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
 
 /**
  * @author Stephane Nicoll
@@ -42,38 +40,38 @@ import static org.springframework.test.web.client.response.MockRestResponseCreat
  */
 public class SpringBootMetadataReaderTests {
 
-	private final InitializrMetadata metadata =
-			InitializrMetadataBuilder.create().build();
+  private final InitializrMetadata metadata =
+      InitializrMetadataBuilder.create().build();
 
-	private final ObjectMapper objectMapper = new ObjectMapper();
+  private final ObjectMapper objectMapper = new ObjectMapper();
 
-	private final RestTemplate restTemplate = new RestTemplate();
+  private final RestTemplate restTemplate = new RestTemplate();
 
-	private final MockRestServiceServer server =
-			MockRestServiceServer.bindTo(restTemplate).build();
+  private final MockRestServiceServer server =
+      MockRestServiceServer.bindTo(restTemplate).build();
 
-	@Test
-	public void readAvailableVersions() throws IOException {
-		server.expect(requestTo("https://spring.io/project_metadata/spring-boot"))
-				.andRespond(withSuccess(
-						new ClassPathResource("metadata/sagan/spring-boot.json"),
-						MediaType.APPLICATION_JSON));
-		List<DefaultMetadataElement> versions = new SpringBootMetadataReader(objectMapper,
-				restTemplate, metadata.getConfiguration().getEnv()
-				.getSpringBootMetadataUrl()).getBootVersions();
-		assertNotNull("spring boot versions should not be null", versions);
-		AtomicBoolean defaultFound = new AtomicBoolean(false);
-		versions.forEach(it -> {
-			assertNotNull("Id must be set", it.getId());
-			assertNotNull("Name must be set", it.getName());
-			if (it.isDefault()) {
-				if (defaultFound.get()) {
-					fail("One default version was already found " + it.getId());
-				}
-				defaultFound.set(true);
-			}
-		});
-		server.verify();
-	}
+  @Test
+  public void readAvailableVersions() throws IOException {
+    server.expect(requestTo("https://spring.io/project_metadata/spring-boot"))
+        .andRespond(withSuccess(
+            new ClassPathResource("metadata/sagan/spring-boot.json"),
+            MediaType.APPLICATION_JSON));
+    List<DefaultMetadataElement> versions = new SpringBootMetadataReader(objectMapper,
+        restTemplate, metadata.getConfiguration().getEnv()
+        .getSpringBootMetadataUrl()).getBootVersions();
+    assertNotNull("spring boot versions should not be null", versions);
+    AtomicBoolean defaultFound = new AtomicBoolean(false);
+    versions.forEach(it -> {
+      assertNotNull("Id must be set", it.getId());
+      assertNotNull("Name must be set", it.getName());
+      if (it.isDefault()) {
+        if (defaultFound.get()) {
+          fail("One default version was already found " + it.getId());
+        }
+        defaultFound.set(true);
+      }
+    });
+    server.verify();
+  }
 
 }

@@ -25,30 +25,30 @@ import org.springframework.test.web.servlet.MockMvc;
  * @author Dave Syer
  */
 public final class MockMvcClientHttpRequestFactoryTestExecutionListener
-		extends AbstractTestExecutionListener {
+    extends AbstractTestExecutionListener {
 
-	private MockMvcClientHttpRequestFactory factory;
+  private MockMvcClientHttpRequestFactory factory;
 
-	@Override
-	public void beforeTestClass(TestContext testContext) throws Exception {
-		ConfigurableBeanFactory beanFactory = (ConfigurableBeanFactory) testContext
-				.getApplicationContext().getAutowireCapableBeanFactory();
-		if (!beanFactory.containsBean("mockMvcClientHttpRequestFactory")) {
-			factory = new MockMvcClientHttpRequestFactory(
-					beanFactory.getBean(MockMvc.class));
-			beanFactory.registerSingleton("mockMvcClientHttpRequestFactory",
-					this.factory);
-		}
-		else {
-			factory = beanFactory.getBean("mockMvcClientHttpRequestFactory", MockMvcClientHttpRequestFactory.class);
-		}
-	}
+  @Override
+  public void beforeTestClass(TestContext testContext) throws Exception {
+    ConfigurableBeanFactory beanFactory = (ConfigurableBeanFactory) testContext
+        .getApplicationContext().getAutowireCapableBeanFactory();
+    if (!beanFactory.containsBean("mockMvcClientHttpRequestFactory")) {
+      factory = new MockMvcClientHttpRequestFactory(
+          beanFactory.getBean(MockMvc.class));
+      beanFactory.registerSingleton("mockMvcClientHttpRequestFactory",
+          this.factory);
+    } else {
+      factory = beanFactory
+          .getBean("mockMvcClientHttpRequestFactory", MockMvcClientHttpRequestFactory.class);
+    }
+  }
 
-	@Override
-	public void beforeTestMethod(TestContext testContext) throws Exception {
-		if (factory != null) {
-			this.factory.setTest(testContext.getTestClass(), testContext.getTestMethod());
-		}
-	}
+  @Override
+  public void beforeTestMethod(TestContext testContext) throws Exception {
+    if (factory != null) {
+      this.factory.setTest(testContext.getTestClass(), testContext.getTestMethod());
+    }
+  }
 
 }

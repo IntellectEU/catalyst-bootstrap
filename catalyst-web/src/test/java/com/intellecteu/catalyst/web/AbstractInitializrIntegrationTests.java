@@ -16,14 +16,7 @@
 
 package com.intellecteu.catalyst.web;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import static org.junit.Assert.assertTrue;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -35,6 +28,14 @@ import com.intellecteu.catalyst.test.generator.ProjectAssert;
 import com.intellecteu.catalyst.web.AbstractInitializrIntegrationTests.Config;
 import com.intellecteu.catalyst.web.mapper.InitializrMetadataVersion;
 import com.intellecteu.catalyst.web.support.DefaultInitializrMetadataProvider;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Expand;
 import org.apache.tools.ant.taskdefs.Untar;
@@ -46,7 +47,6 @@ import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -62,8 +62,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.client.RestTemplate;
 
-import static org.junit.Assert.assertTrue;
-
 /**
  * @author Stephane Nicoll
  */
@@ -71,234 +69,228 @@ import static org.junit.Assert.assertTrue;
 @SpringBootTest(classes = Config.class)
 public abstract class AbstractInitializrIntegrationTests {
 
-	protected static final MediaType CURRENT_METADATA_MEDIA_TYPE =
-			InitializrMetadataVersion.V2_1.getMediaType();
+  protected static final MediaType CURRENT_METADATA_MEDIA_TYPE =
+      InitializrMetadataVersion.V2_1.getMediaType();
 
-	private static final ObjectMapper objectMapper = new ObjectMapper();
+  private static final ObjectMapper objectMapper = new ObjectMapper();
 
-	@Rule
-	public final TemporaryFolder folder = new TemporaryFolder();
+  @Rule
+  public final TemporaryFolder folder = new TemporaryFolder();
 
-	@Autowired
-	private RestTemplateBuilder restTemplateBuilder;
+  @Autowired
+  private RestTemplateBuilder restTemplateBuilder;
 
-	private RestTemplate restTemplate;
+  private RestTemplate restTemplate;
 
-	@Before
-	public void before() {
-		restTemplate = restTemplateBuilder.build();
-	}
+  @Before
+  public void before() {
+    restTemplate = restTemplateBuilder.build();
+  }
 
-	protected abstract String createUrl(String context);
+  protected abstract String createUrl(String context);
 
-	protected String htmlHome() {
-		HttpHeaders headers = new HttpHeaders();
-		headers.setAccept(Collections.singletonList(MediaType.TEXT_HTML));
-		return restTemplate.exchange(createUrl("/"), HttpMethod.GET,
-				new HttpEntity<Void>(headers), String.class).getBody();
-	}
+  protected String htmlHome() {
+    HttpHeaders headers = new HttpHeaders();
+    headers.setAccept(Collections.singletonList(MediaType.TEXT_HTML));
+    return restTemplate.exchange(createUrl("/"), HttpMethod.GET,
+        new HttpEntity<Void>(headers), String.class).getBody();
+  }
 
-	/**
-	 * Validate the "Content-Type" header of the specified response.
-	 */
-	protected void validateContentType(ResponseEntity<String> response,
-			MediaType expected) {
-		MediaType actual = response.getHeaders().getContentType();
-		assertTrue("Non compatible media-type, expected " + expected + ", got " + actual,
-				actual.isCompatibleWith(expected));
-	}
+  /**
+   * Validate the "Content-Type" header of the specified response.
+   */
+  protected void validateContentType(ResponseEntity<String> response,
+      MediaType expected) {
+    MediaType actual = response.getHeaders().getContentType();
+    assertTrue("Non compatible media-type, expected " + expected + ", got " + actual,
+        actual.isCompatibleWith(expected));
+  }
 
-	protected JsonNode parseJson(String text) {
-		try {
-			return objectMapper.readTree(text);
-		}
-		catch (IOException ex) {
-			throw new IllegalArgumentException("Invalid json", ex);
-		}
-	}
+  protected JsonNode parseJson(String text) {
+    try {
+      return objectMapper.readTree(text);
+    } catch (IOException ex) {
+      throw new IllegalArgumentException("Invalid json", ex);
+    }
+  }
 
-	protected void validateMetadata(ResponseEntity<String> response, MediaType mediaType,
-			String version, JSONCompareMode compareMode) {
-		try {
-			validateContentType(response, mediaType);
-			JSONObject json = new JSONObject(response.getBody());
-			JSONObject expected = readMetadataJson(version);
-			JSONAssert.assertEquals(expected, json, compareMode);
-		}
-		catch (JSONException ex) {
-			throw new IllegalArgumentException("Invalid json", ex);
-		}
-	}
+  protected void validateMetadata(ResponseEntity<String> response, MediaType mediaType,
+      String version, JSONCompareMode compareMode) {
+    try {
+      validateContentType(response, mediaType);
+      JSONObject json = new JSONObject(response.getBody());
+      JSONObject expected = readMetadataJson(version);
+      JSONAssert.assertEquals(expected, json, compareMode);
+    } catch (JSONException ex) {
+      throw new IllegalArgumentException("Invalid json", ex);
+    }
+  }
 
-	protected void validateCurrentMetadata(ResponseEntity<String> response) {
-		validateContentType(response, CURRENT_METADATA_MEDIA_TYPE);
-		validateCurrentMetadata(response.getBody());
-	}
+  protected void validateCurrentMetadata(ResponseEntity<String> response) {
+    validateContentType(response, CURRENT_METADATA_MEDIA_TYPE);
+    validateCurrentMetadata(response.getBody());
+  }
 
-	protected void validateCurrentMetadata(String json) {
-		try {
-			JSONObject expected = readMetadataJson("2.1.0");
-			JSONAssert.assertEquals(expected, new JSONObject(json), JSONCompareMode.STRICT);
-		}
-		catch (JSONException ex) {
-			throw new IllegalArgumentException("Invalid json", ex);
-		}
-	}
+  protected void validateCurrentMetadata(String json) {
+    try {
+      JSONObject expected = readMetadataJson("2.1.0");
+      JSONAssert.assertEquals(expected, new JSONObject(json), JSONCompareMode.STRICT);
+    } catch (JSONException ex) {
+      throw new IllegalArgumentException("Invalid json", ex);
+    }
+  }
 
-	private JSONObject readMetadataJson(String version) {
-		return readJsonFrom("metadata/test-default-" + version + ".json");
-	}
+  private JSONObject readMetadataJson(String version) {
+    return readJsonFrom("metadata/test-default-" + version + ".json");
+  }
 
-	/**
-	 * Return a {@link ProjectAssert} for the following archive content.
-	 */
-	protected ProjectAssert zipProjectAssert(byte[] content) {
-		return projectAssert(content, ArchiveType.ZIP);
-	}
+  /**
+   * Return a {@link ProjectAssert} for the following archive content.
+   */
+  protected ProjectAssert zipProjectAssert(byte[] content) {
+    return projectAssert(content, ArchiveType.ZIP);
+  }
 
-	/**
-	 * Return a {@link ProjectAssert} for the following TGZ archive.
-	 */
-	protected ProjectAssert tgzProjectAssert(byte[] content) {
-		return projectAssert(content, ArchiveType.TGZ);
-	}
+  /**
+   * Return a {@link ProjectAssert} for the following TGZ archive.
+   */
+  protected ProjectAssert tgzProjectAssert(byte[] content) {
+    return projectAssert(content, ArchiveType.TGZ);
+  }
 
-	protected ProjectAssert downloadZip(String context) {
-		byte[] body = downloadArchive(context);
-		return zipProjectAssert(body);
-	}
+  protected ProjectAssert downloadZip(String context) {
+    byte[] body = downloadArchive(context);
+    return zipProjectAssert(body);
+  }
 
-	protected ProjectAssert downloadTgz(String context) {
-		byte[] body = downloadArchive(context);
-		return tgzProjectAssert(body);
-	}
+  protected ProjectAssert downloadTgz(String context) {
+    byte[] body = downloadArchive(context);
+    return tgzProjectAssert(body);
+  }
 
-	protected byte[] downloadArchive(String context) {
-		return restTemplate.getForObject(createUrl(context), byte[].class);
-	}
+  protected byte[] downloadArchive(String context) {
+    return restTemplate.getForObject(createUrl(context), byte[].class);
+  }
 
-	protected ResponseEntity<String> invokeHome(String userAgentHeader,
-			String... acceptHeaders) {
-		return execute("/", String.class, userAgentHeader, acceptHeaders);
-	}
+  protected ResponseEntity<String> invokeHome(String userAgentHeader,
+      String... acceptHeaders) {
+    return execute("/", String.class, userAgentHeader, acceptHeaders);
+  }
 
-	protected <T> ResponseEntity<T> execute(String contextPath, Class<T> responseType,
-			String userAgentHeader, String... acceptHeaders) {
-		HttpHeaders headers = new HttpHeaders();
-		if (userAgentHeader != null) {
-			headers.set("User-Agent", userAgentHeader);
-		}
-		if (acceptHeaders != null) {
-			List<MediaType> mediaTypes = new ArrayList<>();
-			for (String acceptHeader : acceptHeaders) {
-				mediaTypes.add(MediaType.parseMediaType(acceptHeader));
-			}
-			headers.setAccept(mediaTypes);
-		}
-		else {
-			headers.setAccept(Collections.emptyList());
-		}
-		return restTemplate.exchange(createUrl(contextPath), HttpMethod.GET,
-				new HttpEntity<Void>(headers), responseType);
-	}
+  protected <T> ResponseEntity<T> execute(String contextPath, Class<T> responseType,
+      String userAgentHeader, String... acceptHeaders) {
+    HttpHeaders headers = new HttpHeaders();
+    if (userAgentHeader != null) {
+      headers.set("User-Agent", userAgentHeader);
+    }
+    if (acceptHeaders != null) {
+      List<MediaType> mediaTypes = new ArrayList<>();
+      for (String acceptHeader : acceptHeaders) {
+        mediaTypes.add(MediaType.parseMediaType(acceptHeader));
+      }
+      headers.setAccept(mediaTypes);
+    } else {
+      headers.setAccept(Collections.emptyList());
+    }
+    return restTemplate.exchange(createUrl(contextPath), HttpMethod.GET,
+        new HttpEntity<Void>(headers), responseType);
+  }
 
-	protected ProjectAssert projectAssert(byte[] content, ArchiveType archiveType) {
-		try {
-			File archiveFile = writeArchive(content);
+  protected ProjectAssert projectAssert(byte[] content, ArchiveType archiveType) {
+    try {
+      File archiveFile = writeArchive(content);
 
-			File project = folder.newFolder();
-			switch (archiveType) {
-				case ZIP:
-					unzip(archiveFile, project);
-					break;
-				case TGZ:
-					untar(archiveFile, project);
-					break;
-			}
-			return new ProjectAssert(project);
-		}
-		catch (Exception e) {
-			throw new IllegalStateException("Cannot unpack archive", e);
-		}
-	}
+      File project = folder.newFolder();
+      switch (archiveType) {
+        case ZIP:
+          unzip(archiveFile, project);
+          break;
+        case TGZ:
+          untar(archiveFile, project);
+          break;
+      }
+      return new ProjectAssert(project);
+    } catch (Exception e) {
+      throw new IllegalStateException("Cannot unpack archive", e);
+    }
+  }
 
-	private void untar(File archiveFile, File project) {
-		Untar expand = new Untar();
-		expand.setProject(new Project());
-		expand.setDest(project);
-		expand.setSrc(archiveFile);
-		Untar.UntarCompressionMethod method = new Untar.UntarCompressionMethod();
-		method.setValue("gzip");
-		expand.setCompression(method);
-		expand.execute();
-	}
+  private void untar(File archiveFile, File project) {
+    Untar expand = new Untar();
+    expand.setProject(new Project());
+    expand.setDest(project);
+    expand.setSrc(archiveFile);
+    Untar.UntarCompressionMethod method = new Untar.UntarCompressionMethod();
+    method.setValue("gzip");
+    expand.setCompression(method);
+    expand.execute();
+  }
 
-	private void unzip(File archiveFile, File project) {
-		Expand expand = new Expand();
-		expand.setProject(new Project());
-		expand.setDest(project);
-		expand.setSrc(archiveFile);
-		expand.execute();
-	}
+  private void unzip(File archiveFile, File project) {
+    Expand expand = new Expand();
+    expand.setProject(new Project());
+    expand.setDest(project);
+    expand.setSrc(archiveFile);
+    expand.execute();
+  }
 
-	protected File writeArchive(byte[] body) throws IOException {
-		File archiveFile = folder.newFile();
-		try (FileOutputStream stream = new FileOutputStream(archiveFile)) {
-			stream.write(body);
-		}
-		return archiveFile;
-	}
+  protected File writeArchive(byte[] body) throws IOException {
+    File archiveFile = folder.newFile();
+    try (FileOutputStream stream = new FileOutputStream(archiveFile)) {
+      stream.write(body);
+    }
+    return archiveFile;
+  }
 
-	protected JSONObject readJsonFrom(String path) {
-		try {
-			ClassPathResource resource = new ClassPathResource(path);
-			try (InputStream stream = resource.getInputStream()) {
-				String json = StreamUtils.copyToString(stream, Charset.forName("UTF-8"));
-				String placeholder = "";
-				if (this instanceof AbstractInitializrControllerIntegrationTests) {
-					placeholder = ((AbstractInitializrControllerIntegrationTests) this).host;
-				}
-				if (this instanceof AbstractFullStackInitializrIntegrationTests) {
-					AbstractFullStackInitializrIntegrationTests test =
-							(AbstractFullStackInitializrIntegrationTests) this;
-					placeholder = test.host + ":" + test.port;
-				}
-				// Let's parse the port as it is random
-				// TODO: put the port back somehow so it appears in stubs
-				String content = json.replaceAll("@host@", placeholder);
-				return new JSONObject(content);
-			}
-		}
-		catch (Exception e) {
-			throw new IllegalStateException("Cannot read JSON from path=" + path);
-		}
-	}
+  protected JSONObject readJsonFrom(String path) {
+    try {
+      ClassPathResource resource = new ClassPathResource(path);
+      try (InputStream stream = resource.getInputStream()) {
+        String json = StreamUtils.copyToString(stream, Charset.forName("UTF-8"));
+        String placeholder = "";
+        if (this instanceof AbstractInitializrControllerIntegrationTests) {
+          placeholder = ((AbstractInitializrControllerIntegrationTests) this).host;
+        }
+        if (this instanceof AbstractFullStackInitializrIntegrationTests) {
+          AbstractFullStackInitializrIntegrationTests test =
+              (AbstractFullStackInitializrIntegrationTests) this;
+          placeholder = test.host + ":" + test.port;
+        }
+        // Let's parse the port as it is random
+        // TODO: put the port back somehow so it appears in stubs
+        String content = json.replaceAll("@host@", placeholder);
+        return new JSONObject(content);
+      }
+    } catch (Exception e) {
+      throw new IllegalStateException("Cannot read JSON from path=" + path);
+    }
+  }
 
-	public RestTemplate getRestTemplate() {
-		return restTemplate;
-	}
+  public RestTemplate getRestTemplate() {
+    return restTemplate;
+  }
 
-	private enum ArchiveType {
-		ZIP,
+  private enum ArchiveType {
+    ZIP,
 
-		TGZ
-	}
+    TGZ
+  }
 
-	@EnableAutoConfiguration
-	public static class Config {
+  @EnableAutoConfiguration
+  public static class Config {
 
-		@Bean
-		public InitializrMetadataProvider initializrMetadataProvider(
-				InitializrProperties properties) {
-			return new DefaultInitializrMetadataProvider(InitializrMetadataBuilder
-					.fromInitializrProperties(properties).build(), new ObjectMapper(),
-					new RestTemplate()) {
-				@Override
-				protected void updateInitializrMetadata(InitializrMetadata metadata) {
-					// Disable metadata fetching from spring.io
-				}
-			};
-		}
+    @Bean
+    public InitializrMetadataProvider initializrMetadataProvider(
+        InitializrProperties properties) {
+      return new DefaultInitializrMetadataProvider(InitializrMetadataBuilder
+          .fromInitializrProperties(properties).build(), new ObjectMapper(),
+          new RestTemplate()) {
+        @Override
+        protected void updateInitializrMetadata(InitializrMetadata metadata) {
+          // Disable metadata fetching from spring.io
+        }
+      };
+    }
 
-	}
+  }
 }

@@ -16,41 +16,40 @@
 
 package com.intellecteu.catalyst.web.project;
 
-import com.intellecteu.catalyst.web.AbstractInitializrControllerIntegrationTests;
-import com.intellecteu.catalyst.test.generator.PomAssert;
-import org.junit.Test;
-
-import org.springframework.test.context.ActiveProfiles;
-
 import static org.junit.Assert.assertTrue;
+
+import com.intellecteu.catalyst.test.generator.PomAssert;
+import com.intellecteu.catalyst.web.AbstractInitializrControllerIntegrationTests;
+import org.junit.Test;
+import org.springframework.test.context.ActiveProfiles;
 
 /**
  * @author Stephane Nicoll
  */
-@ActiveProfiles({ "test-default", "test-custom-defaults" })
+@ActiveProfiles({"test-default", "test-custom-defaults"})
 public class MainControllerDefaultsIntegrationTests
-		extends AbstractInitializrControllerIntegrationTests {
+    extends AbstractInitializrControllerIntegrationTests {
 
-	// see defaults customization
+  // see defaults customization
 
-	@Test
-	public void generateDefaultPom() {
-		String content = getRestTemplate().getForObject(
-				createUrl("/pom.xml?style=web"), String.class);
-		PomAssert pomAssert = new PomAssert(content);
-		pomAssert.hasGroupId("org.foo").hasArtifactId("foo-bar")
-				.hasVersion("1.2.4-SNAPSHOT").hasPackaging("jar")
-				.hasName("FooBar").hasDescription("FooBar Project");
-	}
+  @Test
+  public void generateDefaultPom() {
+    String content = getRestTemplate().getForObject(
+        createUrl("/pom.xml?style=web"), String.class);
+    PomAssert pomAssert = new PomAssert(content);
+    pomAssert.hasGroupId("org.foo").hasArtifactId("foo-bar")
+        .hasVersion("1.2.4-SNAPSHOT").hasPackaging("jar")
+        .hasName("FooBar").hasDescription("FooBar Project");
+  }
 
-	@Test
-	public void defaultsAppliedToHome() {
-		String body = htmlHome();
-		assertTrue("custom groupId not found", body.contains("org.foo"));
-		assertTrue("custom artifactId not found", body.contains("foo-bar"));
-		assertTrue("custom name not found", body.contains("FooBar"));
-		assertTrue("custom description not found", body.contains("FooBar Project"));
-		assertTrue("custom package not found", body.contains("org.foo.demo"));
-	}
+  @Test
+  public void defaultsAppliedToHome() {
+    String body = htmlHome();
+    assertTrue("custom groupId not found", body.contains("org.foo"));
+    assertTrue("custom artifactId not found", body.contains("foo-bar"));
+    assertTrue("custom name not found", body.contains("FooBar"));
+    assertTrue("custom description not found", body.contains("FooBar Project"));
+    assertTrue("custom package not found", body.contains("org.foo.demo"));
+  }
 
 }

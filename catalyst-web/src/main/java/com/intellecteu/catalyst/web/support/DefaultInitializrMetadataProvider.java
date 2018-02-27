@@ -16,72 +16,69 @@
 
 package com.intellecteu.catalyst.web.support;
 
-import java.util.List;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.intellecteu.catalyst.metadata.DefaultMetadataElement;
 import com.intellecteu.catalyst.metadata.InitializrMetadata;
 import com.intellecteu.catalyst.metadata.InitializrMetadataProvider;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 
 /**
- * A default {@link InitializrMetadataProvider} that is able to refresh
- * the metadata with the status of the main spring.io site.
+ * A default {@link InitializrMetadataProvider} that is able to refresh the metadata with the status
+ * of the main spring.io site.
  *
  * @author Stephane Nicoll
  */
 public class DefaultInitializrMetadataProvider implements InitializrMetadataProvider {
 
-	private static final Logger log = LoggerFactory
-			.getLogger(DefaultInitializrMetadataProvider.class);
+  private static final Logger log = LoggerFactory
+      .getLogger(DefaultInitializrMetadataProvider.class);
 
-	private final InitializrMetadata metadata;
-	private final ObjectMapper objectMapper;
-	private final RestTemplate restTemplate;
+  private final InitializrMetadata metadata;
+  private final ObjectMapper objectMapper;
+  private final RestTemplate restTemplate;
 
-	public DefaultInitializrMetadataProvider(InitializrMetadata metadata,
-			ObjectMapper objectMapper, RestTemplate restTemplate) {
-		this.metadata = metadata;
-		this.objectMapper = objectMapper;
-		this.restTemplate = restTemplate;
-	}
+  public DefaultInitializrMetadataProvider(InitializrMetadata metadata,
+      ObjectMapper objectMapper, RestTemplate restTemplate) {
+    this.metadata = metadata;
+    this.objectMapper = objectMapper;
+    this.restTemplate = restTemplate;
+  }
 
-	@Override
-	@Cacheable(value = "initializr.metadata", key = "'metadata'")
-	public InitializrMetadata get() {
-		updateInitializrMetadata(metadata);
-		return metadata;
-	}
+  @Override
+  @Cacheable(value = "initializr.metadata", key = "'metadata'")
+  public InitializrMetadata get() {
+    updateInitializrMetadata(metadata);
+    return metadata;
+  }
 
-	protected void updateInitializrMetadata(InitializrMetadata metadata) {
-		List<DefaultMetadataElement> bootVersions = fetchBootVersions();
-		if (bootVersions != null && !bootVersions.isEmpty()) {
-			if (bootVersions.stream().noneMatch(DefaultMetadataElement::isDefault)) {
-				// No default specified
-				bootVersions.get(0).setDefault(true);
-			}
-			metadata.updateSpringBootVersions(bootVersions);
-		}
-	}
+  protected void updateInitializrMetadata(InitializrMetadata metadata) {
+    List<DefaultMetadataElement> bootVersions = fetchBootVersions();
+    if (bootVersions != null && !bootVersions.isEmpty()) {
+      if (bootVersions.stream().noneMatch(DefaultMetadataElement::isDefault)) {
+        // No default specified
+        bootVersions.get(0).setDefault(true);
+      }
+      metadata.updateSpringBootVersions(bootVersions);
+    }
+  }
 
-	protected List<DefaultMetadataElement> fetchBootVersions() {
-		String url = metadata.getConfiguration().getEnv().getSpringBootMetadataUrl();
-		if (StringUtils.hasText(url)) {
-			try {
-				log.info("Fetching boot metadata from {}", url);
-				return new SpringBootMetadataReader(objectMapper, restTemplate, url)
-						.getBootVersions();
-			}
-			catch (Exception e) {
-				log.warn("Failed to fetch spring boot metadata", e);
-			}
-		}
-		return null;
-	}
+  protected List<DefaultMetadataElement> fetchBootVersions() {
+    String url = metadata.getConfiguration().getEnv().getSpringBootMetadataUrl();
+    if (StringUtils.hasText(url)) {
+      try {
+        log.info("Fetching boot metadata from {}", url);
+        return new SpringBootMetadataReader(objectMapper, restTemplate, url)
+            .getBootVersions();
+      } catch (Exception e) {
+        log.warn("Failed to fetch spring boot metadata", e);
+      }
+    }
+    return null;
+  }
 
 }
