@@ -241,6 +241,15 @@
             "name": "My API",
             "scope": "provided",
             "bom": "my-api-bom"
+          },
+          {
+            "starter": true,
+            "artifactId": "spring-boot-starter-camel-foobar",
+            "groupId": "org.springframework.boot",
+            "id": "camel-foobar",
+            "name": "My Camel dep",
+            "scope": "compile",
+            "category": "camel"
           }
         ],
         "name": "Other"
