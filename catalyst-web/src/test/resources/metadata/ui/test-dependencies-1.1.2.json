@@ -33,6 +33,12 @@
       "id": "my-api",
       "name": "My API",
       "group": "Other"
+    },
+    {
+      "id": "camel-foobar",
+      "name": "My Camel dep",
+      "group": "Other",
+      "category": "camel"
     }
   ]
 }
