@@ -16,35 +16,33 @@
 
 package com.intellecteu.catalyst.service.extension;
 
-import java.util.Arrays;
-import java.util.List;
-
 import com.intellecteu.catalyst.generator.ProjectRequest;
 import com.intellecteu.catalyst.metadata.InitializrMetadata;
 import com.intellecteu.catalyst.util.Version;
-
+import java.util.Arrays;
+import java.util.List;
 import org.springframework.stereotype.Component;
 
 /**
- * As of Spring Boot 2.0, Java8 is mandatory so this extension makes sure that the
- * java version is forced.
+ * As of Spring Boot 2.0, Java8 is mandatory so this extension makes sure that the java version is
+ * forced.
  *
  * @author Stephane Nicoll
  */
 @Component
 class SpringBoot2RequestPostProcessor extends AbstractProjectRequestPostProcessor {
 
-	private static final Version VERSION_2_0_0_M1 = Version.parse("2.0.0.M1");
+  private static final Version VERSION_2_0_0_M1 = Version.parse("2.0.0.M1");
 
-	private static final List<String> VALID_VERSIONS = Arrays.asList("1.8", "9");
+  private static final List<String> VALID_VERSIONS = Arrays.asList("1.8", "9");
 
-	@Override
-	public void postProcessAfterResolution(ProjectRequest request,
-			InitializrMetadata metadata) {
-		if (!VALID_VERSIONS.contains(request.getJavaVersion())
-				&& isSpringBootVersionAtLeastAfter(request, VERSION_2_0_0_M1)) {
-			request.setJavaVersion("1.8");
-		}
-	}
+  @Override
+  public void postProcessAfterResolution(ProjectRequest request,
+      InitializrMetadata metadata) {
+    if (!VALID_VERSIONS.contains(request.getJavaVersion())
+        && isSpringBootVersionAtLeastAfter(request, VERSION_2_0_0_M1)) {
+      request.setJavaVersion("1.8");
+    }
+  }
 
 }

@@ -16,17 +16,17 @@
 
 package com.intellecteu.catalyst.service;
 
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.intellecteu.catalyst.metadata.InitializrMetadata;
 import com.intellecteu.catalyst.metadata.InitializrMetadataBuilder;
 import com.intellecteu.catalyst.metadata.InitializrMetadataProvider;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
@@ -38,8 +38,6 @@ import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 /**
  * Basic smoke tests for {@link InitializrService}.
  *
@@ -49,39 +47,39 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class InitializrServiceSmokeTests {
 
-	@Autowired
-	private TestRestTemplate restTemplate;
+  @Autowired
+  private TestRestTemplate restTemplate;
 
-	@Autowired
-	private InitializrMetadataProvider metadataProvider;
+  @Autowired
+  private InitializrMetadataProvider metadataProvider;
 
-	@Test
-	public void metadataCanBeSerialized() throws URISyntaxException, IOException {
-		RequestEntity<Void> request = RequestEntity.get(new URI("/"))
-				.accept(MediaType.parseMediaType("application/vnd.initializr.v2.1+json"))
-				.build();
-		ResponseEntity<String> response = this.restTemplate.exchange(request, String.class);
-		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-		new ObjectMapper().readTree(response.getBody());
-	}
+  @Test
+  public void metadataCanBeSerialized() throws URISyntaxException, IOException {
+    RequestEntity<Void> request = RequestEntity.get(new URI("/"))
+        .accept(MediaType.parseMediaType("application/vnd.initializr.v2.1+json"))
+        .build();
+    ResponseEntity<String> response = this.restTemplate.exchange(request, String.class);
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    new ObjectMapper().readTree(response.getBody());
+  }
 
-	@Test
-	public void configurationCanBeSerialized() throws URISyntaxException {
-		RequestEntity<Void> request = RequestEntity.get(new URI("/metadata/config"))
-				.accept(MediaType.APPLICATION_JSON)
-				.build();
-		ResponseEntity<String> response = this.restTemplate.exchange(request, String.class);
-		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-		InitializrMetadata actual = InitializrMetadataBuilder.create()
-				.withInitializrMetadata(new ByteArrayResource(
-						response.getBody().getBytes()))
-				.build();
-		assertThat(actual).isNotNull();
-		InitializrMetadata expected = metadataProvider.get();
-		assertThat(actual.getDependencies().getAll().size())
-				.isEqualTo(expected.getDependencies().getAll().size());
-		assertThat(actual.getConfiguration().getEnv().getBoms().size())
-				.isEqualTo(expected.getConfiguration().getEnv().getBoms().size());
-	}
+  @Test
+  public void configurationCanBeSerialized() throws URISyntaxException {
+    RequestEntity<Void> request = RequestEntity.get(new URI("/metadata/config"))
+        .accept(MediaType.APPLICATION_JSON)
+        .build();
+    ResponseEntity<String> response = this.restTemplate.exchange(request, String.class);
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    InitializrMetadata actual = InitializrMetadataBuilder.create()
+        .withInitializrMetadata(new ByteArrayResource(
+            response.getBody().getBytes()))
+        .build();
+    assertThat(actual).isNotNull();
+    InitializrMetadata expected = metadataProvider.get();
+    assertThat(actual.getDependencies().getAll().size())
+        .isEqualTo(expected.getDependencies().getAll().size());
+    assertThat(actual.getConfiguration().getEnv().getBoms().size())
+        .isEqualTo(expected.getConfiguration().getEnv().getBoms().size());
+  }
 
 }

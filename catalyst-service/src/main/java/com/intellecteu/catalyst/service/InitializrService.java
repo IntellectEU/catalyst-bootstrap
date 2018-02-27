@@ -16,11 +16,9 @@
 
 package com.intellecteu.catalyst.service;
 
-import java.util.concurrent.Executor;
-
 import com.intellecteu.catalyst.metadata.InitializrMetadataProvider;
 import com.intellecteu.catalyst.web.project.LegacyStsController;
-
+import java.util.concurrent.Executor;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
@@ -32,8 +30,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.servlet.resource.ResourceUrlProvider;
 
 /**
- * Initializr service application. Enables legacy STS support for older
- * clients.
+ * Initializr service application. Enables legacy STS support for older clients.
  *
  * @author Stephane Nicoll
  */
@@ -41,31 +38,31 @@ import org.springframework.web.servlet.resource.ResourceUrlProvider;
 @EnableCaching
 public class InitializrService {
 
-	public static void main(String[] args) {
-		SpringApplication.run(InitializrService.class, args);
-	}
+  public static void main(String[] args) {
+    SpringApplication.run(InitializrService.class, args);
+  }
 
-	@Bean
-	@SuppressWarnings("deprecation")
-	public LegacyStsController legacyStsController(InitializrMetadataProvider metadataProvider,
-			ResourceUrlProvider resourceUrlProvider) {
-		return new LegacyStsController(metadataProvider, resourceUrlProvider);
-	}
+  @Bean
+  @SuppressWarnings("deprecation")
+  public LegacyStsController legacyStsController(InitializrMetadataProvider metadataProvider,
+      ResourceUrlProvider resourceUrlProvider) {
+    return new LegacyStsController(metadataProvider, resourceUrlProvider);
+  }
 
-	@Configuration
-	@EnableAsync
-	static class AsyncConfiguration extends AsyncConfigurerSupport {
+  @Configuration
+  @EnableAsync
+  static class AsyncConfiguration extends AsyncConfigurerSupport {
 
-		@Override
-		public Executor getAsyncExecutor() {
-			ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-			executor.setCorePoolSize(1);
-			executor.setMaxPoolSize(5);
-			executor.setThreadNamePrefix("catalyst-");
-			executor.initialize();
-			return executor;
-		}
+    @Override
+    public Executor getAsyncExecutor() {
+      ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+      executor.setCorePoolSize(1);
+      executor.setMaxPoolSize(5);
+      executor.setThreadNamePrefix("catalyst-");
+      executor.initialize();
+      return executor;
+    }
 
-	}
+  }
 
 }

@@ -21,31 +21,29 @@ import com.intellecteu.catalyst.generator.ProjectRequestPostProcessor;
 import com.intellecteu.catalyst.metadata.Dependency;
 import com.intellecteu.catalyst.metadata.InitializrMetadata;
 import com.intellecteu.catalyst.util.Version;
-
 import org.springframework.stereotype.Component;
 
 /**
- * A {@link ProjectRequestPostProcessor} that automatically adds
- * {@code spring-security-test} when Spring Security is selected.
+ * A {@link ProjectRequestPostProcessor} that automatically adds {@code spring-security-test} when
+ * Spring Security is selected.
  *
  * @author Stephane Nicoll
  */
 @Component
 class SpringSecurityTestRequestPostProcessor extends AbstractProjectRequestPostProcessor {
 
-	private static final Version VERSION_1_3_0 = Version.parse("1.3.0.RELEASE");
+  static final Dependency SPRING_SECURITY_TEST = Dependency.withId(
+      "spring-security-test", "org.springframework.security",
+      "spring-security-test", null, Dependency.SCOPE_TEST);
+  private static final Version VERSION_1_3_0 = Version.parse("1.3.0.RELEASE");
 
-	static final Dependency SPRING_SECURITY_TEST = Dependency.withId(
-			"spring-security-test", "org.springframework.security",
-			"spring-security-test", null, Dependency.SCOPE_TEST);
-
-	@Override
-	public void postProcessAfterResolution(ProjectRequest request,
-			InitializrMetadata metadata) {
-		if (hasDependency(request, "security")
-				&& isSpringBootVersionAtLeastAfter(request, VERSION_1_3_0)) {
-			request.getResolvedDependencies().add(SPRING_SECURITY_TEST);
-		}
-	}
+  @Override
+  public void postProcessAfterResolution(ProjectRequest request,
+      InitializrMetadata metadata) {
+    if (hasDependency(request, "security")
+        && isSpringBootVersionAtLeastAfter(request, VERSION_1_3_0)) {
+      request.getResolvedDependencies().add(SPRING_SECURITY_TEST);
+    }
+  }
 
 }

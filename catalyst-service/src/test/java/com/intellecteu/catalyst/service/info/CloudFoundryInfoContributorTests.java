@@ -16,46 +16,43 @@
 
 package com.intellecteu.catalyst.service.info;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Java6Assertions.entry;
+
 import java.util.Map;
-
 import org.junit.Test;
-
 import org.springframework.boot.actuate.info.Info;
 import org.springframework.core.env.Environment;
 import org.springframework.mock.env.MockEnvironment;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Java6Assertions.entry;
-
 /**
- *
  * @author Stephane Nicoll
  */
 public class CloudFoundryInfoContributorTests {
 
-	private final MockEnvironment environment = new MockEnvironment();
+  private final MockEnvironment environment = new MockEnvironment();
 
-	@Test
-	public void noVcap() {
-		Info info = getInfo(this.environment);
-		assertThat(info.getDetails()).isEmpty();
-	}
+  private static Info getInfo(Environment env) {
+    Info.Builder builder = new Info.Builder();
+    new CloudFoundryInfoContributor(env).contribute(builder);
+    return builder.build();
+  }
 
-	@Test
-	public void applicationName() {
-		this.environment.setProperty("vcap.application.name", "foo-bar");
-		Info info = getInfo(this.environment);
-		assertThat(info.getDetails()).containsOnlyKeys("app");
-		Object appDetails = info.getDetails().get("app");
-		assertThat(appDetails).isInstanceOf(Map.class);
-		assertThat((Map<String, Object>) appDetails).containsOnly(
-				entry("name", "foo-bar"));
-	}
+  @Test
+  public void noVcap() {
+    Info info = getInfo(this.environment);
+    assertThat(info.getDetails()).isEmpty();
+  }
 
-	private static Info getInfo(Environment env) {
-		Info.Builder builder = new Info.Builder();
-		new CloudFoundryInfoContributor(env).contribute(builder);
-		return builder.build();
-	}
+  @Test
+  public void applicationName() {
+    this.environment.setProperty("vcap.application.name", "foo-bar");
+    Info info = getInfo(this.environment);
+    assertThat(info.getDetails()).containsOnlyKeys("app");
+    Object appDetails = info.getDetails().get("app");
+    assertThat(appDetails).isInstanceOf(Map.class);
+    assertThat((Map<String, Object>) appDetails).containsOnly(
+        entry("name", "foo-bar"));
+  }
 
 }

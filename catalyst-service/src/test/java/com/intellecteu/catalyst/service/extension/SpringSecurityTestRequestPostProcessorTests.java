@@ -26,43 +26,42 @@ import org.junit.Test;
  * @author Stephane Nicoll
  */
 public class SpringSecurityTestRequestPostProcessorTests
-		extends AbstractRequestPostProcessorTests {
+    extends AbstractRequestPostProcessorTests {
 
-	@Test
-	public void securityTestIsAddedWithSecurity() {
-		ProjectRequest request = createProjectRequest("security");
-		generateMavenPom(request)
-				.hasSpringBootStarterDependency("security")
-				.hasSpringBootStarterTest()
-				.hasDependency(springSecurityTest())
-				.hasDependenciesCount(3);
-	}
+  private static Dependency springSecurityTest() {
+    Dependency dependency = Dependency.withId("spring-security-test",
+        "org.springframework.security", "spring-security-test");
+    dependency.setScope(Dependency.SCOPE_TEST);
+    return dependency;
+  }
 
-	@Test
-	public void securityTestIsNotAddedBefore13() {
-		ProjectRequest request = createProjectRequest("security");
-		request.setBootVersion("1.2.7.RELEASE");
-		generateMavenPom(request)
-				.hasSpringBootStarterDependency("security")
-				.hasSpringBootStarterTest()
-				.hasDependenciesCount(2);
-	}
+  @Test
+  public void securityTestIsAddedWithSecurity() {
+    ProjectRequest request = createProjectRequest("security");
+    generateMavenPom(request)
+        .hasSpringBootStarterDependency("security")
+        .hasSpringBootStarterTest()
+        .hasDependency(springSecurityTest())
+        .hasDependenciesCount(3);
+  }
 
-	@Test
-	public void securityTestIsNotAddedWithoutSpringSecurity() {
-		ProjectRequest request = createProjectRequest("web");
-		generateMavenPom(request)
-				.hasSpringBootStarterDependency("web")
-				.hasSpringBootStarterTest()
-				.hasDependenciesCount(2);
-	}
+  @Test
+  public void securityTestIsNotAddedBefore13() {
+    ProjectRequest request = createProjectRequest("security");
+    request.setBootVersion("1.2.7.RELEASE");
+    generateMavenPom(request)
+        .hasSpringBootStarterDependency("security")
+        .hasSpringBootStarterTest()
+        .hasDependenciesCount(2);
+  }
 
-
-	private static Dependency springSecurityTest() {
-		Dependency dependency = Dependency.withId("spring-security-test",
-				"org.springframework.security", "spring-security-test");
-		dependency.setScope(Dependency.SCOPE_TEST);
-		return dependency;
-	}
+  @Test
+  public void securityTestIsNotAddedWithoutSpringSecurity() {
+    ProjectRequest request = createProjectRequest("web");
+    generateMavenPom(request)
+        .hasSpringBootStarterDependency("web")
+        .hasSpringBootStarterTest()
+        .hasDependenciesCount(2);
+  }
 
 }
