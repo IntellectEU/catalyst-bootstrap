@@ -194,6 +194,7 @@ initializr:
           links:
             - rel: guide
               href: http://camel.apache.org/file2.html
+          category: "camel"
         - name: Camel Rest Endpoint
           id: camel-rest-endpoint
           groupId: org.apache.camel
@@ -205,6 +206,7 @@ initializr:
           links:
             - rel: guide
               href: http://camel.apache.org/rest-dsl.html
+          category: "camel"
         - name: Camel MQTT Endpoint
           description: "Communicate with MQTT compliant message brokers, like Apache ActiveMQ or Mosquitto"
           id: camel-mqtt-endpoint
@@ -214,6 +216,7 @@ initializr:
           links:
             - rel: guide
               href: http://camel.apache.org/mqtt.html
+          category: "camel"
         - name: Camel SQL Endpoint
           id: camel-sql-endpoint
           groupId: org.apache.camel
@@ -225,6 +228,7 @@ initializr:
           links:
             - rel: guide
               href: http://camel.apache.org/sql-component.html
+          category: "camel"
     - name: Core
       content:
         - name: DevTools
