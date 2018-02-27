@@ -16,63 +16,62 @@
 
 package com.intellecteu.catalyst.web.mapper;
 
-import java.util.List;
-
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.intellecteu.catalyst.metadata.Dependency;
 import com.intellecteu.catalyst.metadata.Type;
-
+import java.util.List;
 import org.springframework.hateoas.TemplateVariable;
 import org.springframework.hateoas.TemplateVariables;
 import org.springframework.hateoas.UriTemplate;
 
 /**
- * A {@link InitializrMetadataJsonMapper} handling the metadata format for v2.1
- * <p>
- * Version 2.1 brings the "versionRange" attribute for a dependency to restrict
- * the Spring Boot versions that can be used against it. That version also adds
- * an additional `dependencies` endpoint.
+ * A {@link InitializrMetadataJsonMapper} handling the metadata format for v2.1 <p> Version 2.1
+ * brings the "versionRange" attribute for a dependency to restrict the Spring Boot versions that
+ * can be used against it. That version also adds an additional `dependencies` endpoint.
  *
  * @author Stephane Nicoll
  */
 public class InitializrMetadataV21JsonMapper extends InitializrMetadataV2JsonMapper {
 
-	private final TemplateVariables dependenciesVariables;
+  private final TemplateVariables dependenciesVariables;
 
-	public InitializrMetadataV21JsonMapper() {
-		this.dependenciesVariables = new TemplateVariables(
-				new TemplateVariable("bootVersion",
-						TemplateVariable.VariableType.REQUEST_PARAM)
-		);
-	}
+  public InitializrMetadataV21JsonMapper() {
+    this.dependenciesVariables = new TemplateVariables(
+        new TemplateVariable("bootVersion",
+            TemplateVariable.VariableType.REQUEST_PARAM)
+    );
+  }
 
-	@Override
-	protected ObjectNode links(ObjectNode parent, List<Type> types, String appUrl) {
-		ObjectNode links = super.links(parent, types, appUrl);
-		links.set("dependencies", dependenciesLink(appUrl));
-		parent.set("_links", links);
-		return links;
-	}
+  @Override
+  protected ObjectNode links(ObjectNode parent, List<Type> types, String appUrl) {
+    ObjectNode links = super.links(parent, types, appUrl);
+    links.set("dependencies", dependenciesLink(appUrl));
+    parent.set("_links", links);
+    return links;
+  }
 
-	@Override
-	protected ObjectNode mapDependency(Dependency dependency) {
-		ObjectNode content = mapValue(dependency);
-		if (dependency.getVersionRange() != null) {
-			content.put("versionRange", dependency.getVersionRange());
-		}
-		if (dependency.getLinks() != null && !dependency.getLinks().isEmpty()) {
-			content.set("_links", LinkMapper.mapLinks(dependency.getLinks()));
-		}
-		return content;
-	}
+  @Override
+  protected ObjectNode mapDependency(Dependency dependency) {
+    ObjectNode content = mapValue(dependency);
+    if (dependency.getVersionRange() != null) {
+      content.put("versionRange", dependency.getVersionRange());
+    }
+    if (dependency.getLinks() != null && !dependency.getLinks().isEmpty()) {
+      content.set("_links", LinkMapper.mapLinks(dependency.getLinks()));
+    }
+    if (dependency.getCategory() != null) {
+      content.put("category", dependency.getCategory());
+    }
+    return content;
+  }
 
-	private ObjectNode dependenciesLink(String appUrl) {
-		String uri = appUrl != null ? appUrl + "/dependencies" : "/dependencies";
-		UriTemplate uriTemplate = new UriTemplate(uri, this.dependenciesVariables);
-		ObjectNode result = nodeFactory().objectNode();
-		result.put("href", uriTemplate.toString());
-		result.put("templated", true);
-		return result;
-	}
+  private ObjectNode dependenciesLink(String appUrl) {
+    String uri = appUrl != null ? appUrl + "/dependencies" : "/dependencies";
+    UriTemplate uriTemplate = new UriTemplate(uri, this.dependenciesVariables);
+    ObjectNode result = nodeFactory().objectNode();
+    result.put("href", uriTemplate.toString());
+    result.put("templated", true);
+    return result;
+  }
 
 }

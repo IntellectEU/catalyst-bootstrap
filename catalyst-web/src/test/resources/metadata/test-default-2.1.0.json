@@ -90,6 +90,11 @@
           {
             "id": "my-api",
             "name": "My API"
+          },
+          {
+            "id": "camel-foobar",
+            "name": "My Camel dep",
+            "category": "camel"
           }
         ]
       }

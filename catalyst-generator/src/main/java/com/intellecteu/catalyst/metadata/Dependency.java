@@ -45,6 +45,8 @@ public class Dependency extends MetadataElement implements Describable {
   public static final List<String> SCOPE_ALL = Arrays.asList(SCOPE_COMPILE,
       SCOPE_RUNTIME, SCOPE_COMPILE_ONLY, SCOPE_PROVIDED, SCOPE_TEST);
 
+  public static final String CATEGORY_CAMEL = "camel";
+
   private List<String> aliases = new ArrayList<>();
   private List<String> facets = new ArrayList<>();
   private String groupId;
@@ -78,8 +80,7 @@ public class Dependency extends MetadataElement implements Describable {
 
   private List<Link> links = new ArrayList<>();
 
-  @JsonInclude(JsonInclude.Include.NON_DEFAULT)
-  private DependencyCategory category;
+  private String category;
 
   public Dependency() {
   }
@@ -115,7 +116,7 @@ public class Dependency extends MetadataElement implements Describable {
   }
 
   public static Dependency withId(String id, String groupId, String artifactId,
-      String version, String scope, DependencyCategory category) {
+      String version, String scope, String category) {
     Dependency dependency = new Dependency();
     dependency.setId(id);
     dependency.groupId = groupId;
@@ -428,11 +429,11 @@ public class Dependency extends MetadataElement implements Describable {
         : null;
   }
 
-  public DependencyCategory getCategory() {
+  public String getCategory() {
     return category;
   }
 
-  public void setCategory(DependencyCategory category) {
+  public void setCategory(String category) {
     this.category = category;
   }
 

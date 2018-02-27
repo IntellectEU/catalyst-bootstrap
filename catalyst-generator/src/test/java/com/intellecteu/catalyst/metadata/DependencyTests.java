@@ -297,9 +297,9 @@ public class DependencyTests {
   @Test
   public void camelDependencyCategoryIsSupported() {
     Dependency dependency = Dependency
-        .withId("web", null, null, "0.3.0.RELEASE", null, DependencyCategory.CAMEL);
+        .withId("web", null, null, "0.3.0.RELEASE", null, Dependency.CATEGORY_CAMEL);
     dependency.resolve();
-    assertEquals(DependencyCategory.CAMEL, dependency.getCategory());
+    assertEquals(Dependency.CATEGORY_CAMEL, dependency.getCategory());
   }
 
 }

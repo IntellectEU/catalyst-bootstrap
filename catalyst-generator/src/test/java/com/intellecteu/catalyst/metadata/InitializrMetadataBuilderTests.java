@@ -16,21 +16,19 @@
 
 package com.intellecteu.catalyst.metadata;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import java.net.URL;
 import java.util.Map;
 import java.util.Properties;
-
 import org.junit.Test;
-
 import org.springframework.beans.factory.config.YamlPropertiesFactoryBean;
 import org.springframework.boot.bind.PropertiesConfigurationFactory;
 import org.springframework.core.env.MutablePropertySources;
 import org.springframework.core.env.PropertiesPropertySource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 /**
  * Tests for {@link InitializrMetadataBuilder}.
@@ -200,7 +198,7 @@ public class InitializrMetadataBuilderTests {
 
 	private static void assertDefaultConfig(InitializrMetadata metadata) {
 		assertNotNull(metadata);
-		assertEquals("Wrong number of dependencies", 9,
+		assertEquals("Wrong number of dependencies", 10,
 				metadata.getDependencies().getAll().size());
 		assertEquals("Wrong number of dependency group", 2,
 				metadata.getDependencies().getContent().size());
