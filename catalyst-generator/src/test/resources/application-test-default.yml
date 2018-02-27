@@ -97,6 +97,9 @@ initializr:
           artifactId: my-api
           scope: provided
           bom: my-api-bom
+        - name: My Camel dep
+          id: camel-foobar
+          category: camel
   types:
     - name: Maven POM
       id: maven-build

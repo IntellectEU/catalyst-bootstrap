@@ -56,6 +56,12 @@
       "scope": "provided",
       "artifactId": "my-api",
       "bom": "my-api-bom"
+    },
+    "camel-foobar": {
+      "groupId": "org.springframework.boot",
+      "artifactId": "spring-boot-starter-camel-foobar",
+      "scope": "compile",
+      "category": "camel"
     }
   }
 }
