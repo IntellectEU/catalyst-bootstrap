@@ -78,7 +78,8 @@ public class Dependency extends MetadataElement implements Describable {
 
   private List<Link> links = new ArrayList<>();
 
-  private DependencyCategory category = DependencyCategory.SPRING;
+  @JsonInclude(JsonInclude.Include.NON_DEFAULT)
+  private DependencyCategory category;
 
   public Dependency() {
   }
@@ -114,14 +115,21 @@ public class Dependency extends MetadataElement implements Describable {
   }
 
   public static Dependency withId(String id, String groupId, String artifactId,
-      String version, String scope) {
+      String version, String scope, DependencyCategory category) {
     Dependency dependency = new Dependency();
     dependency.setId(id);
     dependency.groupId = groupId;
     dependency.artifactId = artifactId;
     dependency.version = version;
     dependency.scope = (scope != null ? scope : SCOPE_COMPILE);
+    dependency.category = category;
     return dependency;
+  }
+
+  public static Dependency withId(String id, String groupId, String artifactId,
+      String version, String scope) {
+    return withId(id, groupId, artifactId, version, scope, null);
+
   }
 
   public static Dependency withId(String id, String groupId, String artifactId,

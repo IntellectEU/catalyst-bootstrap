@@ -288,10 +288,18 @@ public class DependencyTests {
   }
 
   @Test
-  public void springDependencyCategoryAsDefault() {
+  public void noDependencyCategoryAsDefault() {
     Dependency dependency = Dependency.withId("web", null, null, "0.3.0.RELEASE");
     dependency.resolve();
-    assertEquals(DependencyCategory.SPRING, dependency.getCategory());
+    assertNull(dependency.getCategory());
+  }
+
+  @Test
+  public void camelDependencyCategoryIsSupported() {
+    Dependency dependency = Dependency
+        .withId("web", null, null, "0.3.0.RELEASE", null, DependencyCategory.CAMEL);
+    dependency.resolve();
+    assertEquals(DependencyCategory.CAMEL, dependency.getCategory());
   }
 
 }
