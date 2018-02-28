@@ -1,4 +1,7 @@
 {{=<% %>=}}
+
+<%license%>
+
 package <%packageName%>;
 
 import org.apache.camel.builder.RouteBuilder;

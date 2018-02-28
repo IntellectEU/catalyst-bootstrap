@@ -295,11 +295,20 @@ public class DependencyTests {
   }
 
   @Test
-  public void camelDependencyCategoryIsSupported() {
+  public void customDependencyCategoryIsSupported() {
     Dependency dependency = Dependency
-        .withId("web", null, null, "0.3.0.RELEASE", null, Dependency.CATEGORY_CAMEL);
+        .withId("web", null, null, "0.3.0.RELEASE", null, Dependency.CATEGORY_NO_DEPENDENCY);
     dependency.resolve();
-    assertEquals(Dependency.CATEGORY_CAMEL, dependency.getCategory());
+    assertEquals(Dependency.CATEGORY_NO_DEPENDENCY, dependency.getCategory());
+  }
+
+  @Test
+  public void allowAmptyGroupAndArtifactForNodepCategory() {
+    Dependency dependency = Dependency
+        .withId("web", null, null, "0.3.0.RELEASE", null, Dependency.CATEGORY_NO_DEPENDENCY);
+    dependency.resolve();
+    assertNull(dependency.getGroupId());
+    assertNull(dependency.getArtifactId());
   }
 
 }

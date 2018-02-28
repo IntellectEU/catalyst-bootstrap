@@ -28,6 +28,11 @@
 	</properties>
 
 	<dependencies>
+		<dependency>
+			<groupId>org.apache.camel</groupId>
+			<artifactId>camel-spring-boot-starter</artifactId>
+			<version>${camel.version}</version>
+		</dependency>
 		{{#compileDependencies}}
 		<dependency>
 			<groupId>{{groupId}}</groupId>
@@ -46,7 +51,7 @@
 			<artifactId>groovy</artifactId>
 		</dependency>
 		{{/groovy}}
-		{{#kotlin}}                                                     
+		{{#kotlin}}
 		<dependency>
 			<groupId>org.jetbrains.kotlin</groupId>
 			<artifactId>{{kotlinStdlibArtifactId}}</artifactId>

@@ -141,7 +141,9 @@ public class ProjectGenerator {
 
   private static List<Dependency> filterDependencies(List<Dependency> dependencies,
       String scope) {
-    return dependencies.stream().filter(dep -> scope.equals(dep.getScope()))
+    return dependencies.stream().filter(
+        dep -> scope.equals(dep.getScope())
+            && !Dependency.CATEGORY_NO_DEPENDENCY.equals(dep.getCategory()))
         .sorted(DependencyComparator.INSTANCE)
         .collect(Collectors.toList());
   }
@@ -337,7 +339,7 @@ public class ProjectGenerator {
       }
       appProperties.append(content).append(System.lineSeparator());
     } catch (FileNotFoundException ex) {
-      log.warn("Property file for {} not found.", usecaseName, ex);
+      log.warn("Property file for {} not found: {}", usecaseName, ex.getMessage());
     }
 
   }
@@ -347,7 +349,7 @@ public class ProjectGenerator {
       write(new File(srcDir, usecaseName + "Config.java"),
           "camel/config/" + usecaseName + "Config.java", model);
     } catch (IllegalStateException ex) {
-      log.warn("Configuration file for {} not found.", usecaseName, ex);
+      log.warn("Configuration file for {} not found: {} ", usecaseName, ex.getMessage());
     }
   }
 
