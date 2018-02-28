@@ -82,6 +82,7 @@ ext {
 
 {{/buildPropertiesVersions.empty}}
 dependencies {
+	compile('org.apache.camel:camel-spring-boot-starter:${camel.version}')
 	{{#compileDependencies}}
 	compile('{{groupId}}:{{artifactId}}{{#version}}:{{version}}{{/version}}{{#type}}@{{type}}{{/type}}')
 	{{/compileDependencies}}
