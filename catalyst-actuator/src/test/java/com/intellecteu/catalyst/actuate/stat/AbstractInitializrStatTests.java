@@ -27,26 +27,26 @@ import com.intellecteu.catalyst.test.metadata.InitializrMetadataTestBuilder;
  */
 abstract class AbstractInitializrStatTests {
 
-	private final InitializrMetadata metadata = InitializrMetadataTestBuilder
-			.withDefaults()
-			.addDependencyGroup("core", "security", "validation", "aop")
-			.addDependencyGroup("web", "web", "data-rest", "jersey")
-			.addDependencyGroup("data", "data-jpa", "jdbc")
-			.addDependencyGroup("database", "h2", "mysql")
-			.build();
+  private final InitializrMetadata metadata = InitializrMetadataTestBuilder
+      .withDefaults()
+      .addDependencyGroup("core", "security", "validation", "aop")
+      .addDependencyGroup("web", "web", "data-rest", "jersey")
+      .addDependencyGroup("data", "data-jpa", "jdbc")
+      .addDependencyGroup("database", "h2", "mysql")
+      .build();
 
-	protected InitializrMetadataProvider createProvider(InitializrMetadata metadata) {
-		return new SimpleInitializrMetadataProvider(metadata);
-	}
+  protected InitializrMetadataProvider createProvider(InitializrMetadata metadata) {
+    return new SimpleInitializrMetadataProvider(metadata);
+  }
 
-	protected ProjectRequest createProjectRequest() {
-		ProjectRequest request = new ProjectRequest();
-		request.initialize(metadata);
-		return request;
-	}
+  protected ProjectRequest createProjectRequest() {
+    ProjectRequest request = new ProjectRequest();
+    request.initialize(metadata);
+    return request;
+  }
 
-	public InitializrMetadata getMetadata() {
-		return metadata;
-	}
+  public InitializrMetadata getMetadata() {
+    return metadata;
+  }
 
 }

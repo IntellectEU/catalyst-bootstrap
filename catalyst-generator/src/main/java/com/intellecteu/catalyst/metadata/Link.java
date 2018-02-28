@@ -16,6 +16,8 @@
 
 package com.intellecteu.catalyst.metadata;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Collections;
@@ -26,153 +28,143 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
-
 /**
- * Metadata for a link. Each link has a "relation" that potentially attaches a strong
- * semantic to the nature of the link. The URI of the link itself can be templated by
- * including variables in the form `{variableName}`.
- * <p>
- * An actual {@code URI} can be generated using {@code expand}, providing a mapping for
- * those variables.
+ * Metadata for a link. Each link has a "relation" that potentially attaches a strong semantic to
+ * the nature of the link. The URI of the link itself can be templated by including variables in the
+ * form `{variableName}`. <p> An actual {@code URI} can be generated using {@code expand}, providing
+ * a mapping for those variables.
  *
  * @author Dave Syer
  * @author Stephane Nicoll
  */
 public class Link {
 
-	private static final Pattern VARIABLE_REGEX = Pattern.compile("\\{(\\w+)\\}");
+  private static final Pattern VARIABLE_REGEX = Pattern.compile("\\{(\\w+)\\}");
+  @JsonIgnore
+  private final Set<String> templateVariables = new LinkedHashSet<>();
+  /**
+   * The relation of the link.
+   */
+  private String rel;
+  /**
+   * The URI the link is pointing to.
+   */
+  private String href;
+  /**
+   * Specify if the URI is templated.
+   */
+  @JsonInclude(JsonInclude.Include.NON_DEFAULT)
+  private boolean templated;
+  /**
+   * A description of the link.
+   */
+  @JsonInclude(JsonInclude.Include.NON_NULL)
+  private String description;
 
-	/**
-	 * The relation of the link.
-	 */
-	private String rel;
+  public Link() {
+  }
 
-	/**
-	 * The URI the link is pointing to.
-	 */
-	private String href;
+  private Link(String rel, String href) {
+    this(rel, href, null);
+  }
 
-	/**
-	 * Specify if the URI is templated.
-	 */
-	@JsonInclude(JsonInclude.Include.NON_DEFAULT)
-	private boolean templated;
+  private Link(String rel, String href, String description) {
+    this.rel = rel;
+    this.href = href;
+    this.description = description;
+  }
 
-	@JsonIgnore
-	private final Set<String> templateVariables = new LinkedHashSet<>();
+  private Link(String rel, String href, boolean templated) {
+    this(rel, href);
+    this.templated = templated;
+  }
 
-	/**
-	 * A description of the link.
-	 */
-	@JsonInclude(JsonInclude.Include.NON_NULL)
-	private String description;
+  public static Link create(String rel, String href) {
+    return new Link(rel, href);
+  }
 
-	public Link() {
-	}
+  public static Link create(String rel, String href, String description) {
+    return new Link(rel, href, description);
+  }
 
-	private Link(String rel, String href) {
-		this(rel, href, null);
-	}
+  public static Link create(String rel, String href, boolean templated) {
+    return new Link(rel, href, templated);
+  }
 
-	private Link(String rel, String href, String description) {
-		this.rel = rel;
-		this.href = href;
-		this.description = description;
-	}
+  public String getRel() {
+    return rel;
+  }
 
-	private Link(String rel, String href, boolean templated) {
-		this(rel, href);
-		this.templated = templated;
-	}
+  public void setRel(String rel) {
+    this.rel = rel;
+  }
 
-	public String getRel() {
-		return rel;
-	}
+  public boolean isTemplated() {
+    return templated;
+  }
 
-	public void setRel(String rel) {
-		this.rel = rel;
-	}
+  public void setTemplated(boolean templated) {
+    this.templated = templated;
+  }
 
-	public boolean isTemplated() {
-		return templated;
-	}
+  public String getDescription() {
+    return description;
+  }
 
-	public void setTemplated(boolean templated) {
-		this.templated = templated;
-	}
+  public void setDescription(String description) {
+    this.description = description;
+  }
 
-	public String getDescription() {
-		return description;
-	}
+  public String getHref() {
+    return href;
+  }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+  public void setHref(String href) {
+    this.href = href;
+  }
 
-	public String getHref() {
-		return href;
-	}
+  public Set<String> getTemplateVariables() {
+    return Collections.unmodifiableSet(templateVariables);
+  }
 
-	public Set<String> getTemplateVariables() {
-		return Collections.unmodifiableSet(templateVariables);
-	}
+  public void resolve() {
+    if (rel == null) {
+      throw new InvalidInitializrMetadataException(
+          "Invalid link " + this + ": rel attribute is mandatory");
+    }
+    if (href == null) {
+      throw new InvalidInitializrMetadataException(
+          "Invalid link " + this + ": href attribute is mandatory");
+    }
+    Matcher matcher = VARIABLE_REGEX.matcher(href);
+    while (matcher.find()) {
+      String variable = matcher.group(1);
+      this.templateVariables.add(variable);
+    }
+    this.templated = !this.templateVariables.isEmpty();
+  }
 
-	public void setHref(String href) {
-		this.href = href;
-	}
-
-	public void resolve() {
-		if (rel == null) {
-			throw new InvalidInitializrMetadataException(
-					"Invalid link " + this + ": rel attribute is mandatory");
-		}
-		if (href == null) {
-			throw new InvalidInitializrMetadataException(
-					"Invalid link " + this + ": href attribute is mandatory");
-		}
-		Matcher matcher = VARIABLE_REGEX.matcher(href);
-		while (matcher.find()) {
-			String variable = matcher.group(1);
-			this.templateVariables.add(variable);
-		}
-		this.templated = !this.templateVariables.isEmpty();
-	}
-
-	/**
-	 * Expand the link using the specified parameters.
-	 * @param parameters the parameters value
-	 * @return an URI where all variables have been expanded
-	 */
-	public URI expand(Map<String, String> parameters) {
-		AtomicReference<String> result = new AtomicReference<>(href);
-		templateVariables.forEach(var -> {
-			Object value = parameters.get(var);
-			if (value == null) {
-				throw new IllegalArgumentException(
-						"Could not expand " + href + ", missing value for '" + var + "'");
-			}
-			result.set(result.get().replace("{" + var + "}", value.toString()));
-		});
-		try {
-			return new URI(result.get());
-		}
-		catch (URISyntaxException e) {
-			throw new IllegalStateException("Invalid URL", e);
-		}
-	}
-
-	public static Link create(String rel, String href) {
-		return new Link(rel, href);
-	}
-
-	public static Link create(String rel, String href, String description) {
-		return new Link(rel, href, description);
-	}
-
-	public static Link create(String rel, String href, boolean templated) {
-		return new Link(rel, href, templated);
-	}
+  /**
+   * Expand the link using the specified parameters.
+   *
+   * @param parameters the parameters value
+   * @return an URI where all variables have been expanded
+   */
+  public URI expand(Map<String, String> parameters) {
+    AtomicReference<String> result = new AtomicReference<>(href);
+    templateVariables.forEach(var -> {
+      Object value = parameters.get(var);
+      if (value == null) {
+        throw new IllegalArgumentException(
+            "Could not expand " + href + ", missing value for '" + var + "'");
+      }
+      result.set(result.get().replace("{" + var + "}", value.toString()));
+    });
+    try {
+      return new URI(result.get());
+    } catch (URISyntaxException e) {
+      throw new IllegalStateException("Invalid URL", e);
+    }
+  }
 
 }

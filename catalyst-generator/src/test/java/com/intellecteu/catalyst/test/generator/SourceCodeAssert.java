@@ -16,16 +16,15 @@
 
 package com.intellecteu.catalyst.test.generator;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.Charset;
-
-import org.springframework.core.io.Resource;
-import org.springframework.util.StreamUtils;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.Charset;
+import org.springframework.core.io.Resource;
+import org.springframework.util.StreamUtils;
 
 /**
  * Source code assertions.
@@ -34,55 +33,54 @@ import static org.junit.Assert.assertTrue;
  */
 public class SourceCodeAssert {
 
-	private final String name;
-	private final String content;
+  private final String name;
+  private final String content;
 
-	public SourceCodeAssert(String name, String content) {
-		this.name = name;
-		this.content = content.replaceAll("\r\n", "\n");
-	}
+  public SourceCodeAssert(String name, String content) {
+    this.name = name;
+    this.content = content.replaceAll("\r\n", "\n");
+  }
 
-	public SourceCodeAssert equalsTo(Resource expected) {
-		try (InputStream stream = expected.getInputStream()) {
-			String expectedContent = StreamUtils.copyToString(stream,
-					Charset.forName("UTF-8"));
-			assertEquals("Unexpected content for " + name,
-					expectedContent.replaceAll("\r\n", "\n"), content);
-		}
-		catch (IOException e) {
-			throw new IllegalStateException("Cannot read file", e);
-		}
-		return this;
-	}
+  public SourceCodeAssert equalsTo(Resource expected) {
+    try (InputStream stream = expected.getInputStream()) {
+      String expectedContent = StreamUtils.copyToString(stream,
+          Charset.forName("UTF-8"));
+      assertEquals("Unexpected content for " + name,
+          expectedContent.replaceAll("\r\n", "\n"), content);
+    } catch (IOException e) {
+      throw new IllegalStateException("Cannot read file", e);
+    }
+    return this;
+  }
 
-	public SourceCodeAssert hasImports(String... classNames) {
-		for (String className : classNames) {
-			contains("import " + className);
-		}
-		return this;
-	}
+  public SourceCodeAssert hasImports(String... classNames) {
+    for (String className : classNames) {
+      contains("import " + className);
+    }
+    return this;
+  }
 
-	public SourceCodeAssert doesNotHaveImports(String... classNames) {
-		for (String className : classNames) {
-			doesNotContain("import " + className);
-		}
-		return this;
-	}
+  public SourceCodeAssert doesNotHaveImports(String... classNames) {
+    for (String className : classNames) {
+      doesNotContain("import " + className);
+    }
+    return this;
+  }
 
-	public SourceCodeAssert contains(String... expressions) {
-		for (String expression : expressions) {
-			assertTrue(expression + " has not been found in source code '" + name + "'",
-					content.contains(expression));
-		}
-		return this;
-	}
+  public SourceCodeAssert contains(String... expressions) {
+    for (String expression : expressions) {
+      assertTrue(expression + " has not been found in source code '" + name + "'",
+          content.contains(expression));
+    }
+    return this;
+  }
 
-	public SourceCodeAssert doesNotContain(String... expressions) {
-		for (String expression : expressions) {
-			assertFalse(expression + " should not have been found in source code '" + name
-					+ "'", content.contains(expression));
-		}
-		return this;
-	}
+  public SourceCodeAssert doesNotContain(String... expressions) {
+    for (String expression : expressions) {
+      assertFalse(expression + " should not have been found in source code '" + name
+          + "'", content.contains(expression));
+    }
+    return this;
+  }
 
 }

@@ -18,7 +18,6 @@ package com.intellecteu.catalyst.web.autoconfigure;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.context.config.ConfigFileApplicationListener;
 import org.springframework.boot.env.EnvironmentPostProcessor;
@@ -32,64 +31,64 @@ import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
 /**
- * Post-process the environment to extract the service credentials provided by
- * CloudFoundry. Injects the elastic service URI if present.
+ * Post-process the environment to extract the service credentials provided by CloudFoundry. Injects
+ * the elastic service URI if present.
  *
  * @author Stephane Nicoll
  */
 public class CloudfoundryEnvironmentPostProcessor
-		implements EnvironmentPostProcessor, Ordered {
+    implements EnvironmentPostProcessor, Ordered {
 
-	private static final String PROPERTY_SOURCE_NAME = "defaultProperties";
+  private static final String PROPERTY_SOURCE_NAME = "defaultProperties";
 
-	private static final int ORDER = ConfigFileApplicationListener.DEFAULT_ORDER + 1;
+  private static final int ORDER = ConfigFileApplicationListener.DEFAULT_ORDER + 1;
 
-	@Override
-	public void postProcessEnvironment(ConfigurableEnvironment environment,
-			SpringApplication springApplication) {
+  private static void addOrReplace(MutablePropertySources propertySources,
+      Map<String, Object> map) {
+    MapPropertySource target = null;
+    if (propertySources.contains(PROPERTY_SOURCE_NAME)) {
+      PropertySource<?> source = propertySources.get(PROPERTY_SOURCE_NAME);
+      if (source instanceof MapPropertySource) {
+        target = (MapPropertySource) source;
+        for (String key : map.keySet()) {
+          if (!target.containsProperty(key)) {
+            target.getSource().put(key, map.get(key));
+          }
+        }
+      }
+    }
+    if (target == null) {
+      target = new MapPropertySource(PROPERTY_SOURCE_NAME, map);
+    }
+    if (!propertySources.contains(PROPERTY_SOURCE_NAME)) {
+      propertySources.addLast(target);
+    }
+  }
 
-		Map<String, Object> map = new LinkedHashMap<>();
-		String uri = environment.getProperty("vcap.services.stats-index.credentials.uri");
-		if (StringUtils.hasText(uri)) {
-			UriComponents uriComponents = UriComponentsBuilder.fromUriString(uri).build();
-			String userInfo = uriComponents.getUserInfo();
-			if (StringUtils.hasText(userInfo)) {
-				String[] credentials = userInfo.split(":");
-				map.put("initializr.stats.elastic.username", credentials[0]);
-				map.put("initializr.stats.elastic.password", credentials[1]);
-			}
-			map.put("initializr.stats.elastic.uri", UriComponentsBuilder
-					.fromUriString(uri).userInfo(null).build().toString());
+  @Override
+  public void postProcessEnvironment(ConfigurableEnvironment environment,
+      SpringApplication springApplication) {
 
-			addOrReplace(environment.getPropertySources(), map);
-		}
-	}
+    Map<String, Object> map = new LinkedHashMap<>();
+    String uri = environment.getProperty("vcap.services.stats-index.credentials.uri");
+    if (StringUtils.hasText(uri)) {
+      UriComponents uriComponents = UriComponentsBuilder.fromUriString(uri).build();
+      String userInfo = uriComponents.getUserInfo();
+      if (StringUtils.hasText(userInfo)) {
+        String[] credentials = userInfo.split(":");
+        map.put("initializr.stats.elastic.username", credentials[0]);
+        map.put("initializr.stats.elastic.password", credentials[1]);
+      }
+      map.put("initializr.stats.elastic.uri", UriComponentsBuilder
+          .fromUriString(uri).userInfo(null).build().toString());
 
-	@Override
-	public int getOrder() {
-		return ORDER;
-	}
+      addOrReplace(environment.getPropertySources(), map);
+    }
+  }
 
-	private static void addOrReplace(MutablePropertySources propertySources,
-			Map<String, Object> map) {
-		MapPropertySource target = null;
-		if (propertySources.contains(PROPERTY_SOURCE_NAME)) {
-			PropertySource<?> source = propertySources.get(PROPERTY_SOURCE_NAME);
-			if (source instanceof MapPropertySource) {
-				target = (MapPropertySource) source;
-				for (String key : map.keySet()) {
-					if (!target.containsProperty(key)) {
-						target.getSource().put(key, map.get(key));
-					}
-				}
-			}
-		}
-		if (target == null) {
-			target = new MapPropertySource(PROPERTY_SOURCE_NAME, map);
-		}
-		if (!propertySources.contains(PROPERTY_SOURCE_NAME)) {
-			propertySources.addLast(target);
-		}
-	}
+  @Override
+  public int getOrder() {
+    return ORDER;
+  }
 
 }

@@ -26,111 +26,112 @@ import java.util.regex.Pattern;
  */
 public class Agent {
 
-	/**
-	 * The {@link AgentId}.
-	 */
-	private final AgentId id;
+  /**
+   * The {@link AgentId}.
+   */
+  private final AgentId id;
 
-	/**
-	 * The version of the agent, if any
-	 */
-	private final String version;
+  /**
+   * The version of the agent, if any
+   */
+  private final String version;
 
-	public Agent(AgentId id, String version) {
-		this.id = id;
-		this.version = version;
-	}
+  public Agent(AgentId id, String version) {
+    this.id = id;
+    this.version = version;
+  }
 
-	public AgentId getId() {
-		return id;
-	}
+  /**
+   * Create an {@link Agent} based on the specified {@code User-Agent} header.
+   *
+   * @param userAgent the user agent
+   * @return an {@link Agent} instance or {@code null}
+   */
+  public static Agent fromUserAgent(String userAgent) {
+    return UserAgentHandler.parse(userAgent);
+  }
 
-	public String getVersion() {
-		return version;
-	}
+  public AgentId getId() {
+    return id;
+  }
 
-	/**
-	 * Create an {@link Agent} based on the specified {@code User-Agent} header.
-	 * @param userAgent the user agent
-	 * @return an {@link Agent} instance or {@code null}
-	 */
-	public static Agent fromUserAgent(String userAgent) {
-		return UserAgentHandler.parse(userAgent);
-	}
+  public String getVersion() {
+    return version;
+  }
 
-	/**
-	 * Defines the various known agents.
-	 */
-	public enum AgentId {
+  /**
+   * Defines the various known agents.
+   */
+  public enum AgentId {
 
-		CURL("curl", "curl"),
+    CURL("curl", "curl"),
 
-		HTTPIE("httpie", "HTTPie"),
+    HTTPIE("httpie", "HTTPie"),
 
-		SPRING_BOOT_CLI("spring", "SpringBootCli"),
+    SPRING_BOOT_CLI("spring", "SpringBootCli"),
 
-		STS("sts", "STS"),
+    STS("sts", "STS"),
 
-		INTELLIJ_IDEA("intellijidea", "IntelliJ IDEA"),
+    INTELLIJ_IDEA("intellijidea", "IntelliJ IDEA"),
 
-		NETBEANS("netbeans", "NetBeans"),
+    NETBEANS("netbeans", "NetBeans"),
 
-		BROWSER("browser", "Browser");
+    BROWSER("browser", "Browser");
 
-		final String id;
-		final String name;
+    final String id;
+    final String name;
 
-		public String getId() {
-			return id;
-		}
+    AgentId(String id, String name) {
+      this.id = id;
+      this.name = name;
+    }
 
-		public String getName() {
-			return name;
-		}
+    public String getId() {
+      return id;
+    }
 
-		AgentId(String id, String name) {
-			this.id = id;
-			this.name = name;
-		}
-	}
+    public String getName() {
+      return name;
+    }
+  }
 
-	private static class UserAgentHandler {
+  private static class UserAgentHandler {
 
-		private static final Pattern TOOL_REGEX = Pattern.compile("([^\\/]*)\\/([^ ]*).*");
+    private static final Pattern TOOL_REGEX = Pattern.compile("([^\\/]*)\\/([^ ]*).*");
 
-		private static final Pattern STS_REGEX = Pattern.compile("STS (.*)");
+    private static final Pattern STS_REGEX = Pattern.compile("STS (.*)");
 
-		private static final Pattern NETBEANS_REGEX = Pattern.compile("nb-springboot-plugin\\/(.*)");
+    private static final Pattern NETBEANS_REGEX = Pattern.compile("nb-springboot-plugin\\/(.*)");
 
-		public static Agent parse(String userAgent) {
-			Matcher matcher = TOOL_REGEX.matcher(userAgent);
-			if (matcher.matches()) {
-				String name = matcher.group(1);
-				for (AgentId id : AgentId.values()) {
-					if (name.equals(id.name)) {
-						String version = matcher.group(2);
-						return new Agent(id, version);
-					}
-				}
-			}
-			matcher = STS_REGEX.matcher(userAgent);
-			if (matcher.matches()) {
-				return new Agent(AgentId.STS, matcher.group(1));
-			}
-			matcher = NETBEANS_REGEX.matcher(userAgent);
-			if (matcher.matches()) {
-				return new Agent(AgentId.NETBEANS, matcher.group(1));
-			}
+    public static Agent parse(String userAgent) {
+      Matcher matcher = TOOL_REGEX.matcher(userAgent);
+      if (matcher.matches()) {
+        String name = matcher.group(1);
+        for (AgentId id : AgentId.values()) {
+          if (name.equals(id.name)) {
+            String version = matcher.group(2);
+            return new Agent(id, version);
+          }
+        }
+      }
+      matcher = STS_REGEX.matcher(userAgent);
+      if (matcher.matches()) {
+        return new Agent(AgentId.STS, matcher.group(1));
+      }
+      matcher = NETBEANS_REGEX.matcher(userAgent);
+      if (matcher.matches()) {
+        return new Agent(AgentId.NETBEANS, matcher.group(1));
+      }
 
-			if (userAgent.equals(AgentId.INTELLIJ_IDEA.name)) {
-				return new Agent(AgentId.INTELLIJ_IDEA, null);
-			}
-			if (userAgent.contains("Mozilla/5.0")) { // Super heuristics
-				return new Agent(AgentId.BROWSER, null);
-			}
-			return null;
-		}
+      if (userAgent.equals(AgentId.INTELLIJ_IDEA.name)) {
+        return new Agent(AgentId.INTELLIJ_IDEA, null);
+      }
+      if (userAgent.contains("Mozilla/5.0")) { // Super heuristics
+        return new Agent(AgentId.BROWSER, null);
+      }
+      return null;
+    }
 
-	}
+  }
 
 }

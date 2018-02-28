@@ -25,38 +25,38 @@ import org.junit.Test;
  * @author Stephane Nicoll
  */
 public class SpringBoot2RequestPostProcessorTests
-		extends AbstractRequestPostProcessorTests {
+    extends AbstractRequestPostProcessorTests {
 
-	@Test
-	public void java8IsMandatoryMaven() {
-		ProjectRequest request = createProjectRequest("web");
-		request.setBootVersion("2.0.0.BUILD-SNAPSHOT");
-		request.setJavaVersion("1.7");
-		generateMavenPom(request).hasJavaVersion("1.8");
-	}
+  @Test
+  public void java8IsMandatoryMaven() {
+    ProjectRequest request = createProjectRequest("web");
+    request.setBootVersion("2.0.0.BUILD-SNAPSHOT");
+    request.setJavaVersion("1.7");
+    generateMavenPom(request).hasJavaVersion("1.8");
+  }
 
-	@Test
-	public void java8IsMandatoryGradle() {
-		ProjectRequest request = createProjectRequest("data-jpa");
-		request.setBootVersion("2.0.0.M3");
-		request.setJavaVersion("1.7");
-		generateGradleBuild(request).hasJavaVersion("1.8");
-	}
+  @Test
+  public void java8IsMandatoryGradle() {
+    ProjectRequest request = createProjectRequest("data-jpa");
+    request.setBootVersion("2.0.0.M3");
+    request.setJavaVersion("1.7");
+    generateGradleBuild(request).hasJavaVersion("1.8");
+  }
 
-	@Test
-	public void java9CanBeUsedMaven() {
-		ProjectRequest request = createProjectRequest("web");
-		request.setBootVersion("2.0.0.BUILD-SNAPSHOT");
-		request.setJavaVersion("9");
-		generateMavenPom(request).hasJavaVersion("9");
-	}
+  @Test
+  public void java9CanBeUsedMaven() {
+    ProjectRequest request = createProjectRequest("web");
+    request.setBootVersion("2.0.0.BUILD-SNAPSHOT");
+    request.setJavaVersion("9");
+    generateMavenPom(request).hasJavaVersion("9");
+  }
 
-	@Test
-	public void java9CanBeUsedGradle() {
-		ProjectRequest request = createProjectRequest("data-jpa");
-		request.setBootVersion("2.0.0.M3");
-		request.setJavaVersion("9");
-		generateGradleBuild(request).hasJavaVersion("9");
-	}
+  @Test
+  public void java9CanBeUsedGradle() {
+    ProjectRequest request = createProjectRequest("data-jpa");
+    request.setBootVersion("2.0.0.M3");
+    request.setJavaVersion("9");
+    generateGradleBuild(request).hasJavaVersion("9");
+  }
 
 }

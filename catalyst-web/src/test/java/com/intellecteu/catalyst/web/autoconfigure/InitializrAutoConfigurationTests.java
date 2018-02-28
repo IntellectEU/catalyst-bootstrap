@@ -16,10 +16,12 @@
 
 package com.intellecteu.catalyst.web.autoconfigure;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+
 import com.intellecteu.catalyst.metadata.InitializrMetadataProvider;
 import org.junit.After;
 import org.junit.Test;
-
 import org.springframework.beans.DirectFieldAccessor;
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.boot.autoconfigure.web.WebClientAutoConfiguration;
@@ -32,9 +34,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.ResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-
 /**
  * Tests for {@link InitializrAutoConfiguration}.
  *
@@ -42,48 +41,48 @@ import static org.mockito.Mockito.mock;
  */
 public class InitializrAutoConfigurationTests {
 
-	private ConfigurableApplicationContext context;
+  private ConfigurableApplicationContext context;
 
-	@After
-	public void close() {
-		if (this.context != null) {
-			this.context.close();
-		}
-	}
+  @After
+  public void close() {
+    if (this.context != null) {
+      this.context.close();
+    }
+  }
 
-	@Test
-	public void customRestTemplateBuilderIsUsed() {
-		load(CustomRestTemplateConfiguration.class);
-		assertThat(this.context.getBeansOfType(InitializrMetadataProvider.class))
-				.hasSize(1);
-		RestTemplate restTemplate = (RestTemplate) new DirectFieldAccessor(
-				this.context.getBean(InitializrMetadataProvider.class))
-				.getPropertyValue("restTemplate");
-		assertThat(restTemplate.getErrorHandler()).isSameAs(
-				CustomRestTemplateConfiguration.errorHandler);
-	}
+  @Test
+  public void customRestTemplateBuilderIsUsed() {
+    load(CustomRestTemplateConfiguration.class);
+    assertThat(this.context.getBeansOfType(InitializrMetadataProvider.class))
+        .hasSize(1);
+    RestTemplate restTemplate = (RestTemplate) new DirectFieldAccessor(
+        this.context.getBean(InitializrMetadataProvider.class))
+        .getPropertyValue("restTemplate");
+    assertThat(restTemplate.getErrorHandler()).isSameAs(
+        CustomRestTemplateConfiguration.errorHandler);
+  }
 
-	private void load(Class<?> config, String... environment) {
-		AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext();
-		EnvironmentTestUtils.addEnvironment(ctx, environment);
-		if (config != null) {
-			ctx.register(config);
-		}
-		ctx.register(WebClientAutoConfiguration.class, JacksonAutoConfiguration.class,
-				InitializrAutoConfiguration.class);
-		ctx.refresh();
-		this.context = ctx;
-	}
+  private void load(Class<?> config, String... environment) {
+    AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext();
+    EnvironmentTestUtils.addEnvironment(ctx, environment);
+    if (config != null) {
+      ctx.register(config);
+    }
+    ctx.register(WebClientAutoConfiguration.class, JacksonAutoConfiguration.class,
+        InitializrAutoConfiguration.class);
+    ctx.refresh();
+    this.context = ctx;
+  }
 
-	@Configuration
-	static class CustomRestTemplateConfiguration {
+  @Configuration
+  static class CustomRestTemplateConfiguration {
 
-		private static final ResponseErrorHandler errorHandler = mock(ResponseErrorHandler.class);
+    private static final ResponseErrorHandler errorHandler = mock(ResponseErrorHandler.class);
 
-		@Bean
-		public RestTemplateCustomizer testRestTemplateCustomizer() {
-			return b -> b.setErrorHandler(errorHandler);
-		}
-	}
+    @Bean
+    public RestTemplateCustomizer testRestTemplateCustomizer() {
+      return b -> b.setErrorHandler(errorHandler);
+    }
+  }
 
 }

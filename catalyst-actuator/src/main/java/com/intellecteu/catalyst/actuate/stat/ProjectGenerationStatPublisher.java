@@ -22,7 +22,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.intellecteu.catalyst.generator.ProjectRequestEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.event.EventListener;
 import org.springframework.http.MediaType;
@@ -40,77 +39,75 @@ import org.springframework.web.client.RestTemplate;
  */
 public class ProjectGenerationStatPublisher {
 
-	private static final Logger log = LoggerFactory
-			.getLogger(ProjectGenerationStatPublisher.class);
+  private static final Logger log = LoggerFactory
+      .getLogger(ProjectGenerationStatPublisher.class);
 
-	private final ProjectRequestDocumentFactory documentFactory;
-	private final StatsProperties statsProperties;
-	private final ObjectMapper objectMapper;
-	private final RestTemplate restTemplate;
-	private final RetryTemplate retryTemplate;
+  private final ProjectRequestDocumentFactory documentFactory;
+  private final StatsProperties statsProperties;
+  private final ObjectMapper objectMapper;
+  private final RestTemplate restTemplate;
+  private final RetryTemplate retryTemplate;
 
-	public ProjectGenerationStatPublisher(ProjectRequestDocumentFactory documentFactory,
-			StatsProperties statsProperties, RestTemplateBuilder restTemplateBuilder,
-			RetryTemplate retryTemplate) {
-		this.documentFactory = documentFactory;
-		this.statsProperties = statsProperties;
-		this.objectMapper = createObjectMapper();
-		StatsProperties.Elastic elastic = statsProperties.getElastic();
-		if (StringUtils.hasText(elastic.getUsername())) {
-			this.restTemplate = restTemplateBuilder
-					.basicAuthorization(elastic.getUsername(),
-							elastic.getPassword())
-					.build();
-		} else {
-			this.restTemplate = restTemplateBuilder.build();
-		}
-		this.retryTemplate = retryTemplate;
-	}
+  public ProjectGenerationStatPublisher(ProjectRequestDocumentFactory documentFactory,
+      StatsProperties statsProperties, RestTemplateBuilder restTemplateBuilder,
+      RetryTemplate retryTemplate) {
+    this.documentFactory = documentFactory;
+    this.statsProperties = statsProperties;
+    this.objectMapper = createObjectMapper();
+    StatsProperties.Elastic elastic = statsProperties.getElastic();
+    if (StringUtils.hasText(elastic.getUsername())) {
+      this.restTemplate = restTemplateBuilder
+          .basicAuthorization(elastic.getUsername(),
+              elastic.getPassword())
+          .build();
+    } else {
+      this.restTemplate = restTemplateBuilder.build();
+    }
+    this.retryTemplate = retryTemplate;
+  }
 
-	@EventListener
-	@Async
-	public void handleEvent(ProjectRequestEvent event) {
-		String json = null;
-		try {
-			ProjectRequestDocument document = documentFactory.createDocument(event);
-			if (log.isDebugEnabled()) {
-				log.debug("Publishing " + document);
-			}
-			json = toJson(document);
+  private static ObjectMapper createObjectMapper() {
+    ObjectMapper mapper = new ObjectMapper();
+    mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+    return mapper;
+  }
 
-			RequestEntity<String> request = RequestEntity
-					.post(this.statsProperties.getElastic().getEntityUrl())
-					.contentType(MediaType.APPLICATION_JSON).body(json);
+  @EventListener
+  @Async
+  public void handleEvent(ProjectRequestEvent event) {
+    String json = null;
+    try {
+      ProjectRequestDocument document = documentFactory.createDocument(event);
+      if (log.isDebugEnabled()) {
+        log.debug("Publishing " + document);
+      }
+      json = toJson(document);
 
-			this.retryTemplate.execute((RetryCallback<Void, RuntimeException>) context -> {
-				restTemplate.exchange(request, String.class);
-				return null;
-			});
-		}
-		catch (Exception ex) {
-			log.warn(String.format(
-					"Failed to publish stat to index, document follows %n%n%s%n", json),
-					ex);
-		}
-	}
+      RequestEntity<String> request = RequestEntity
+          .post(this.statsProperties.getElastic().getEntityUrl())
+          .contentType(MediaType.APPLICATION_JSON).body(json);
 
-	private String toJson(ProjectRequestDocument stats) {
-		try {
-			return this.objectMapper.writeValueAsString(stats);
-		}
-		catch (JsonProcessingException ex) {
-			throw new IllegalStateException("Cannot convert to JSON", ex);
-		}
-	}
+      this.retryTemplate.execute((RetryCallback<Void, RuntimeException>) context -> {
+        restTemplate.exchange(request, String.class);
+        return null;
+      });
+    } catch (Exception ex) {
+      log.warn(String.format(
+          "Failed to publish stat to index, document follows %n%n%s%n", json),
+          ex);
+    }
+  }
 
-	private static ObjectMapper createObjectMapper() {
-		ObjectMapper mapper = new ObjectMapper();
-		mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-		return mapper;
-	}
+  private String toJson(ProjectRequestDocument stats) {
+    try {
+      return this.objectMapper.writeValueAsString(stats);
+    } catch (JsonProcessingException ex) {
+      throw new IllegalStateException("Cannot convert to JSON", ex);
+    }
+  }
 
-	protected RestTemplate getRestTemplate() {
-		return this.restTemplate;
-	}
+  protected RestTemplate getRestTemplate() {
+    return this.restTemplate;
+  }
 
 }

@@ -31,100 +31,99 @@ import java.util.regex.Pattern;
 //Copied from RestDocs to make it visible
 final class JsonFieldPath {
 
-	private static final Pattern BRACKETS_AND_ARRAY_PATTERN = Pattern
-			.compile("\\[\'(.+?)\'\\]|\\[([0-9]+|\\*){0,1}\\]");
+  private static final Pattern BRACKETS_AND_ARRAY_PATTERN = Pattern
+      .compile("\\[\'(.+?)\'\\]|\\[([0-9]+|\\*){0,1}\\]");
 
-	private static final Pattern ARRAY_INDEX_PATTERN = Pattern
-			.compile("\\[([0-9]+|\\*){0,1}\\]");
+  private static final Pattern ARRAY_INDEX_PATTERN = Pattern
+      .compile("\\[([0-9]+|\\*){0,1}\\]");
 
-	private final String rawPath;
+  private final String rawPath;
 
-	private final List<String> segments;
+  private final List<String> segments;
 
-	private final boolean precise;
+  private final boolean precise;
 
-	private final boolean array;
+  private final boolean array;
 
-	private JsonFieldPath(String rawPath, List<String> segments, boolean precise,
-			boolean array) {
-		this.rawPath = rawPath;
-		this.segments = segments;
-		this.precise = precise;
-		this.array = array;
-	}
+  private JsonFieldPath(String rawPath, List<String> segments, boolean precise,
+      boolean array) {
+    this.rawPath = rawPath;
+    this.segments = segments;
+    this.precise = precise;
+    this.array = array;
+  }
 
-	boolean isPrecise() {
-		return this.precise;
-	}
+  static JsonFieldPath compile(String path) {
+    List<String> segments = extractSegments(path);
+    return new JsonFieldPath(path, segments, matchesSingleValue(segments),
+        isArraySegment(segments.get(segments.size() - 1)));
+  }
 
-	boolean isArray() {
-		return this.array;
-	}
+  static boolean isArraySegment(String segment) {
+    return ARRAY_INDEX_PATTERN.matcher(segment).matches();
+  }
 
-	List<String> getSegments() {
-		return this.segments;
-	}
+  static boolean matchesSingleValue(List<String> segments) {
+    Iterator<String> iterator = segments.iterator();
+    while (iterator.hasNext()) {
+      if (isArraySegment(iterator.next()) && iterator.hasNext()) {
+        return false;
+      }
+    }
+    return true;
+  }
 
-	@Override
-	public String toString() {
-		return this.rawPath;
-	}
+  private static List<String> extractSegments(String path) {
+    Matcher matcher = BRACKETS_AND_ARRAY_PATTERN.matcher(path);
 
-	static JsonFieldPath compile(String path) {
-		List<String> segments = extractSegments(path);
-		return new JsonFieldPath(path, segments, matchesSingleValue(segments),
-				isArraySegment(segments.get(segments.size() - 1)));
-	}
+    int previous = 0;
 
-	static boolean isArraySegment(String segment) {
-		return ARRAY_INDEX_PATTERN.matcher(segment).matches();
-	}
+    List<String> segments = new ArrayList<>();
+    while (matcher.find()) {
+      if (previous != matcher.start()) {
+        segments.addAll(extractDotSeparatedSegments(
+            path.substring(previous, matcher.start())));
+      }
+      if (matcher.group(1) != null) {
+        segments.add(matcher.group(1));
+      } else {
+        segments.add(matcher.group());
+      }
+      previous = matcher.end(0);
+    }
 
-	static boolean matchesSingleValue(List<String> segments) {
-		Iterator<String> iterator = segments.iterator();
-		while (iterator.hasNext()) {
-			if (isArraySegment(iterator.next()) && iterator.hasNext()) {
-				return false;
-			}
-		}
-		return true;
-	}
+    if (previous < path.length()) {
+      segments.addAll(extractDotSeparatedSegments(path.substring(previous)));
+    }
 
-	private static List<String> extractSegments(String path) {
-		Matcher matcher = BRACKETS_AND_ARRAY_PATTERN.matcher(path);
+    return segments;
+  }
 
-		int previous = 0;
+  private static List<String> extractDotSeparatedSegments(String path) {
+    List<String> segments = new ArrayList<>();
+    for (String segment : path.split("\\.")) {
+      if (segment.length() > 0) {
+        segments.add(segment);
+      }
+    }
+    return segments;
+  }
 
-		List<String> segments = new ArrayList<>();
-		while (matcher.find()) {
-			if (previous != matcher.start()) {
-				segments.addAll(extractDotSeparatedSegments(
-						path.substring(previous, matcher.start())));
-			}
-			if (matcher.group(1) != null) {
-				segments.add(matcher.group(1));
-			}
-			else {
-				segments.add(matcher.group());
-			}
-			previous = matcher.end(0);
-		}
+  boolean isPrecise() {
+    return this.precise;
+  }
 
-		if (previous < path.length()) {
-			segments.addAll(extractDotSeparatedSegments(path.substring(previous)));
-		}
+  boolean isArray() {
+    return this.array;
+  }
 
-		return segments;
-	}
+  List<String> getSegments() {
+    return this.segments;
+  }
 
-	private static List<String> extractDotSeparatedSegments(String path) {
-		List<String> segments = new ArrayList<>();
-		for (String segment : path.split("\\.")) {
-			if (segment.length() > 0) {
-				segments.add(segment);
-			}
-		}
-		return segments;
-	}
+  @Override
+  public String toString() {
+    return this.rawPath;
+  }
 
 }

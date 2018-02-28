@@ -16,11 +16,9 @@
 
 package com.intellecteu.catalyst.generator;
 
+import com.intellecteu.catalyst.metadata.InitializrMetadata;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.intellecteu.catalyst.metadata.InitializrMetadata;
-
 import org.springframework.util.Assert;
 
 /**
@@ -30,32 +28,32 @@ import org.springframework.util.Assert;
  */
 public class ProjectRequestResolver {
 
-	private final List<ProjectRequestPostProcessor> postProcessors;
+  private final List<ProjectRequestPostProcessor> postProcessors;
 
-	public ProjectRequestResolver(List<ProjectRequestPostProcessor> postProcessors) {
-		this.postProcessors = new ArrayList<>(postProcessors);
-	}
+  public ProjectRequestResolver(List<ProjectRequestPostProcessor> postProcessors) {
+    this.postProcessors = new ArrayList<>(postProcessors);
+  }
 
-	public ProjectRequest resolve(ProjectRequest request, InitializrMetadata metadata) {
-		Assert.notNull(request, "Request must not be null");
-		applyPostProcessBeforeResolution(request, metadata);
-		request.resolve(metadata);
-		applyPostProcessAfterResolution(request, metadata);
-		return request;
-	}
+  public ProjectRequest resolve(ProjectRequest request, InitializrMetadata metadata) {
+    Assert.notNull(request, "Request must not be null");
+    applyPostProcessBeforeResolution(request, metadata);
+    request.resolve(metadata);
+    applyPostProcessAfterResolution(request, metadata);
+    return request;
+  }
 
-	private void applyPostProcessBeforeResolution(ProjectRequest request,
-			InitializrMetadata metadata) {
-		for (ProjectRequestPostProcessor processor : postProcessors) {
-			processor.postProcessBeforeResolution(request, metadata);
-		}
-	}
+  private void applyPostProcessBeforeResolution(ProjectRequest request,
+      InitializrMetadata metadata) {
+    for (ProjectRequestPostProcessor processor : postProcessors) {
+      processor.postProcessBeforeResolution(request, metadata);
+    }
+  }
 
-	private void applyPostProcessAfterResolution(ProjectRequest request,
-			InitializrMetadata metadata) {
-		for (ProjectRequestPostProcessor processor : postProcessors) {
-			processor.postProcessAfterResolution(request, metadata);
-		}
-	}
+  private void applyPostProcessAfterResolution(ProjectRequest request,
+      InitializrMetadata metadata) {
+    for (ProjectRequestPostProcessor processor : postProcessors) {
+      processor.postProcessAfterResolution(request, metadata);
+    }
+  }
 
 }

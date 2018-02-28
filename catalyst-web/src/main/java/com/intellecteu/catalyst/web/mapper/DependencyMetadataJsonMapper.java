@@ -25,9 +25,9 @@ import com.intellecteu.catalyst.metadata.DependencyMetadata;
  */
 interface DependencyMetadataJsonMapper {
 
-	/**
-	 * Write a json representation of the specified metadata.
-	 */
-	String write(DependencyMetadata metadata);
+  /**
+   * Write a json representation of the specified metadata.
+   */
+  String write(DependencyMetadata metadata);
 
 }

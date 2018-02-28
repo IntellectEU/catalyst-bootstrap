@@ -16,14 +16,17 @@
 
 package com.intellecteu.catalyst.actuate.stat;
 
-import java.util.Collections;
-import java.util.UUID;
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.jsonPath;
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
+import static org.springframework.test.web.client.response.MockRestResponseCreators.withStatus;
 
 import com.intellecteu.catalyst.generator.ProjectGeneratedEvent;
 import com.intellecteu.catalyst.generator.ProjectRequest;
+import java.util.Collections;
+import java.util.UUID;
 import org.junit.Before;
 import org.junit.Test;
-
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -32,103 +35,98 @@ import org.springframework.retry.policy.SimpleRetryPolicy;
 import org.springframework.retry.support.RetryTemplate;
 import org.springframework.test.web.client.MockRestServiceServer;
 
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.jsonPath;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
-import static org.springframework.test.web.client.response.MockRestResponseCreators.withStatus;
-
 /**
  * @author Stephane Nicoll
  */
 public class ProjectGenerationStatPublisherTests extends AbstractInitializrStatTests {
 
-	private RetryTemplate retryTemplate;
-	private ProjectGenerationStatPublisher statPublisher;
-	private MockRestServiceServer mockServer;
+  private RetryTemplate retryTemplate;
+  private ProjectGenerationStatPublisher statPublisher;
+  private MockRestServiceServer mockServer;
 
+  private static String mockResponse(String id, boolean created) {
+    return "{\"_index\":\"initializr\",\"_type\":\"request\",\"_id\":\"" + id
+        + "\",\"_version\":1,\"_shards\"" +
+        ":{\"total\":1,\"successful\":1,\"failed\":0},\"created\":" + created + "}";
+  }
 
-	@Before
-	public void setUp() {
-		StatsProperties properties = createProperties();
-		ProjectRequestDocumentFactory documentFactory =
-				new ProjectRequestDocumentFactory(createProvider(getMetadata()));
-		this.retryTemplate = new RetryTemplate();
-		this.statPublisher = new ProjectGenerationStatPublisher(documentFactory,
-				properties, new RestTemplateBuilder(), retryTemplate);
-		mockServer = MockRestServiceServer.createServer(
-				this.statPublisher.getRestTemplate());
-	}
+  private static StatsProperties createProperties() {
+    StatsProperties properties = new StatsProperties();
+    StatsProperties.Elastic elastic = properties.getElastic();
+    elastic.setUri("http://example.com/elastic");
+    elastic.setUsername("foo");
+    elastic.setPassword("bar");
+    return properties;
+  }
 
-	@Test
-	public void publishSimpleDocument() {
-		ProjectRequest request = createProjectRequest();
-		request.setGroupId("com.example.foo");
-		request.setArtifactId("my-project");
+  @Before
+  public void setUp() {
+    StatsProperties properties = createProperties();
+    ProjectRequestDocumentFactory documentFactory =
+        new ProjectRequestDocumentFactory(createProvider(getMetadata()));
+    this.retryTemplate = new RetryTemplate();
+    this.statPublisher = new ProjectGenerationStatPublisher(documentFactory,
+        properties, new RestTemplateBuilder(), retryTemplate);
+    mockServer = MockRestServiceServer.createServer(
+        this.statPublisher.getRestTemplate());
+  }
 
-		mockServer.expect(requestTo("http://example.com/elastic/initializr/request"))
-				.andExpect(method(HttpMethod.POST))
-				.andExpect(jsonPath("$.groupId").value("com.example.foo"))
-				.andExpect(jsonPath("$.artifactId").value("my-project"))
-				.andRespond(withStatus(HttpStatus.CREATED)
-						.body(mockResponse(UUID.randomUUID().toString(), true))
-						.contentType(MediaType.APPLICATION_JSON));
+  @Test
+  public void publishSimpleDocument() {
+    ProjectRequest request = createProjectRequest();
+    request.setGroupId("com.example.foo");
+    request.setArtifactId("my-project");
 
-		this.statPublisher.handleEvent(new ProjectGeneratedEvent(request));
-		mockServer.verify();
-	}
+    mockServer.expect(requestTo("http://example.com/elastic/initializr/request"))
+        .andExpect(method(HttpMethod.POST))
+        .andExpect(jsonPath("$.groupId").value("com.example.foo"))
+        .andExpect(jsonPath("$.artifactId").value("my-project"))
+        .andRespond(withStatus(HttpStatus.CREATED)
+            .body(mockResponse(UUID.randomUUID().toString(), true))
+            .contentType(MediaType.APPLICATION_JSON));
 
-	@Test
-	public void recoverFromError() {
-		ProjectRequest request = createProjectRequest();
+    this.statPublisher.handleEvent(new ProjectGeneratedEvent(request));
+    mockServer.verify();
+  }
 
-		mockServer.expect(requestTo("http://example.com/elastic/initializr/request"))
-				.andExpect(method(HttpMethod.POST))
-				.andRespond(withStatus(HttpStatus.INTERNAL_SERVER_ERROR));
+  @Test
+  public void recoverFromError() {
+    ProjectRequest request = createProjectRequest();
 
-		mockServer.expect(requestTo("http://example.com/elastic/initializr/request"))
-				.andExpect(method(HttpMethod.POST))
-				.andRespond(withStatus(HttpStatus.INTERNAL_SERVER_ERROR));
+    mockServer.expect(requestTo("http://example.com/elastic/initializr/request"))
+        .andExpect(method(HttpMethod.POST))
+        .andRespond(withStatus(HttpStatus.INTERNAL_SERVER_ERROR));
 
-		mockServer.expect(requestTo("http://example.com/elastic/initializr/request"))
-				.andExpect(method(HttpMethod.POST))
-				.andRespond(withStatus(HttpStatus.CREATED)
-						.body(mockResponse(UUID.randomUUID().toString(), true))
-						.contentType(MediaType.APPLICATION_JSON));
+    mockServer.expect(requestTo("http://example.com/elastic/initializr/request"))
+        .andExpect(method(HttpMethod.POST))
+        .andRespond(withStatus(HttpStatus.INTERNAL_SERVER_ERROR));
 
-		this.statPublisher.handleEvent(new ProjectGeneratedEvent(request));
-		mockServer.verify();
-	}
+    mockServer.expect(requestTo("http://example.com/elastic/initializr/request"))
+        .andExpect(method(HttpMethod.POST))
+        .andRespond(withStatus(HttpStatus.CREATED)
+            .body(mockResponse(UUID.randomUUID().toString(), true))
+            .contentType(MediaType.APPLICATION_JSON));
 
-	@Test
-	public void fatalErrorOnlyLogs() {
-		ProjectRequest request = createProjectRequest();
-		this.retryTemplate.setRetryPolicy(new SimpleRetryPolicy(2,
-				Collections.singletonMap(Exception.class, true)));
+    this.statPublisher.handleEvent(new ProjectGeneratedEvent(request));
+    mockServer.verify();
+  }
 
-		mockServer.expect(requestTo("http://example.com/elastic/initializr/request"))
-				.andExpect(method(HttpMethod.POST))
-				.andRespond(withStatus(HttpStatus.INTERNAL_SERVER_ERROR));
+  @Test
+  public void fatalErrorOnlyLogs() {
+    ProjectRequest request = createProjectRequest();
+    this.retryTemplate.setRetryPolicy(new SimpleRetryPolicy(2,
+        Collections.singletonMap(Exception.class, true)));
 
-		mockServer.expect(requestTo("http://example.com/elastic/initializr/request"))
-				.andExpect(method(HttpMethod.POST))
-				.andRespond(withStatus(HttpStatus.INTERNAL_SERVER_ERROR));
+    mockServer.expect(requestTo("http://example.com/elastic/initializr/request"))
+        .andExpect(method(HttpMethod.POST))
+        .andRespond(withStatus(HttpStatus.INTERNAL_SERVER_ERROR));
 
-		this.statPublisher.handleEvent(new ProjectGeneratedEvent(request));
-		mockServer.verify();
-	}
+    mockServer.expect(requestTo("http://example.com/elastic/initializr/request"))
+        .andExpect(method(HttpMethod.POST))
+        .andRespond(withStatus(HttpStatus.INTERNAL_SERVER_ERROR));
 
-	private static String mockResponse(String id, boolean created) {
-		return "{\"_index\":\"initializr\",\"_type\":\"request\",\"_id\":\"" + id + "\",\"_version\":1,\"_shards\"" +
-				":{\"total\":1,\"successful\":1,\"failed\":0},\"created\":" + created + "}";
-	}
-
-	private static StatsProperties createProperties() {
-		StatsProperties properties = new StatsProperties();
-		StatsProperties.Elastic elastic = properties.getElastic();
-		elastic.setUri("http://example.com/elastic");
-		elastic.setUsername("foo");
-		elastic.setPassword("bar");
-		return properties;
-	}
+    this.statPublisher.handleEvent(new ProjectGeneratedEvent(request));
+    mockServer.verify();
+  }
 
 }

@@ -16,51 +16,50 @@
 
 package com.intellecteu.catalyst.web.project;
 
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.core.IsNot.not;
+import static org.junit.Assert.assertThat;
+
 import com.intellecteu.catalyst.web.AbstractInitializrControllerIntegrationTests;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
-
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
-
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.hamcrest.core.IsNot.not;
-import static org.junit.Assert.assertThat;
 
 /**
  * @author Stephane Nicoll
  */
 @ActiveProfiles("test-default")
 public class MainControllerDependenciesTests
-		extends AbstractInitializrControllerIntegrationTests {
+    extends AbstractInitializrControllerIntegrationTests {
 
-	@Test
-	public void noBootVersion() throws JSONException {
-		ResponseEntity<String> response = execute("/dependencies", String.class, null,
-				"application/json");
-		assertThat(response.getHeaders().getFirst(HttpHeaders.ETAG), not(nullValue()));
-		validateContentType(response, CURRENT_METADATA_MEDIA_TYPE);
-		validateDependenciesOutput("1.1.4", response.getBody());
-	}
+  @Test
+  public void noBootVersion() throws JSONException {
+    ResponseEntity<String> response = execute("/dependencies", String.class, null,
+        "application/json");
+    assertThat(response.getHeaders().getFirst(HttpHeaders.ETAG), not(nullValue()));
+    validateContentType(response, CURRENT_METADATA_MEDIA_TYPE);
+    validateDependenciesOutput("1.1.4", response.getBody());
+  }
 
-	@Test
-	public void filteredDependencies() throws JSONException {
-		ResponseEntity<String> response = execute("/dependencies?bootVersion=1.2.1.RELEASE",
-				String.class, null, "application/json");
-		assertThat(response.getHeaders().getFirst(HttpHeaders.ETAG), not(nullValue()));
-		validateContentType(response, CURRENT_METADATA_MEDIA_TYPE);
-		validateDependenciesOutput("1.2.1", response.getBody());
-	}
+  @Test
+  public void filteredDependencies() throws JSONException {
+    ResponseEntity<String> response = execute("/dependencies?bootVersion=1.2.1.RELEASE",
+        String.class, null, "application/json");
+    assertThat(response.getHeaders().getFirst(HttpHeaders.ETAG), not(nullValue()));
+    validateContentType(response, CURRENT_METADATA_MEDIA_TYPE);
+    validateDependenciesOutput("1.2.1", response.getBody());
+  }
 
-	protected void validateDependenciesOutput(String version, String actual)
-			throws JSONException {
-		JSONObject expected = readJsonFrom(
-				"metadata/dependencies/test-dependencies-" + version + ".json");
-		JSONAssert.assertEquals(expected, new JSONObject(actual), JSONCompareMode.STRICT);
-	}
+  protected void validateDependenciesOutput(String version, String actual)
+      throws JSONException {
+    JSONObject expected = readJsonFrom(
+        "metadata/dependencies/test-dependencies-" + version + ".json");
+    JSONAssert.assertEquals(expected, new JSONObject(actual), JSONCompareMode.STRICT);
+  }
 
 }

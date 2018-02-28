@@ -16,45 +16,45 @@
 
 package com.intellecteu.catalyst.metadata;
 
-import org.junit.Test;
-
 import static org.junit.Assert.assertEquals;
+
+import org.junit.Test;
 
 /**
  * @author Stephane Nicoll
  */
 public class TextCapabilityTests {
 
-	@Test
-	public void mergeValue() {
-		TextCapability capability = new TextCapability("foo");
-		capability.setContent("1234");
-		TextCapability another = new TextCapability("foo");
-		another.setContent("4567");
-		capability.merge(another);
-		assertEquals("foo", capability.getId());
-		assertEquals(ServiceCapabilityType.TEXT, capability.getType());
-		assertEquals("4567", capability.getContent());
-	}
+  @Test
+  public void mergeValue() {
+    TextCapability capability = new TextCapability("foo");
+    capability.setContent("1234");
+    TextCapability another = new TextCapability("foo");
+    another.setContent("4567");
+    capability.merge(another);
+    assertEquals("foo", capability.getId());
+    assertEquals(ServiceCapabilityType.TEXT, capability.getType());
+    assertEquals("4567", capability.getContent());
+  }
 
-	@Test
-	public void mergeTitle() {
-		TextCapability capability = new TextCapability("foo", "Foo", "my desc");
-		capability.merge(new TextCapability("foo", "AnotherFoo", ""));
-		assertEquals("foo", capability.getId());
-		assertEquals(ServiceCapabilityType.TEXT, capability.getType());
-		assertEquals("AnotherFoo", capability.getTitle());
-		assertEquals("my desc", capability.getDescription());
-	}
+  @Test
+  public void mergeTitle() {
+    TextCapability capability = new TextCapability("foo", "Foo", "my desc");
+    capability.merge(new TextCapability("foo", "AnotherFoo", ""));
+    assertEquals("foo", capability.getId());
+    assertEquals(ServiceCapabilityType.TEXT, capability.getType());
+    assertEquals("AnotherFoo", capability.getTitle());
+    assertEquals("my desc", capability.getDescription());
+  }
 
-	@Test
-	public void mergeDescription() {
-		TextCapability capability = new TextCapability("foo", "Foo", "my desc");
-		capability.merge(new TextCapability("foo", "", "another desc"));
-		assertEquals("foo", capability.getId());
-		assertEquals(ServiceCapabilityType.TEXT, capability.getType());
-		assertEquals("Foo", capability.getTitle());
-		assertEquals("another desc", capability.getDescription());
-	}
+  @Test
+  public void mergeDescription() {
+    TextCapability capability = new TextCapability("foo", "Foo", "my desc");
+    capability.merge(new TextCapability("foo", "", "another desc"));
+    assertEquals("foo", capability.getId());
+    assertEquals(ServiceCapabilityType.TEXT, capability.getType());
+    assertEquals("Foo", capability.getTitle());
+    assertEquals("another desc", capability.getDescription());
+  }
 
 }

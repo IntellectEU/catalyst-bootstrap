@@ -23,11 +23,10 @@ package com.intellecteu.catalyst.metadata;
  */
 public interface InitializrMetadataProvider {
 
-	/**
-	 * Return the metadata to use. Rather than keeping a handle to
-	 * a particular instance, implementations may decide to refresh
-	 * or recompute the metadata if necessary.
-	 */
-	InitializrMetadata get();
+  /**
+   * Return the metadata to use. Rather than keeping a handle to a particular instance,
+   * implementations may decide to refresh or recompute the metadata if necessary.
+   */
+  InitializrMetadata get();
 
 }

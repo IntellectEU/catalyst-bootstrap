@@ -23,18 +23,18 @@ package com.intellecteu.catalyst.generator;
  */
 public class ProjectFailedEvent extends ProjectRequestEvent {
 
-	private final Exception cause;
+  private final Exception cause;
 
-	public ProjectFailedEvent(ProjectRequest projectRequest, Exception cause) {
-		super(projectRequest);
-		this.cause = cause;
-	}
+  public ProjectFailedEvent(ProjectRequest projectRequest, Exception cause) {
+    super(projectRequest);
+    this.cause = cause;
+  }
 
-	/**
-	 * Return the cause of the failure.
-	 */
-	public Exception getCause() {
-		return cause;
-	}
+  /**
+   * Return the cause of the failure.
+   */
+  public Exception getCause() {
+    return cause;
+  }
 
 }

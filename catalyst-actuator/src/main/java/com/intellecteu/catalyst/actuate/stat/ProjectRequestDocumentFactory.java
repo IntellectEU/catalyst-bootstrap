@@ -16,18 +16,16 @@
 
 package com.intellecteu.catalyst.actuate.stat;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import com.intellecteu.catalyst.generator.ProjectFailedEvent;
 import com.intellecteu.catalyst.generator.ProjectRequest;
 import com.intellecteu.catalyst.generator.ProjectRequestEvent;
 import com.intellecteu.catalyst.metadata.InitializrMetadata;
 import com.intellecteu.catalyst.metadata.InitializrMetadataProvider;
 import com.intellecteu.catalyst.util.Agent;
-
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.springframework.util.StringUtils;
 
 /**
@@ -37,123 +35,122 @@ import org.springframework.util.StringUtils;
  */
 public class ProjectRequestDocumentFactory {
 
-	private static final Pattern IP_PATTERN =
-			Pattern.compile("[0-9]*\\.[0-9]*\\.[0-9]*\\.[0-9]*");
+  private static final Pattern IP_PATTERN =
+      Pattern.compile("[0-9]*\\.[0-9]*\\.[0-9]*\\.[0-9]*");
 
-	private final InitializrMetadataProvider metadataProvider;
+  private final InitializrMetadataProvider metadataProvider;
 
-	public ProjectRequestDocumentFactory(InitializrMetadataProvider metadataProvider) {
-		this.metadataProvider = metadataProvider;
-	}
+  public ProjectRequestDocumentFactory(InitializrMetadataProvider metadataProvider) {
+    this.metadataProvider = metadataProvider;
+  }
 
-	public ProjectRequestDocument createDocument(ProjectRequestEvent event) {
-		InitializrMetadata metadata = metadataProvider.get();
-		ProjectRequest request = event.getProjectRequest();
+  private static void handleCloudFlareHeaders(ProjectRequest request,
+      ProjectRequestDocument document) {
+    String candidate = (String) request.getParameters().get("cf-connecting-ip");
+    if (StringUtils.hasText(candidate)) {
+      document.setRequestIp(candidate);
+      document.setRequestIpv4(extractIpv4(candidate));
+    }
+    String country = (String) request.getParameters().get("cf-ipcountry");
+    if (StringUtils.hasText(country) && !"xx".equalsIgnoreCase(country)) {
+      document.setRequestCountry(country);
+    }
+  }
 
-		ProjectRequestDocument document = new ProjectRequestDocument();
-		document.setGenerationTimestamp(event.getTimestamp());
+  private static Agent extractAgentInformation(ProjectRequest request) {
+    String userAgent = (String) request.getParameters().get("user-agent");
+    if (StringUtils.hasText(userAgent)) {
+      return Agent.fromUserAgent(userAgent);
+    }
+    return null;
+  }
 
-		handleCloudFlareHeaders(request, document);
-		String candidate = (String) request.getParameters().get("x-forwarded-for");
-		if (!StringUtils.hasText(document.getRequestIp()) && candidate != null) {
-			document.setRequestIp(candidate);
-			document.setRequestIpv4(extractIpv4(candidate));
-		}
+  private static String extractIpv4(String candidate) {
+    if (StringUtils.hasText(candidate)) {
+      Matcher matcher = IP_PATTERN.matcher(candidate);
+      if (matcher.find()) {
+        return matcher.group();
+      }
+    }
+    return null;
+  }
 
-		Agent agent = extractAgentInformation(request);
-		if (agent != null) {
-			document.setClientId(agent.getId().getId());
-			document.setClientVersion(agent.getVersion());
-		}
+  public ProjectRequestDocument createDocument(ProjectRequestEvent event) {
+    InitializrMetadata metadata = metadataProvider.get();
+    ProjectRequest request = event.getProjectRequest();
 
-		document.setGroupId(request.getGroupId());
-		document.setArtifactId(request.getArtifactId());
-		document.setPackageName(request.getPackageName());
-		document.setBootVersion(request.getBootVersion());
+    ProjectRequestDocument document = new ProjectRequestDocument();
+    document.setGenerationTimestamp(event.getTimestamp());
 
-		document.setJavaVersion(request.getJavaVersion());
-		if (StringUtils.hasText(request.getJavaVersion())
-				&& metadata.getJavaVersions().get(request.getJavaVersion()) == null) {
-			document.setInvalid(true);
-			document.setInvalidJavaVersion(true);
-		}
+    handleCloudFlareHeaders(request, document);
+    String candidate = (String) request.getParameters().get("x-forwarded-for");
+    if (!StringUtils.hasText(document.getRequestIp()) && candidate != null) {
+      document.setRequestIp(candidate);
+      document.setRequestIpv4(extractIpv4(candidate));
+    }
 
-		document.setLanguage(request.getLanguage());
-		if (StringUtils.hasText(request.getLanguage())
-				&& metadata.getLanguages().get(request.getLanguage()) == null) {
-			document.setInvalid(true);
-			document.setInvalidLanguage(true);
-		}
+    Agent agent = extractAgentInformation(request);
+    if (agent != null) {
+      document.setClientId(agent.getId().getId());
+      document.setClientVersion(agent.getVersion());
+    }
 
-		document.setPackaging(request.getPackaging());
-		if (StringUtils.hasText(request.getPackaging())
-				&& metadata.getPackagings().get(request.getPackaging()) == null) {
-			document.setInvalid(true);
-			document.setInvalidPackaging(true);
-		}
+    document.setGroupId(request.getGroupId());
+    document.setArtifactId(request.getArtifactId());
+    document.setPackageName(request.getPackageName());
+    document.setBootVersion(request.getBootVersion());
 
-		document.setType(request.getType());
-		if (StringUtils.hasText(request.getType())
-				&& metadata.getTypes().get(request.getType()) == null) {
-			document.setInvalid(true);
-			document.setInvalidType(true);
-		}
+    document.setJavaVersion(request.getJavaVersion());
+    if (StringUtils.hasText(request.getJavaVersion())
+        && metadata.getJavaVersions().get(request.getJavaVersion()) == null) {
+      document.setInvalid(true);
+      document.setInvalidJavaVersion(true);
+    }
 
-		// Let's not rely on the resolved dependencies here
-		List<String> dependencies = new ArrayList<>();
-		dependencies.addAll(request.getStyle());
-		dependencies.addAll(request.getDependencies());
-		dependencies.forEach(id -> {
-			if (metadata.getDependencies().get(id) != null) {
-				document.getDependencies().add(id);
-			}
-			else {
-				document.setInvalid(true);
-				document.getInvalidDependencies().add(id);
-			}
-		});
+    document.setLanguage(request.getLanguage());
+    if (StringUtils.hasText(request.getLanguage())
+        && metadata.getLanguages().get(request.getLanguage()) == null) {
+      document.setInvalid(true);
+      document.setInvalidLanguage(true);
+    }
 
-		// Let's make sure that the document is flagged as invalid no matter what
-		if (event instanceof ProjectFailedEvent) {
-			ProjectFailedEvent failed = (ProjectFailedEvent) event;
-			document.setInvalid(true);
-			if (failed.getCause() != null) {
-				document.setErrorMessage(failed.getCause().getMessage());
-			}
-		}
+    document.setPackaging(request.getPackaging());
+    if (StringUtils.hasText(request.getPackaging())
+        && metadata.getPackagings().get(request.getPackaging()) == null) {
+      document.setInvalid(true);
+      document.setInvalidPackaging(true);
+    }
 
-		return document;
-	}
+    document.setType(request.getType());
+    if (StringUtils.hasText(request.getType())
+        && metadata.getTypes().get(request.getType()) == null) {
+      document.setInvalid(true);
+      document.setInvalidType(true);
+    }
 
-	private static void handleCloudFlareHeaders(ProjectRequest request,
-			ProjectRequestDocument document) {
-		String candidate = (String) request.getParameters().get("cf-connecting-ip");
-		if (StringUtils.hasText(candidate)) {
-			document.setRequestIp(candidate);
-			document.setRequestIpv4(extractIpv4(candidate));
-		}
-		String country = (String) request.getParameters().get("cf-ipcountry");
-		if (StringUtils.hasText(country) && !"xx".equalsIgnoreCase(country)) {
-			document.setRequestCountry(country);
-		}
-	}
+    // Let's not rely on the resolved dependencies here
+    List<String> dependencies = new ArrayList<>();
+    dependencies.addAll(request.getStyle());
+    dependencies.addAll(request.getDependencies());
+    dependencies.forEach(id -> {
+      if (metadata.getDependencies().get(id) != null) {
+        document.getDependencies().add(id);
+      } else {
+        document.setInvalid(true);
+        document.getInvalidDependencies().add(id);
+      }
+    });
 
-	private static Agent extractAgentInformation(ProjectRequest request) {
-		String userAgent = (String) request.getParameters().get("user-agent");
-		if (StringUtils.hasText(userAgent)) {
-			return Agent.fromUserAgent(userAgent);
-		}
-		return null;
-	}
+    // Let's make sure that the document is flagged as invalid no matter what
+    if (event instanceof ProjectFailedEvent) {
+      ProjectFailedEvent failed = (ProjectFailedEvent) event;
+      document.setInvalid(true);
+      if (failed.getCause() != null) {
+        document.setErrorMessage(failed.getCause().getMessage());
+      }
+    }
 
-	private static String extractIpv4(String candidate) {
-		if (StringUtils.hasText(candidate)) {
-			Matcher matcher = IP_PATTERN.matcher(candidate);
-			if (matcher.find()) {
-				return matcher.group();
-			}
-		}
-		return null;
-	}
+    return document;
+  }
 
 }

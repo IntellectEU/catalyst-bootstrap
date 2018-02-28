@@ -19,29 +19,28 @@ package com.intellecteu.catalyst.actuate.autoconfigure;
 import com.intellecteu.catalyst.actuate.info.BomRangesInfoContributor;
 import com.intellecteu.catalyst.actuate.info.DependencyRangesInfoContributor;
 import com.intellecteu.catalyst.metadata.InitializrMetadataProvider;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * {@link org.springframework.boot.autoconfigure.EnableAutoConfiguration
- * Auto-configuration} to improve actuator endpoints with initializr specific information.
+ * {@link org.springframework.boot.autoconfigure.EnableAutoConfiguration Auto-configuration} to
+ * improve actuator endpoints with initializr specific information.
  *
  * @author Stephane Nicoll
  */
 @Configuration
 public class InitializrActuatorEndpointsAutoConfiguration {
 
-	@Bean
-	public BomRangesInfoContributor bomRangesInfoContributor(
-			InitializrMetadataProvider metadataProvider) {
-		return new BomRangesInfoContributor(metadataProvider);
-	}
+  @Bean
+  public BomRangesInfoContributor bomRangesInfoContributor(
+      InitializrMetadataProvider metadataProvider) {
+    return new BomRangesInfoContributor(metadataProvider);
+  }
 
-	@Bean
-	public DependencyRangesInfoContributor dependencyRangesInfoContributor(
-			InitializrMetadataProvider metadataProvider) {
-		return new DependencyRangesInfoContributor(metadataProvider);
-	}
+  @Bean
+  public DependencyRangesInfoContributor dependencyRangesInfoContributor(
+      InitializrMetadataProvider metadataProvider) {
+    return new DependencyRangesInfoContributor(metadataProvider);
+  }
 
 }

@@ -16,21 +16,21 @@
 
 package com.intellecteu.catalyst.metadata;
 
-import org.junit.Test;
-
 import static org.junit.Assert.assertEquals;
+
+import org.junit.Test;
 
 /**
  * @author Stephane Nicoll
  */
 public class TypeTests {
 
-	@Test
-	public void parseAction() {
-		Type type = new Type();
-		type.setId("foo");
-		type.setAction("my-action.zip");
-		assertEquals("/my-action.zip", type.getAction());
-	}
+  @Test
+  public void parseAction() {
+    Type type = new Type();
+    type.setId("foo");
+    type.setAction("my-action.zip");
+    assertEquals("/my-action.zip", type.getAction());
+  }
 
 }

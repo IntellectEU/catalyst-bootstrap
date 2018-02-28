@@ -16,10 +16,8 @@
 
 package com.intellecteu.catalyst.web.project;
 
-import java.util.Map;
-
 import com.intellecteu.catalyst.metadata.InitializrMetadataProvider;
-
+import java.util.Map;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.resource.ResourceUrlProvider;
@@ -32,16 +30,16 @@ import org.springframework.web.servlet.resource.ResourceUrlProvider;
 @Controller
 public class LegacyStsController extends AbstractInitializrController {
 
-	public LegacyStsController(InitializrMetadataProvider metadataProvider,
-			ResourceUrlProvider resourceUrlProvider) {
-		super(metadataProvider, resourceUrlProvider);
-	}
+  public LegacyStsController(InitializrMetadataProvider metadataProvider,
+      ResourceUrlProvider resourceUrlProvider) {
+    super(metadataProvider, resourceUrlProvider);
+  }
 
-	@RequestMapping(value = "/sts", produces = "text/html")
-	public String stsHome(Map<String, Object> model) {
-		renderHome(model);
-		return "sts-home";
-	}
+  @RequestMapping(value = "/sts", produces = "text/html")
+  public String stsHome(Map<String, Object> model) {
+    renderHome(model);
+    return "sts-home";
+  }
 
 }
 

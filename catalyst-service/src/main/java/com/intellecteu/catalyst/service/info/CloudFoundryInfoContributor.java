@@ -18,7 +18,6 @@ package com.intellecteu.catalyst.service.info;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-
 import org.springframework.boot.actuate.info.Info;
 import org.springframework.boot.actuate.info.InfoContributor;
 import org.springframework.core.env.Environment;
@@ -26,28 +25,28 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 /**
- * An {@link InfoContributor} that exposes the name of the app. Useful in a blue/green
- * deployment scenario as the name of the app provides a hint to that.
+ * An {@link InfoContributor} that exposes the name of the app. Useful in a blue/green deployment
+ * scenario as the name of the app provides a hint to that.
  *
  * @author Stephane Nicoll
  */
 @Component
 public class CloudFoundryInfoContributor implements InfoContributor {
 
-	private final Environment environment;
+  private final Environment environment;
 
-	public CloudFoundryInfoContributor(Environment environment) {
-		this.environment = environment;
-	}
+  public CloudFoundryInfoContributor(Environment environment) {
+    this.environment = environment;
+  }
 
-	@Override
-	public void contribute(Info.Builder builder) {
-		String applicationName = this.environment.getProperty("vcap.application.name");
-		if (StringUtils.hasText(applicationName)) {
-			Map<String, String> details = new LinkedHashMap<>();
-			details.put("name", applicationName);
-			builder.withDetail("app", details);
-		}
-	}
+  @Override
+  public void contribute(Info.Builder builder) {
+    String applicationName = this.environment.getProperty("vcap.application.name");
+    if (StringUtils.hasText(applicationName)) {
+      Map<String, String> details = new LinkedHashMap<>();
+      details.put("name", applicationName);
+      builder.withDetail("app", details);
+    }
+  }
 
 }

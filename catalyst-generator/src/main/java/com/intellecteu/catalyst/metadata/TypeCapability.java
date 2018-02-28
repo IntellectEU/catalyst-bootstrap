@@ -26,43 +26,42 @@ import java.util.List;
  */
 public class TypeCapability extends ServiceCapability<List<Type>> implements Defaultable<Type> {
 
-	private final List<Type> content = new ArrayList<>();
+  private final List<Type> content = new ArrayList<>();
 
-	public TypeCapability() {
-		super("type", ServiceCapabilityType.ACTION, "Type", "project type");
-	}
+  public TypeCapability() {
+    super("type", ServiceCapabilityType.ACTION, "Type", "project type");
+  }
 
-	@Override
-	public List<Type> getContent() {
-		return content;
-	}
+  @Override
+  public List<Type> getContent() {
+    return content;
+  }
 
-	/**
-	 * Return the {@link Type} with the specified id or {@code null} if no such type
-	 * exists.
-	 */
-	public Type get(String id) {
-		return content.stream()
-				.filter(it -> id.equals(it.getId()) || id.equals(it.getStsId()))
-				.findFirst().orElse(null);
-	}
+  /**
+   * Return the {@link Type} with the specified id or {@code null} if no such type exists.
+   */
+  public Type get(String id) {
+    return content.stream()
+        .filter(it -> id.equals(it.getId()) || id.equals(it.getStsId()))
+        .findFirst().orElse(null);
+  }
 
-	/**
-	 * Return the default {@link Type}.
-	 */
-	@Override
-	public Type getDefault() {
-		return content.stream().filter(DefaultMetadataElement::isDefault)
-				.findFirst().orElse(null);
-	}
+  /**
+   * Return the default {@link Type}.
+   */
+  @Override
+  public Type getDefault() {
+    return content.stream().filter(DefaultMetadataElement::isDefault)
+        .findFirst().orElse(null);
+  }
 
-	@Override
-	public void merge(List<Type> otherContent) {
-		otherContent.forEach(it -> {
-			if (get(it.getId()) == null) {
-				content.add(it);
-			}
-		});
-	}
+  @Override
+  public void merge(List<Type> otherContent) {
+    otherContent.forEach(it -> {
+      if (get(it.getId()) == null) {
+        content.add(it);
+      }
+    });
+  }
 
 }

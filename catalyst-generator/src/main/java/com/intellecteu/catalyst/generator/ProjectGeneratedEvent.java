@@ -23,8 +23,8 @@ package com.intellecteu.catalyst.generator;
  */
 public class ProjectGeneratedEvent extends ProjectRequestEvent {
 
-	public ProjectGeneratedEvent(ProjectRequest projectRequest) {
-		super(projectRequest);
-	}
+  public ProjectGeneratedEvent(ProjectRequest projectRequest) {
+    super(projectRequest);
+  }
 
 }

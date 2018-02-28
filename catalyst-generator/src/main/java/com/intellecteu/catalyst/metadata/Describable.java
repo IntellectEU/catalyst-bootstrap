@@ -18,6 +18,6 @@ package com.intellecteu.catalyst.metadata;
 
 public interface Describable {
 
-	String getDescription();
+  String getDescription();
 
 }

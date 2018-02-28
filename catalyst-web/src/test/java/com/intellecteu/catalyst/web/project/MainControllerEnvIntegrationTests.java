@@ -16,60 +16,58 @@
 
 package com.intellecteu.catalyst.web.project;
 
-import java.net.URI;
-
-import com.intellecteu.catalyst.web.AbstractInitializrControllerIntegrationTests;
-import com.intellecteu.catalyst.test.generator.ProjectAssert;
-import org.junit.Test;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.ActiveProfiles;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import com.intellecteu.catalyst.test.generator.ProjectAssert;
+import com.intellecteu.catalyst.web.AbstractInitializrControllerIntegrationTests;
+import java.net.URI;
+import org.junit.Test;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.ActiveProfiles;
+
 /**
  * @author Stephane Nicoll
  */
-@ActiveProfiles({ "test-default", "test-custom-env" })
+@ActiveProfiles({"test-default", "test-custom-env"})
 public class MainControllerEnvIntegrationTests
-		extends AbstractInitializrControllerIntegrationTests {
+    extends AbstractInitializrControllerIntegrationTests {
 
-	@Test
-	public void downloadCliWithCustomRepository() throws Exception {
-		ResponseEntity<?> entity = getRestTemplate().getForEntity(
-				createUrl("/spring"), String.class);
-		assertEquals(HttpStatus.FOUND, entity.getStatusCode());
-		String expected = "https://repo.spring.io/lib-release/org/springframework/boot/spring-boot-cli/1.1.4.RELEASE/spring-boot-cli-1.1.4.RELEASE-bin.zip";
-		assertEquals(new URI(expected), entity.getHeaders().getLocation());
-	}
+  @Test
+  public void downloadCliWithCustomRepository() throws Exception {
+    ResponseEntity<?> entity = getRestTemplate().getForEntity(
+        createUrl("/spring"), String.class);
+    assertEquals(HttpStatus.FOUND, entity.getStatusCode());
+    String expected = "https://repo.spring.io/lib-release/org/springframework/boot/spring-boot-cli/1.1.4.RELEASE/spring-boot-cli-1.1.4.RELEASE-bin.zip";
+    assertEquals(new URI(expected), entity.getHeaders().getLocation());
+  }
 
-	@Test
-	public void doNotForceSsl() {
-		ResponseEntity<String> response = invokeHome("curl/1.2.4", "*/*");
-		String body = response.getBody();
-		assertTrue("Must not force https", body.contains("http://start.spring.io/"));
-		assertFalse("Must not force https", body.contains("https://"));
-	}
+  @Test
+  public void doNotForceSsl() {
+    ResponseEntity<String> response = invokeHome("curl/1.2.4", "*/*");
+    String body = response.getBody();
+    assertTrue("Must not force https", body.contains("http://start.spring.io/"));
+    assertFalse("Must not force https", body.contains("https://"));
+  }
 
-	@Test
-	public void generateProjectWithInvalidName() {
-		downloadZip("/starter.zip?style=data-jpa&name=Invalid")
-				.isJavaProject(ProjectAssert.DEFAULT_PACKAGE_NAME, "FooBarApplication")
-				.isMavenProject()
-				.hasStaticAndTemplatesResources(false).pomAssert()
-				.hasDependenciesCount(2)
-				.hasSpringBootStarterDependency("data-jpa")
-				.hasSpringBootStarterTest();
-	}
+  @Test
+  public void generateProjectWithInvalidName() {
+    downloadZip("/starter.zip?style=data-jpa&name=Invalid")
+        .isJavaProject(ProjectAssert.DEFAULT_PACKAGE_NAME, "FooBarApplication")
+        .isMavenProject()
+        .hasStaticAndTemplatesResources(false).pomAssert()
+        .hasDependenciesCount(2)
+        .hasSpringBootStarterDependency("data-jpa")
+        .hasSpringBootStarterTest();
+  }
 
-	@Test
-	public void googleAnalytics() {
-		String body = htmlHome();
-		assertTrue("google tag manager should be enabled",
-				body.contains("https://www.googletagmanager.com/gtm.js"));
-	}
+  @Test
+  public void googleAnalytics() {
+    String body = htmlHome();
+    assertTrue("google tag manager should be enabled",
+        body.contains("https://www.googletagmanager.com/gtm.js"));
+  }
 
 }

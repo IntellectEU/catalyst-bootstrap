@@ -16,7 +16,8 @@
 
 package com.intellecteu.catalyst.web.mapper;
 
-import java.io.IOException;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -24,66 +25,64 @@ import com.intellecteu.catalyst.metadata.Dependency;
 import com.intellecteu.catalyst.metadata.InitializrMetadata;
 import com.intellecteu.catalyst.metadata.Link;
 import com.intellecteu.catalyst.test.metadata.InitializrMetadataTestBuilder;
+import java.io.IOException;
 import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 /**
  * @author Stephane Nicoll
  */
 public class InitializrMetadataJsonMapperTests {
 
-	private static final ObjectMapper objectMapper = new ObjectMapper();
+  private static final ObjectMapper objectMapper = new ObjectMapper();
 
-	private final InitializrMetadataJsonMapper jsonMapper =
-			new InitializrMetadataV21JsonMapper();
+  private final InitializrMetadataJsonMapper jsonMapper =
+      new InitializrMetadataV21JsonMapper();
 
-	@Test
-	public void withNoAppUrl() throws IOException {
-		InitializrMetadata metadata = new InitializrMetadataTestBuilder()
-				.addType("foo", true, "/foo.zip", "none", "test")
-				.addDependencyGroup("foo", "one", "two").build();
-		String json = jsonMapper.write(metadata, null);
-		JsonNode result = objectMapper.readTree(json);
-		assertEquals("/foo.zip?type=foo{&dependencies,packaging,javaVersion,language,bootVersion," +
-				"groupId,artifactId,version,name,description,packageName}", get(result, "_links.foo.href"));
-	}
+  @Test
+  public void withNoAppUrl() throws IOException {
+    InitializrMetadata metadata = new InitializrMetadataTestBuilder()
+        .addType("foo", true, "/foo.zip", "none", "test")
+        .addDependencyGroup("foo", "one", "two").build();
+    String json = jsonMapper.write(metadata, null);
+    JsonNode result = objectMapper.readTree(json);
+    assertEquals("/foo.zip?type=foo{&dependencies,packaging,javaVersion,language,bootVersion," +
+        "groupId,artifactId,version,name,description,packageName}", get(result, "_links.foo.href"));
+  }
 
-	@Test
-	public void withAppUrl() throws IOException {
-		InitializrMetadata metadata = new InitializrMetadataTestBuilder()
-				.addType("foo", true, "/foo.zip", "none", "test")
-				.addDependencyGroup("foo", "one", "two").build();
-		String json = jsonMapper.write(metadata, "http://server:8080/my-app");
-		JsonNode result = objectMapper.readTree(json);
-		assertEquals("http://server:8080/my-app/foo.zip?type=foo{&dependencies,packaging,javaVersion," +
-						"language,bootVersion,groupId,artifactId,version,name,description,packageName}",
-				get(result, "_links.foo.href"));
-	}
+  @Test
+  public void withAppUrl() throws IOException {
+    InitializrMetadata metadata = new InitializrMetadataTestBuilder()
+        .addType("foo", true, "/foo.zip", "none", "test")
+        .addDependencyGroup("foo", "one", "two").build();
+    String json = jsonMapper.write(metadata, "http://server:8080/my-app");
+    JsonNode result = objectMapper.readTree(json);
+    assertEquals("http://server:8080/my-app/foo.zip?type=foo{&dependencies,packaging,javaVersion," +
+            "language,bootVersion,groupId,artifactId,version,name,description,packageName}",
+        get(result, "_links.foo.href"));
+  }
 
-	@Test
-	public void linksRendered() {
-		Dependency dependency = Dependency.withId("foo", "com.example", "foo");
-		dependency.getLinks().add(Link.create("guide", "https://example.com/how-to"));
-		dependency.getLinks().add(Link.create("reference", "https://example.com/doc"));
-		InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
-				.addDependencyGroup("test", dependency).build();
-		String json = jsonMapper.write(metadata, null);
-		int first = json.indexOf("https://example.com/how-to");
-		int second = json.indexOf("https://example.com/doc");
-		// JSON objects are not ordered
-		assertTrue(first > 0);
-		assertTrue(second > 0);
-	}
+  @Test
+  public void linksRendered() {
+    Dependency dependency = Dependency.withId("foo", "com.example", "foo");
+    dependency.getLinks().add(Link.create("guide", "https://example.com/how-to"));
+    dependency.getLinks().add(Link.create("reference", "https://example.com/doc"));
+    InitializrMetadata metadata = InitializrMetadataTestBuilder.withDefaults()
+        .addDependencyGroup("test", dependency).build();
+    String json = jsonMapper.write(metadata, null);
+    int first = json.indexOf("https://example.com/how-to");
+    int second = json.indexOf("https://example.com/doc");
+    // JSON objects are not ordered
+    assertTrue(first > 0);
+    assertTrue(second > 0);
+  }
 
-	private Object get(JsonNode result, String path) {
-		String[] nodes = path.split("\\.");
-		for (int i = 0; i < nodes.length - 1; i++) {
-			String node = nodes[i];
-			result = result.path(node);
-		}
-		return result.get(nodes[nodes.length - 1]).textValue();
-	}
+  private Object get(JsonNode result, String path) {
+    String[] nodes = path.split("\\.");
+    for (int i = 0; i < nodes.length - 1; i++) {
+      String node = nodes[i];
+      result = result.path(node);
+    }
+    return result.get(nodes[nodes.length - 1]).textValue();
+  }
 
 }

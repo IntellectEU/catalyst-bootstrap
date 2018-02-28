@@ -16,10 +16,10 @@
 
 package com.intellecteu.catalyst.actuate.test;
 
-import java.util.Arrays;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
+
+import java.util.Arrays;
 
 /**
  * Metrics assertion based on {@link TestCounterService}.
@@ -28,35 +28,35 @@ import static org.junit.Assert.fail;
  */
 public class MetricsAssert {
 
-	private final TestCounterService counterService;
+  private final TestCounterService counterService;
 
-	public MetricsAssert(TestCounterService counterService) {
-		this.counterService = counterService;
-	}
+  public MetricsAssert(TestCounterService counterService) {
+    this.counterService = counterService;
+  }
 
-	public MetricsAssert hasValue(long value, String... metrics) {
-		Arrays.asList(metrics).forEach(it -> {
-			Long actual = counterService.getValues().get(it);
-			if (actual == null) {
-				fail("Metric '" + it + "' not found, got '"
-						+ counterService.getValues().keySet() + "'");
-			}
-			assertEquals("Wrong value for metric " + it, value, actual.longValue());
-		});
-		return this;
-	}
+  public MetricsAssert hasValue(long value, String... metrics) {
+    Arrays.asList(metrics).forEach(it -> {
+      Long actual = counterService.getValues().get(it);
+      if (actual == null) {
+        fail("Metric '" + it + "' not found, got '"
+            + counterService.getValues().keySet() + "'");
+      }
+      assertEquals("Wrong value for metric " + it, value, actual.longValue());
+    });
+    return this;
+  }
 
-	public MetricsAssert hasNoValue(String... metrics) {
-		Arrays.asList(metrics).forEach(it ->
-				assertEquals("Metric '" + it + "' should not be registered", null,
-						counterService.getValues().get(it)));
-		return this;
-	}
+  public MetricsAssert hasNoValue(String... metrics) {
+    Arrays.asList(metrics).forEach(it ->
+        assertEquals("Metric '" + it + "' should not be registered", null,
+            counterService.getValues().get(it)));
+    return this;
+  }
 
-	public MetricsAssert metricsCount(int count) {
-		assertEquals(
-				"Wrong number of metrics, got '" + counterService.getValues().keySet() + "'",
-				count, counterService.getValues().size());
-		return this;
-	}
+  public MetricsAssert metricsCount(int count) {
+    assertEquals(
+        "Wrong number of metrics, got '" + counterService.getValues().keySet() + "'",
+        count, counterService.getValues().size());
+    return this;
+  }
 }

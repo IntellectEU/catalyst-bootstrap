@@ -16,19 +16,16 @@
 
 package com.intellecteu.catalyst.web.project;
 
-import java.beans.PropertyDescriptor;
-import java.io.IOException;
-import java.util.Map;
-import java.util.function.Function;
-
-import javax.servlet.http.HttpServletResponse;
-
 import com.intellecteu.catalyst.generator.InvalidProjectRequestException;
 import com.intellecteu.catalyst.metadata.InitializrConfiguration;
 import com.intellecteu.catalyst.metadata.InitializrMetadata;
 import com.intellecteu.catalyst.metadata.InitializrMetadataProvider;
 import com.intellecteu.catalyst.metadata.TypeCapability;
-
+import java.beans.PropertyDescriptor;
+import java.io.IOException;
+import java.util.Map;
+import java.util.function.Function;
+import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -42,83 +39,83 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
  */
 public abstract class AbstractInitializrController {
 
-	protected final InitializrMetadataProvider metadataProvider;
-	private final Function<String, String> linkTo;
-	private Boolean forceSsl;
+  protected final InitializrMetadataProvider metadataProvider;
+  private final Function<String, String> linkTo;
+  private Boolean forceSsl;
 
-	protected AbstractInitializrController(InitializrMetadataProvider metadataProvider,
-			ResourceUrlProvider resourceUrlProvider) {
-		this.metadataProvider = metadataProvider;
-		this.linkTo = link -> {
-			String result = resourceUrlProvider.getForLookupPath(link);
-			return result == null ? link : result;
-		};
-	}
+  protected AbstractInitializrController(InitializrMetadataProvider metadataProvider,
+      ResourceUrlProvider resourceUrlProvider) {
+    this.metadataProvider = metadataProvider;
+    this.linkTo = link -> {
+      String result = resourceUrlProvider.getForLookupPath(link);
+      return result == null ? link : result;
+    };
+  }
 
-	public boolean isForceSsl() {
-		if (this.forceSsl == null) {
-			this.forceSsl = metadataProvider.get().getConfiguration().getEnv()
-					.isForceSsl();
-		}
-		return this.forceSsl;
+  public boolean isForceSsl() {
+    if (this.forceSsl == null) {
+      this.forceSsl = metadataProvider.get().getConfiguration().getEnv()
+          .isForceSsl();
+    }
+    return this.forceSsl;
 
-	}
+  }
 
-	@ExceptionHandler
-	public void invalidProjectRequest(HttpServletResponse response,
-			InvalidProjectRequestException ex) throws IOException {
-		response.sendError(HttpStatus.BAD_REQUEST.value(), ex.getMessage());
-	}
+  @ExceptionHandler
+  public void invalidProjectRequest(HttpServletResponse response,
+      InvalidProjectRequestException ex) throws IOException {
+    response.sendError(HttpStatus.BAD_REQUEST.value(), ex.getMessage());
+  }
 
-	/**
-	 * Render the home page with the specified template.
-	 */
-	protected void renderHome(Map<String, Object> model) {
-		InitializrMetadata metadata = metadataProvider.get();
+  /**
+   * Render the home page with the specified template.
+   */
+  protected void renderHome(Map<String, Object> model) {
+    InitializrMetadata metadata = metadataProvider.get();
 
-		model.put("serviceUrl", generateAppUrl());
-		BeanWrapperImpl wrapper = new BeanWrapperImpl(metadata);
-		for (PropertyDescriptor descriptor : wrapper.getPropertyDescriptors()) {
-			if ("types".equals(descriptor.getName())) {
-				model.put("types", removeTypes(metadata.getTypes()));
-			}
-			else {
-				model.put(descriptor.getName(),
-						wrapper.getPropertyValue(descriptor.getName()));
-			}
-		}
+    model.put("serviceUrl", generateAppUrl());
+    BeanWrapperImpl wrapper = new BeanWrapperImpl(metadata);
+    for (PropertyDescriptor descriptor : wrapper.getPropertyDescriptors()) {
+      if ("types".equals(descriptor.getName())) {
+        model.put("types", removeTypes(metadata.getTypes()));
+      } else {
+        model.put(descriptor.getName(),
+            wrapper.getPropertyValue(descriptor.getName()));
+      }
+    }
 
-		// Google analytics support
-		model.put("trackingCode",
-				metadata.getConfiguration().getEnv().getGoogleAnalyticsTrackingCode());
+    // Google analytics support
+    model.put("trackingCode",
+        metadata.getConfiguration().getEnv().getGoogleAnalyticsTrackingCode());
 
-	}
+  }
 
-	public Function<String, String> getLinkTo() {
-		return linkTo;
-	}
+  public Function<String, String> getLinkTo() {
+    return linkTo;
+  }
 
-	private TypeCapability removeTypes(TypeCapability types) {
-		TypeCapability result = new TypeCapability();
-		result.setDescription(types.getDescription());
-		result.setTitle(types.getTitle());
-		result.getContent().addAll(types.getContent());
-		// Only keep project type
-		result.getContent().removeIf(t -> !"project".equals(t.getTags().get("format")));
-		return result;
-	}
+  private TypeCapability removeTypes(TypeCapability types) {
+    TypeCapability result = new TypeCapability();
+    result.setDescription(types.getDescription());
+    result.setTitle(types.getTitle());
+    result.getContent().addAll(types.getContent());
+    // Only keep project type
+    result.getContent().removeIf(t -> !"project".equals(t.getTags().get("format")));
+    return result;
+  }
 
-	/**
-	 * Generate a full URL of the service, mostly for use in templates.
-	 * @see InitializrConfiguration.Env#forceSsl
-	 */
-	protected String generateAppUrl() {
-		ServletUriComponentsBuilder builder = ServletUriComponentsBuilder
-				.fromCurrentServletMapping();
-		if (isForceSsl()) {
-			builder.scheme("https");
-		}
-		return builder.build().toString();
-	}
+  /**
+   * Generate a full URL of the service, mostly for use in templates.
+   *
+   * @see InitializrConfiguration.Env#forceSsl
+   */
+  protected String generateAppUrl() {
+    ServletUriComponentsBuilder builder = ServletUriComponentsBuilder
+        .fromCurrentServletMapping();
+    if (isForceSsl()) {
+      builder.scheme("https");
+    }
+    return builder.build().toString();
+  }
 
 }

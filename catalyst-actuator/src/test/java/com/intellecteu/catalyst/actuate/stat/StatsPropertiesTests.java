@@ -16,31 +16,31 @@
 
 package com.intellecteu.catalyst.actuate.stat;
 
-import org.junit.Test;
-
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+
+import org.junit.Test;
 
 /**
  * @author Stephane Nicoll
  */
 public class StatsPropertiesTests {
 
-	private final StatsProperties properties = new StatsProperties();
+  private final StatsProperties properties = new StatsProperties();
 
-	@Test
-	public void cleanTrailingSlash() {
-		properties.getElastic().setUri("http://example.com/");
-		assertThat(properties.getElastic().getUri(), is("http://example.com"));
-	}
+  @Test
+  public void cleanTrailingSlash() {
+    properties.getElastic().setUri("http://example.com/");
+    assertThat(properties.getElastic().getUri(), is("http://example.com"));
+  }
 
-	@Test
-	public void provideEntityUrl() {
-		properties.getElastic().setUri("http://example.com/");
-		properties.getElastic().setIndexName("my-index");
-		properties.getElastic().setEntityName("foo");
-		assertThat(properties.getElastic().getEntityUrl().toString(),
-				is("http://example.com/my-index/foo"));
-	}
+  @Test
+  public void provideEntityUrl() {
+    properties.getElastic().setUri("http://example.com/");
+    properties.getElastic().setIndexName("my-index");
+    properties.getElastic().setEntityName("foo");
+    assertThat(properties.getElastic().getEntityUrl().toString(),
+        is("http://example.com/my-index/foo"));
+  }
 
 }

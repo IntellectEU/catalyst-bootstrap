@@ -16,56 +16,55 @@
 
 package com.intellecteu.catalyst.web.autoconfigure;
 
-import org.junit.Test;
+import static org.assertj.core.api.Assertions.assertThat;
 
+import org.junit.Test;
 import org.springframework.boot.SpringApplication;
 import org.springframework.mock.env.MockEnvironment;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author Stephane Nicoll
  */
 public class CloudfoundryEnvironmentPostProcessorTests {
 
-	private final CloudfoundryEnvironmentPostProcessor postProcessor =
-			new CloudfoundryEnvironmentPostProcessor();
-	private final MockEnvironment environment = new MockEnvironment();
-	private final SpringApplication application = new SpringApplication();
+  private final CloudfoundryEnvironmentPostProcessor postProcessor =
+      new CloudfoundryEnvironmentPostProcessor();
+  private final MockEnvironment environment = new MockEnvironment();
+  private final SpringApplication application = new SpringApplication();
 
-	@Test
-	public void parseCredentials() {
-		environment.setProperty("vcap.services.stats-index.credentials.uri",
-				"http://user:pass@example.com/bar/biz?param=one");
-		postProcessor.postProcessEnvironment(environment, application);
+  @Test
+  public void parseCredentials() {
+    environment.setProperty("vcap.services.stats-index.credentials.uri",
+        "http://user:pass@example.com/bar/biz?param=one");
+    postProcessor.postProcessEnvironment(environment, application);
 
-		assertThat(environment.getProperty("initializr.stats.elastic.uri"))
-				.isEqualTo("http://example.com/bar/biz?param=one");
-		assertThat(environment.getProperty("initializr.stats.elastic.username"))
-				.isEqualTo("user");
-		assertThat(environment.getProperty("initializr.stats.elastic.password"))
-				.isEqualTo("pass");
-	}
+    assertThat(environment.getProperty("initializr.stats.elastic.uri"))
+        .isEqualTo("http://example.com/bar/biz?param=one");
+    assertThat(environment.getProperty("initializr.stats.elastic.username"))
+        .isEqualTo("user");
+    assertThat(environment.getProperty("initializr.stats.elastic.password"))
+        .isEqualTo("pass");
+  }
 
-	@Test
-	public void parseNoCredentials() {
-		environment.setProperty("vcap.services.stats-index.credentials.uri",
-				"http://example.com/bar/biz?param=one");
-		postProcessor.postProcessEnvironment(environment, application);
+  @Test
+  public void parseNoCredentials() {
+    environment.setProperty("vcap.services.stats-index.credentials.uri",
+        "http://example.com/bar/biz?param=one");
+    postProcessor.postProcessEnvironment(environment, application);
 
-		assertThat(environment.getProperty("initializr.stats.elastic.uri"))
-				.isEqualTo("http://example.com/bar/biz?param=one");
-		assertThat(environment.getProperty("initializr.stats.elastic.username")).isNull();
-		assertThat(environment.getProperty("initializr.stats.elastic.password")).isNull();
-	}
+    assertThat(environment.getProperty("initializr.stats.elastic.uri"))
+        .isEqualTo("http://example.com/bar/biz?param=one");
+    assertThat(environment.getProperty("initializr.stats.elastic.username")).isNull();
+    assertThat(environment.getProperty("initializr.stats.elastic.password")).isNull();
+  }
 
-	@Test
-	public void parseNoVcapUri() {
-		postProcessor.postProcessEnvironment(environment, application);
+  @Test
+  public void parseNoVcapUri() {
+    postProcessor.postProcessEnvironment(environment, application);
 
-		assertThat(environment.getProperty("initializr.stats.elastic.uri")).isNull();
-		assertThat(environment.getProperty("initializr.stats.elastic.username")).isNull();
-		assertThat(environment.getProperty("initializr.stats.elastic.password")).isNull();
-	}
+    assertThat(environment.getProperty("initializr.stats.elastic.uri")).isNull();
+    assertThat(environment.getProperty("initializr.stats.elastic.username")).isNull();
+    assertThat(environment.getProperty("initializr.stats.elastic.password")).isNull();
+  }
 
 }

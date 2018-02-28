@@ -16,9 +16,6 @@
 
 package com.intellecteu.catalyst.web.support;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import com.intellecteu.catalyst.metadata.BillOfMaterials;
 import com.intellecteu.catalyst.metadata.Dependency;
 import com.intellecteu.catalyst.metadata.DependencyMetadata;
@@ -26,7 +23,8 @@ import com.intellecteu.catalyst.metadata.DependencyMetadataProvider;
 import com.intellecteu.catalyst.metadata.InitializrMetadata;
 import com.intellecteu.catalyst.metadata.Repository;
 import com.intellecteu.catalyst.util.Version;
-
+import java.util.LinkedHashMap;
+import java.util.Map;
 import org.springframework.cache.annotation.Cacheable;
 
 /**
@@ -36,40 +34,40 @@ import org.springframework.cache.annotation.Cacheable;
  */
 public class DefaultDependencyMetadataProvider implements DependencyMetadataProvider {
 
-	@Override
-	@Cacheable(cacheNames = "initializr.dependency-metadata", key = "#p1")
-	public DependencyMetadata get(InitializrMetadata metadata, Version bootVersion) {
-		Map<String, Dependency> dependencies = new LinkedHashMap<>();
-		for (Dependency d : metadata.getDependencies().getAll()) {
-			if (d.match(bootVersion)) {
-				dependencies.put(d.getId(), d.resolve(bootVersion));
-			}
-		}
+  @Override
+  @Cacheable(cacheNames = "initializr.dependency-metadata", key = "#p1")
+  public DependencyMetadata get(InitializrMetadata metadata, Version bootVersion) {
+    Map<String, Dependency> dependencies = new LinkedHashMap<>();
+    for (Dependency d : metadata.getDependencies().getAll()) {
+      if (d.match(bootVersion)) {
+        dependencies.put(d.getId(), d.resolve(bootVersion));
+      }
+    }
 
-		Map<String, Repository> repositories = new LinkedHashMap<>();
-		for (Dependency d : dependencies.values()) {
-			if (d.getRepository() != null) {
-				repositories.put(d.getRepository(), metadata.getConfiguration()
-						.getEnv().getRepositories().get(d.getRepository()));
-			}
-		}
+    Map<String, Repository> repositories = new LinkedHashMap<>();
+    for (Dependency d : dependencies.values()) {
+      if (d.getRepository() != null) {
+        repositories.put(d.getRepository(), metadata.getConfiguration()
+            .getEnv().getRepositories().get(d.getRepository()));
+      }
+    }
 
-		Map<String, BillOfMaterials> boms = new LinkedHashMap<>();
-		for (Dependency d : dependencies.values()) {
-			if (d.getBom() != null) {
-				boms.put(d.getBom(), metadata.getConfiguration().getEnv()
-						.getBoms().get(d.getBom()).resolve(bootVersion));
-			}
-		}
-		// Each resolved bom may require additional repositories
-		for (BillOfMaterials b : boms.values()) {
-			for (String id : b.getRepositories()) {
-				repositories.put(id, metadata.getConfiguration().getEnv()
-						.getRepositories().get(id));
-			}
-		}
+    Map<String, BillOfMaterials> boms = new LinkedHashMap<>();
+    for (Dependency d : dependencies.values()) {
+      if (d.getBom() != null) {
+        boms.put(d.getBom(), metadata.getConfiguration().getEnv()
+            .getBoms().get(d.getBom()).resolve(bootVersion));
+      }
+    }
+    // Each resolved bom may require additional repositories
+    for (BillOfMaterials b : boms.values()) {
+      for (String id : b.getRepositories()) {
+        repositories.put(id, metadata.getConfiguration().getEnv()
+            .getRepositories().get(id));
+      }
+    }
 
-		return new DependencyMetadata(bootVersion, dependencies, repositories, boms);
-	}
+    return new DependencyMetadata(bootVersion, dependencies, repositories, boms);
+  }
 
 }

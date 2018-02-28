@@ -16,13 +16,13 @@
 
 package com.intellecteu.catalyst.web.project;
 
-import java.util.Collections;
+import static org.junit.Assert.assertTrue;
 
-import com.intellecteu.catalyst.web.AbstractInitializrControllerIntegrationTests;
 import com.intellecteu.catalyst.metadata.InitializrMetadataProvider;
+import com.intellecteu.catalyst.web.AbstractInitializrControllerIntegrationTests;
 import com.intellecteu.catalyst.web.project.LegacyStsControllerIntegrationTests.LegacyConfig;
+import java.util.Collections;
 import org.junit.Test;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpEntity;
@@ -33,47 +33,45 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.web.servlet.resource.ResourceUrlProvider;
 
-import static org.junit.Assert.assertTrue;
-
 /**
  * @author Stephane Nicoll
  */
 @ActiveProfiles("test-default")
 @ContextConfiguration(classes = LegacyConfig.class)
 public class LegacyStsControllerIntegrationTests
-		extends AbstractInitializrControllerIntegrationTests {
+    extends AbstractInitializrControllerIntegrationTests {
 
-	@Test
-	public void legacyStsHome() {
-		String body = htmlHome();
-		assertTrue("groupId not found", body.contains("com.example"));
-		assertTrue("artifactId not found", body.contains("demo"));
-		assertTrue("custom description not found",
-				body.contains("Demo project for Spring Boot"));
-		assertTrue("Wrong body:\n" + body,
-				body.contains("<input type=\"radio\" name=\"language\" value=\"groovy\"/>"));
-		assertTrue("Wrong body:\n" + body,
-				body.contains("<input type=\"radio\" name=\"language\" value=\"java\" checked=\"true\"/>"));
-	}
+  @Test
+  public void legacyStsHome() {
+    String body = htmlHome();
+    assertTrue("groupId not found", body.contains("com.example"));
+    assertTrue("artifactId not found", body.contains("demo"));
+    assertTrue("custom description not found",
+        body.contains("Demo project for Spring Boot"));
+    assertTrue("Wrong body:\n" + body,
+        body.contains("<input type=\"radio\" name=\"language\" value=\"groovy\"/>"));
+    assertTrue("Wrong body:\n" + body,
+        body.contains("<input type=\"radio\" name=\"language\" value=\"java\" checked=\"true\"/>"));
+  }
 
-	@Override
-	protected String htmlHome() {
-		HttpHeaders headers = new HttpHeaders();
-		headers.setAccept(Collections.singletonList(MediaType.TEXT_HTML));
-		return getRestTemplate().exchange(createUrl("/sts"), HttpMethod.GET,
-				new HttpEntity<Void>(headers), String.class).getBody();
-	}
+  @Override
+  protected String htmlHome() {
+    HttpHeaders headers = new HttpHeaders();
+    headers.setAccept(Collections.singletonList(MediaType.TEXT_HTML));
+    return getRestTemplate().exchange(createUrl("/sts"), HttpMethod.GET,
+        new HttpEntity<Void>(headers), String.class).getBody();
+  }
 
-	@Configuration
-	protected static class LegacyConfig {
+  @Configuration
+  protected static class LegacyConfig {
 
-		@Bean
-		public LegacyStsController legacyStsController(
-				InitializrMetadataProvider metadataProvider,
-				ResourceUrlProvider resourceUrlProvider) {
-			return new LegacyStsController(metadataProvider, resourceUrlProvider);
-		}
+    @Bean
+    public LegacyStsController legacyStsController(
+        InitializrMetadataProvider metadataProvider,
+        ResourceUrlProvider resourceUrlProvider) {
+      return new LegacyStsController(metadataProvider, resourceUrlProvider);
+    }
 
-	}
+  }
 
 }

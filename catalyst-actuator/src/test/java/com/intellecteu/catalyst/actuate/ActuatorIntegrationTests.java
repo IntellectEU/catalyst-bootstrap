@@ -16,17 +16,16 @@
 
 package com.intellecteu.catalyst.actuate;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.intellecteu.catalyst.web.AbstractFullStackInitializrIntegrationTests;
-import org.junit.Test;
-
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-
-import static com.intellecteu.catalyst.web.AbstractInitializrIntegrationTests.*;
+import static com.intellecteu.catalyst.web.AbstractInitializrIntegrationTests.Config;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.intellecteu.catalyst.web.AbstractFullStackInitializrIntegrationTests;
+import org.junit.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
 /**
  * Tests for actuator specific features.
@@ -35,47 +34,47 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
  */
 @ActiveProfiles("test-default")
 @SpringBootTest(classes = Config.class, webEnvironment = RANDOM_PORT,
-		properties = "management.security.enabled=false")
+    properties = "management.security.enabled=false")
 public class ActuatorIntegrationTests
-		extends AbstractFullStackInitializrIntegrationTests {
+    extends AbstractFullStackInitializrIntegrationTests {
 
-	@Test
-	public void infoHasExternalProperties() {
-		String body = getRestTemplate().getForObject(createUrl("/info"), String.class);
-		assertTrue("Wrong body:\n" + body, body.contains("\"spring-boot\""));
-		assertTrue("Wrong body:\n" + body,
-				body.contains("\"version\":\"1.1.4.RELEASE\""));
-	}
+  @Test
+  public void infoHasExternalProperties() {
+    String body = getRestTemplate().getForObject(createUrl("/info"), String.class);
+    assertTrue("Wrong body:\n" + body, body.contains("\"spring-boot\""));
+    assertTrue("Wrong body:\n" + body,
+        body.contains("\"version\":\"1.1.4.RELEASE\""));
+  }
 
-	@Test
-	public void metricsAvailableByDefault() {
-		downloadZip("/starter.zip?packaging=jar&javaVersion=1.8&style=web&style=jpa");
-		JsonNode result = metricsEndpoint();
-		int requests = result.get("counter.initializr.requests").intValue();
-		int packaging = result.get("counter.initializr.packaging.jar").intValue();
-		int javaVersion = result.get("counter.initializr.java_version.1_8").intValue();
-		int webDependency = result.get("counter.initializr.dependency.web").intValue();
-		int jpaDependency = result.get("counter.initializr.dependency.data-jpa")
-				.intValue();
+  @Test
+  public void metricsAvailableByDefault() {
+    downloadZip("/starter.zip?packaging=jar&javaVersion=1.8&style=web&style=jpa");
+    JsonNode result = metricsEndpoint();
+    int requests = result.get("counter.initializr.requests").intValue();
+    int packaging = result.get("counter.initializr.packaging.jar").intValue();
+    int javaVersion = result.get("counter.initializr.java_version.1_8").intValue();
+    int webDependency = result.get("counter.initializr.dependency.web").intValue();
+    int jpaDependency = result.get("counter.initializr.dependency.data-jpa")
+        .intValue();
 
-		// No jpa dep this time
-		downloadZip("/starter.zip?packaging=jar&javaVersion=1.8&style=web");
+    // No jpa dep this time
+    downloadZip("/starter.zip?packaging=jar&javaVersion=1.8&style=web");
 
-		JsonNode updatedResult = metricsEndpoint();
-		assertEquals("Number of request should have increased", requests + 1,
-				updatedResult.get("counter.initializr.requests").intValue());
-		assertEquals("jar packaging metric should have increased", packaging + 1,
-				updatedResult.get("counter.initializr.packaging.jar").intValue());
-		assertEquals("java version metric should have increased", javaVersion + 1,
-				updatedResult.get("counter.initializr.java_version.1_8").intValue());
-		assertEquals("web dependency metric should have increased", webDependency + 1,
-				updatedResult.get("counter.initializr.dependency.web").intValue());
-		assertEquals("jpa dependency metric should not have increased", jpaDependency,
-				updatedResult.get("counter.initializr.dependency.data-jpa").intValue());
-	}
+    JsonNode updatedResult = metricsEndpoint();
+    assertEquals("Number of request should have increased", requests + 1,
+        updatedResult.get("counter.initializr.requests").intValue());
+    assertEquals("jar packaging metric should have increased", packaging + 1,
+        updatedResult.get("counter.initializr.packaging.jar").intValue());
+    assertEquals("java version metric should have increased", javaVersion + 1,
+        updatedResult.get("counter.initializr.java_version.1_8").intValue());
+    assertEquals("web dependency metric should have increased", webDependency + 1,
+        updatedResult.get("counter.initializr.dependency.web").intValue());
+    assertEquals("jpa dependency metric should not have increased", jpaDependency,
+        updatedResult.get("counter.initializr.dependency.data-jpa").intValue());
+  }
 
-	private JsonNode metricsEndpoint() {
-		return parseJson(getRestTemplate().getForObject(createUrl("/metrics"), String.class));
-	}
+  private JsonNode metricsEndpoint() {
+    return parseJson(getRestTemplate().getForObject(createUrl("/metrics"), String.class));
+  }
 
 }

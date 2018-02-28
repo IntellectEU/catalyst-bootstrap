@@ -18,7 +18,6 @@ package com.intellecteu.catalyst.actuate.stat;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 import org.springframework.util.StringUtils;
@@ -31,110 +30,109 @@ import org.springframework.util.StringUtils;
 @ConfigurationProperties("initializr.stats")
 public class StatsProperties {
 
-	@NestedConfigurationProperty
-	private final Elastic elastic = new Elastic();
+  @NestedConfigurationProperty
+  private final Elastic elastic = new Elastic();
 
-	public Elastic getElastic() {
-		return elastic;
-	}
+  public Elastic getElastic() {
+    return elastic;
+  }
 
-	public static final class Elastic {
+  public static final class Elastic {
 
-		/**
-		 * Elastic service uri.
-		 */
-		private String uri;
+    /**
+     * Elastic service uri.
+     */
+    private String uri;
 
-		/**
-		 * Elastic service username.
-		 */
-		private String username;
+    /**
+     * Elastic service username.
+     */
+    private String username;
 
-		/**
-		 * Elastic service password
-		 */
-		private String password;
+    /**
+     * Elastic service password
+     */
+    private String password;
 
-		/**
-		 * Name of the index.
-		 */
-		private String indexName = "initializr";
+    /**
+     * Name of the index.
+     */
+    private String indexName = "initializr";
 
-		/**
-		 * Name of the entity to use to publish stats.
-		 */
-		private String entityName = "request";
+    /**
+     * Name of the entity to use to publish stats.
+     */
+    private String entityName = "request";
 
-		/**
-		 * Number of attempts before giving up.
-		 */
-		private int maxAttempts = 3;
+    /**
+     * Number of attempts before giving up.
+     */
+    private int maxAttempts = 3;
 
-		public String getUsername() {
-			return username;
-		}
+    private static String cleanUri(String contextPath) {
+      if (StringUtils.hasText(contextPath) && contextPath.endsWith("/")) {
+        return contextPath.substring(0, contextPath.length() - 1);
+      }
+      return contextPath;
+    }
 
-		public void setUsername(String username) {
-			this.username = username;
-		}
+    public String getUsername() {
+      return username;
+    }
 
-		public String getPassword() {
-			return password;
-		}
+    public void setUsername(String username) {
+      this.username = username;
+    }
 
-		public void setPassword(String password) {
-			this.password = password;
-		}
+    public String getPassword() {
+      return password;
+    }
 
-		public String getIndexName() {
-			return indexName;
-		}
+    public void setPassword(String password) {
+      this.password = password;
+    }
 
-		public void setIndexName(String indexName) {
-			this.indexName = indexName;
-		}
+    public String getIndexName() {
+      return indexName;
+    }
 
-		public String getEntityName() {
-			return entityName;
-		}
+    public void setIndexName(String indexName) {
+      this.indexName = indexName;
+    }
 
-		public void setEntityName(String entityName) {
-			this.entityName = entityName;
-		}
+    public String getEntityName() {
+      return entityName;
+    }
 
-		public int getMaxAttempts() {
-			return maxAttempts;
-		}
+    public void setEntityName(String entityName) {
+      this.entityName = entityName;
+    }
 
-		public void setMaxAttempts(int maxAttempts) {
-			this.maxAttempts = maxAttempts;
-		}
+    public int getMaxAttempts() {
+      return maxAttempts;
+    }
 
-		public String getUri() {
-			return uri;
-		}
+    public void setMaxAttempts(int maxAttempts) {
+      this.maxAttempts = maxAttempts;
+    }
 
-		public void setUri(String uri) {
-			this.uri = cleanUri(uri);
-		}
+    public String getUri() {
+      return uri;
+    }
 
-		public URI getEntityUrl() {
-			String string = uri + "/" + indexName + "/" + entityName;
-			try {
-				return new URI(string);
-			}
-			catch (URISyntaxException ex) {
-				throw new IllegalStateException("Cannot create entity URL: " + string, ex);
-			}
-		}
+    public void setUri(String uri) {
+      this.uri = cleanUri(uri);
+    }
 
-		private static String cleanUri(String contextPath) {
-			if (StringUtils.hasText(contextPath) && contextPath.endsWith("/")) {
-				return contextPath.substring(0, contextPath.length() - 1);
-			}
-			return contextPath;
-		}
+    public URI getEntityUrl() {
+      String string = uri + "/" + indexName + "/" + entityName;
+      try {
+        return new URI(string);
+      } catch (URISyntaxException ex) {
+        throw new IllegalStateException("Cannot create entity URL: " + string, ex);
+      }
+    }
 
-	}
+  }
 
 }

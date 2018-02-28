@@ -26,11 +26,11 @@ import com.intellecteu.catalyst.InitializrException;
 @SuppressWarnings("serial")
 public class InvalidInitializrMetadataException extends InitializrException {
 
-	public InvalidInitializrMetadataException(String message, Throwable cause) {
-		super(message, cause);
-	}
+  public InvalidInitializrMetadataException(String message, Throwable cause) {
+    super(message, cause);
+  }
 
-	public InvalidInitializrMetadataException(String message) {
-		super(message);
-	}
+  public InvalidInitializrMetadataException(String message) {
+    super(message);
+  }
 }

@@ -16,128 +16,127 @@
 
 package com.intellecteu.catalyst.metadata;
 
-import java.util.Arrays;
-
-import com.intellecteu.catalyst.util.Version;
-import com.intellecteu.catalyst.util.VersionParser;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.junit.Assert.assertThat;
+
+import com.intellecteu.catalyst.util.Version;
+import com.intellecteu.catalyst.util.VersionParser;
+import java.util.Arrays;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 /**
  * @author Stephane Nicoll
  */
 public class BillOfMaterialsTests {
 
-	@Rule
-	public final ExpectedException thrown = ExpectedException.none();
+  @Rule
+  public final ExpectedException thrown = ExpectedException.none();
 
-	@Test
-	public void resolveSimpleBom() {
-		BillOfMaterials bom = BillOfMaterials.create("com.example", "bom", "1.0.0");
-		bom.validate();
-		BillOfMaterials resolved = bom.resolve(Version.parse("1.2.3.RELEASE"));
-		assertThat(bom, sameInstance(resolved));
-	}
+  @Test
+  public void resolveSimpleBom() {
+    BillOfMaterials bom = BillOfMaterials.create("com.example", "bom", "1.0.0");
+    bom.validate();
+    BillOfMaterials resolved = bom.resolve(Version.parse("1.2.3.RELEASE"));
+    assertThat(bom, sameInstance(resolved));
+  }
 
-	@Test
-	public void resolveSimpleRange() {
-		BillOfMaterials bom = BillOfMaterials.create("com.example", "bom", "1.0.0");
-		bom.setVersionProperty("bom.version");
-		bom.getRepositories().add("repo-main");
-		bom.getAdditionalBoms().add("bom-main");
-		bom.getMappings()
-				.add(BillOfMaterials.Mapping.create("[1.2.0.RELEASE,1.3.0.M1)", "1.1.0"));
-		bom.validate();
-		BillOfMaterials resolved = bom.resolve(Version.parse("1.2.3.RELEASE"));
-		assertThat(resolved.getGroupId(), equalTo("com.example"));
-		assertThat(resolved.getArtifactId(), equalTo("bom"));
-		assertThat(resolved.getVersion(), equalTo("1.1.0"));
-		assertThat(resolved.getVersionProperty().toStandardFormat(),
-				equalTo("bom.version"));
-		assertThat(resolved.getRepositories().size(), equalTo(1));
-		assertThat(resolved.getRepositories().get(0), equalTo("repo-main"));
-		assertThat(resolved.getAdditionalBoms().size(), equalTo(1));
-		assertThat(resolved.getAdditionalBoms().get(0), equalTo("bom-main"));
-	}
+  @Test
+  public void resolveSimpleRange() {
+    BillOfMaterials bom = BillOfMaterials.create("com.example", "bom", "1.0.0");
+    bom.setVersionProperty("bom.version");
+    bom.getRepositories().add("repo-main");
+    bom.getAdditionalBoms().add("bom-main");
+    bom.getMappings()
+        .add(BillOfMaterials.Mapping.create("[1.2.0.RELEASE,1.3.0.M1)", "1.1.0"));
+    bom.validate();
+    BillOfMaterials resolved = bom.resolve(Version.parse("1.2.3.RELEASE"));
+    assertThat(resolved.getGroupId(), equalTo("com.example"));
+    assertThat(resolved.getArtifactId(), equalTo("bom"));
+    assertThat(resolved.getVersion(), equalTo("1.1.0"));
+    assertThat(resolved.getVersionProperty().toStandardFormat(),
+        equalTo("bom.version"));
+    assertThat(resolved.getRepositories().size(), equalTo(1));
+    assertThat(resolved.getRepositories().get(0), equalTo("repo-main"));
+    assertThat(resolved.getAdditionalBoms().size(), equalTo(1));
+    assertThat(resolved.getAdditionalBoms().get(0), equalTo("bom-main"));
+  }
 
-	@Test
-	public void resolveRangeOverride() {
-		BillOfMaterials bom = BillOfMaterials.create("com.example", "bom", "1.0.0");
-		bom.getRepositories().add("repo-main");
-		bom.getAdditionalBoms().add("bom-main");
-		BillOfMaterials.Mapping mapping = BillOfMaterials.Mapping.create("[1.2.0.RELEASE,1.3.0.M1)",
-				"1.1.0", "repo-foo");
-		mapping.getAdditionalBoms().add("bom-foo");
-		bom.getMappings().add(mapping);
-		bom.validate();
-		BillOfMaterials resolved = bom.resolve(Version.parse("1.2.3.RELEASE"));
-		assertThat(resolved.getGroupId(), equalTo("com.example"));
-		assertThat(resolved.getArtifactId(), equalTo("bom"));
-		assertThat(resolved.getVersion(), equalTo("1.1.0"));
-		assertThat(resolved.getVersionProperty(), nullValue());
-		assertThat(resolved.getRepositories().size(), equalTo(1));
-		assertThat(resolved.getRepositories().get(0), equalTo("repo-foo"));
-		assertThat(resolved.getAdditionalBoms().size(), equalTo(1));
-		assertThat(resolved.getAdditionalBoms().get(0), equalTo("bom-foo"));
-	}
+  @Test
+  public void resolveRangeOverride() {
+    BillOfMaterials bom = BillOfMaterials.create("com.example", "bom", "1.0.0");
+    bom.getRepositories().add("repo-main");
+    bom.getAdditionalBoms().add("bom-main");
+    BillOfMaterials.Mapping mapping = BillOfMaterials.Mapping.create("[1.2.0.RELEASE,1.3.0.M1)",
+        "1.1.0", "repo-foo");
+    mapping.getAdditionalBoms().add("bom-foo");
+    bom.getMappings().add(mapping);
+    bom.validate();
+    BillOfMaterials resolved = bom.resolve(Version.parse("1.2.3.RELEASE"));
+    assertThat(resolved.getGroupId(), equalTo("com.example"));
+    assertThat(resolved.getArtifactId(), equalTo("bom"));
+    assertThat(resolved.getVersion(), equalTo("1.1.0"));
+    assertThat(resolved.getVersionProperty(), nullValue());
+    assertThat(resolved.getRepositories().size(), equalTo(1));
+    assertThat(resolved.getRepositories().get(0), equalTo("repo-foo"));
+    assertThat(resolved.getAdditionalBoms().size(), equalTo(1));
+    assertThat(resolved.getAdditionalBoms().get(0), equalTo("bom-foo"));
+  }
 
-	@Test
-	public void resolveRangeOverrideAndMapping() {
-		BillOfMaterials bom = BillOfMaterials.create("com.example", "bom", "1.0.0");
-		bom.setVersionProperty("example.version");
-		bom.getMappings()
-				.add(BillOfMaterials.Mapping.create("[1.2.0.RELEASE,1.3.0.M1)", "1.1.0"));
-		bom.validate();
-		BillOfMaterials resolved = bom.resolve(Version.parse("1.2.3.RELEASE"));
-		assertThat(resolved.getGroupId(), equalTo("com.example"));
-		assertThat(resolved.getArtifactId(), equalTo("bom"));
-		assertThat(resolved.getVersion(), equalTo("1.1.0"));
-		assertThat(resolved.getVersionProperty().toStandardFormat(),
-				equalTo("example.version"));
-	}
+  @Test
+  public void resolveRangeOverrideAndMapping() {
+    BillOfMaterials bom = BillOfMaterials.create("com.example", "bom", "1.0.0");
+    bom.setVersionProperty("example.version");
+    bom.getMappings()
+        .add(BillOfMaterials.Mapping.create("[1.2.0.RELEASE,1.3.0.M1)", "1.1.0"));
+    bom.validate();
+    BillOfMaterials resolved = bom.resolve(Version.parse("1.2.3.RELEASE"));
+    assertThat(resolved.getGroupId(), equalTo("com.example"));
+    assertThat(resolved.getArtifactId(), equalTo("bom"));
+    assertThat(resolved.getVersion(), equalTo("1.1.0"));
+    assertThat(resolved.getVersionProperty().toStandardFormat(),
+        equalTo("example.version"));
+  }
 
-	@Test
-	public void noRangeAvailable() {
-		BillOfMaterials bom = BillOfMaterials.create("com.example", "bom");
-		bom.getMappings()
-				.add(BillOfMaterials.Mapping.create("[1.2.0.RELEASE,1.3.0.M1)", "1.1.0"));
-		bom.getMappings()
-				.add(BillOfMaterials.Mapping.create("[1.3.0.M1, 1.4.0.M1)", "1.2.0"));
-		bom.validate();
+  @Test
+  public void noRangeAvailable() {
+    BillOfMaterials bom = BillOfMaterials.create("com.example", "bom");
+    bom.getMappings()
+        .add(BillOfMaterials.Mapping.create("[1.2.0.RELEASE,1.3.0.M1)", "1.1.0"));
+    bom.getMappings()
+        .add(BillOfMaterials.Mapping.create("[1.3.0.M1, 1.4.0.M1)", "1.2.0"));
+    bom.validate();
 
-		thrown.expect(IllegalStateException.class);
-		thrown.expectMessage("1.4.1.RELEASE");
-		bom.resolve(Version.parse("1.4.1.RELEASE"));
-	}
+    thrown.expect(IllegalStateException.class);
+    thrown.expectMessage("1.4.1.RELEASE");
+    bom.resolve(Version.parse("1.4.1.RELEASE"));
+  }
 
-	@Test
-	public void resolveRangeWithVariablePatch() {
-		BillOfMaterials bom = BillOfMaterials.create("com.example", "bom", "1.0.0");
-		bom.getMappings().add(
-				BillOfMaterials.Mapping.create("[1.3.0.RELEASE,1.3.x.RELEASE]", "1.1.0"));
-		bom.getMappings().add(BillOfMaterials.Mapping
-				.create("[1.3.x.BUILD-SNAPSHOT,1.4.0.RELEASE)", "1.1.1-SNAPSHOT"));
-		bom.validate();
+  @Test
+  public void resolveRangeWithVariablePatch() {
+    BillOfMaterials bom = BillOfMaterials.create("com.example", "bom", "1.0.0");
+    bom.getMappings().add(
+        BillOfMaterials.Mapping.create("[1.3.0.RELEASE,1.3.x.RELEASE]", "1.1.0"));
+    bom.getMappings().add(BillOfMaterials.Mapping
+        .create("[1.3.x.BUILD-SNAPSHOT,1.4.0.RELEASE)", "1.1.1-SNAPSHOT"));
+    bom.validate();
 
-		bom.updateVersionRange(new VersionParser(Arrays.asList(
-				Version.parse("1.3.8.RELEASE"), Version.parse("1.3.9.BUILD-SNAPSHOT"))));
-		assertThat(bom.resolve(Version.parse("1.3.8.RELEASE")).getVersion(),
-				equalTo("1.1.0"));
-		assertThat(bom.resolve(Version.parse("1.3.9.RELEASE")).getVersion(),
-				equalTo("1.1.1-SNAPSHOT"));
+    bom.updateVersionRange(new VersionParser(Arrays.asList(
+        Version.parse("1.3.8.RELEASE"), Version.parse("1.3.9.BUILD-SNAPSHOT"))));
+    assertThat(bom.resolve(Version.parse("1.3.8.RELEASE")).getVersion(),
+        equalTo("1.1.0"));
+    assertThat(bom.resolve(Version.parse("1.3.9.RELEASE")).getVersion(),
+        equalTo("1.1.1-SNAPSHOT"));
 
-		bom.updateVersionRange(new VersionParser(Arrays.asList(
-				Version.parse("1.3.9.RELEASE"), Version.parse("1.3.10.BUILD-SNAPSHOT"))));
-		assertThat(bom.resolve(Version.parse("1.3.8.RELEASE")).getVersion(),
-				equalTo("1.1.0"));
-		assertThat(bom.resolve(Version.parse("1.3.9.RELEASE")).getVersion(),
-				equalTo("1.1.0"));
-	}
+    bom.updateVersionRange(new VersionParser(Arrays.asList(
+        Version.parse("1.3.9.RELEASE"), Version.parse("1.3.10.BUILD-SNAPSHOT"))));
+    assertThat(bom.resolve(Version.parse("1.3.8.RELEASE")).getVersion(),
+        equalTo("1.1.0"));
+    assertThat(bom.resolve(Version.parse("1.3.9.RELEASE")).getVersion(),
+        equalTo("1.1.0"));
+  }
 
 }

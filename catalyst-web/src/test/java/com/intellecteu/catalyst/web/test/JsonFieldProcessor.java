@@ -23,207 +23,203 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
- * A {@code JsonFieldProcessor} processes a payload's fields, allowing them to be
- * extracted and removed.
+ * A {@code JsonFieldProcessor} processes a payload's fields, allowing them to be extracted and
+ * removed.
  *
  * @author Andy Wilkinson
  */
 // Copied from RestDocs to make it visible
 final class JsonFieldProcessor {
 
-	boolean hasField(JsonFieldPath fieldPath, Object payload) {
-		final AtomicReference<Boolean> hasField = new AtomicReference<>(false);
-		traverse(new ProcessingContext(payload, fieldPath), match -> hasField.set(true));
-		return hasField.get();
-	}
+  boolean hasField(JsonFieldPath fieldPath, Object payload) {
+    final AtomicReference<Boolean> hasField = new AtomicReference<>(false);
+    traverse(new ProcessingContext(payload, fieldPath), match -> hasField.set(true));
+    return hasField.get();
+  }
 
-	Object extract(JsonFieldPath path, Object payload) {
-		final List<Object> matches = new ArrayList<>();
-		traverse(new ProcessingContext(payload, path), match -> matches.add(match.getValue()));
-		if (matches.isEmpty()) {
-			throw new IllegalArgumentException("Field does not exist: " + path);
-		}
-		if ((!path.isArray()) && path.isPrecise()) {
-			return matches.get(0);
-		}
-		else {
-			return matches;
-		}
-	}
+  Object extract(JsonFieldPath path, Object payload) {
+    final List<Object> matches = new ArrayList<>();
+    traverse(new ProcessingContext(payload, path), match -> matches.add(match.getValue()));
+    if (matches.isEmpty()) {
+      throw new IllegalArgumentException("Field does not exist: " + path);
+    }
+    if ((!path.isArray()) && path.isPrecise()) {
+      return matches.get(0);
+    } else {
+      return matches;
+    }
+  }
 
-	void remove(final JsonFieldPath path, Object payload) {
-		traverse(new ProcessingContext(payload, path), Match::remove);
-	}
+  void remove(final JsonFieldPath path, Object payload) {
+    traverse(new ProcessingContext(payload, path), Match::remove);
+  }
 
-	private void traverse(ProcessingContext context, MatchCallback matchCallback) {
-		final String segment = context.getSegment();
-		if (JsonFieldPath.isArraySegment(segment)) {
-			if (context.getPayload() instanceof List) {
-				handleListPayload(context, matchCallback);
-			}
-		}
-		else if (context.getPayload() instanceof Map
-				&& ((Map<?, ?>) context.getPayload()).containsKey(segment)) {
-			handleMapPayload(context, matchCallback);
-		}
-	}
+  private void traverse(ProcessingContext context, MatchCallback matchCallback) {
+    final String segment = context.getSegment();
+    if (JsonFieldPath.isArraySegment(segment)) {
+      if (context.getPayload() instanceof List) {
+        handleListPayload(context, matchCallback);
+      }
+    } else if (context.getPayload() instanceof Map
+        && ((Map<?, ?>) context.getPayload()).containsKey(segment)) {
+      handleMapPayload(context, matchCallback);
+    }
+  }
 
-	private void handleListPayload(ProcessingContext context,
-			MatchCallback matchCallback) {
-		List<?> list = context.getPayload();
-		final Iterator<?> items = list.iterator();
-		if (context.isLeaf()) {
-			while (items.hasNext()) {
-				Object item = items.next();
-				matchCallback.foundMatch(
-						new ListMatch(items, list, item, context.getParentMatch()));
-			}
-		}
-		else {
-			while (items.hasNext()) {
-				Object item = items.next();
-				traverse(
-						context.descend(item,
-								new ListMatch(items, list, item, context.parent)),
-						matchCallback);
-			}
-		}
-	}
+  private void handleListPayload(ProcessingContext context,
+      MatchCallback matchCallback) {
+    List<?> list = context.getPayload();
+    final Iterator<?> items = list.iterator();
+    if (context.isLeaf()) {
+      while (items.hasNext()) {
+        Object item = items.next();
+        matchCallback.foundMatch(
+            new ListMatch(items, list, item, context.getParentMatch()));
+      }
+    } else {
+      while (items.hasNext()) {
+        Object item = items.next();
+        traverse(
+            context.descend(item,
+                new ListMatch(items, list, item, context.parent)),
+            matchCallback);
+      }
+    }
+  }
 
-	private void handleMapPayload(ProcessingContext context,
-			MatchCallback matchCallback) {
-		Map<?, ?> map = context.getPayload();
-		Object item = map.get(context.getSegment());
-		MapMatch mapMatch = new MapMatch(item, map, context.getSegment(),
-				context.getParentMatch());
-		if (context.isLeaf()) {
-			matchCallback.foundMatch(mapMatch);
-		}
-		else {
-			traverse(context.descend(item, mapMatch), matchCallback);
-		}
-	}
+  private void handleMapPayload(ProcessingContext context,
+      MatchCallback matchCallback) {
+    Map<?, ?> map = context.getPayload();
+    Object item = map.get(context.getSegment());
+    MapMatch mapMatch = new MapMatch(item, map, context.getSegment(),
+        context.getParentMatch());
+    if (context.isLeaf()) {
+      matchCallback.foundMatch(mapMatch);
+    } else {
+      traverse(context.descend(item, mapMatch), matchCallback);
+    }
+  }
 
-	private static final class MapMatch implements Match {
+  private interface MatchCallback {
 
-		private final Object item;
+    void foundMatch(Match match);
 
-		private final Map<?, ?> map;
+  }
 
-		private final String segment;
+  private interface Match {
 
-		private final Match parent;
+    Object getValue();
 
-		private MapMatch(Object item, Map<?, ?> map, String segment, Match parent) {
-			this.item = item;
-			this.map = map;
-			this.segment = segment;
-			this.parent = parent;
-		}
+    void remove();
+  }
 
-		@Override
-		public Object getValue() {
-			return this.item;
-		}
+  private static final class MapMatch implements Match {
 
-		@Override
-		public void remove() {
-			this.map.remove(this.segment);
-			if (this.map.isEmpty() && this.parent != null) {
-				this.parent.remove();
-			}
-		}
+    private final Object item;
 
-	}
+    private final Map<?, ?> map;
 
-	private static final class ListMatch implements Match {
+    private final String segment;
 
-		private final Iterator<?> items;
+    private final Match parent;
 
-		private final List<?> list;
+    private MapMatch(Object item, Map<?, ?> map, String segment, Match parent) {
+      this.item = item;
+      this.map = map;
+      this.segment = segment;
+      this.parent = parent;
+    }
 
-		private final Object item;
+    @Override
+    public Object getValue() {
+      return this.item;
+    }
 
-		private final Match parent;
+    @Override
+    public void remove() {
+      this.map.remove(this.segment);
+      if (this.map.isEmpty() && this.parent != null) {
+        this.parent.remove();
+      }
+    }
 
-		private ListMatch(Iterator<?> items, List<?> list, Object item, Match parent) {
-			this.items = items;
-			this.list = list;
-			this.item = item;
-			this.parent = parent;
-		}
+  }
 
-		@Override
-		public Object getValue() {
-			return this.item;
-		}
+  private static final class ListMatch implements Match {
 
-		@Override
-		public void remove() {
-			this.items.remove();
-			if (this.list.isEmpty() && this.parent != null) {
-				this.parent.remove();
-			}
-		}
+    private final Iterator<?> items;
 
-	}
+    private final List<?> list;
 
-	private interface MatchCallback {
+    private final Object item;
 
-		void foundMatch(Match match);
+    private final Match parent;
 
-	}
+    private ListMatch(Iterator<?> items, List<?> list, Object item, Match parent) {
+      this.items = items;
+      this.list = list;
+      this.item = item;
+      this.parent = parent;
+    }
 
-	private interface Match {
+    @Override
+    public Object getValue() {
+      return this.item;
+    }
 
-		Object getValue();
+    @Override
+    public void remove() {
+      this.items.remove();
+      if (this.list.isEmpty() && this.parent != null) {
+        this.parent.remove();
+      }
+    }
 
-		void remove();
-	}
+  }
 
-	private static final class ProcessingContext {
+  private static final class ProcessingContext {
 
-		private final Object payload;
+    private final Object payload;
 
-		private final List<String> segments;
+    private final List<String> segments;
 
-		private final Match parent;
+    private final Match parent;
 
-		private final JsonFieldPath path;
+    private final JsonFieldPath path;
 
-		private ProcessingContext(Object payload, JsonFieldPath path) {
-			this(payload, path, null, null);
-		}
+    private ProcessingContext(Object payload, JsonFieldPath path) {
+      this(payload, path, null, null);
+    }
 
-		private ProcessingContext(Object payload, JsonFieldPath path,
-				List<String> segments, Match parent) {
-			this.payload = payload;
-			this.path = path;
-			this.segments = segments == null ? path.getSegments() : segments;
-			this.parent = parent;
-		}
+    private ProcessingContext(Object payload, JsonFieldPath path,
+        List<String> segments, Match parent) {
+      this.payload = payload;
+      this.path = path;
+      this.segments = segments == null ? path.getSegments() : segments;
+      this.parent = parent;
+    }
 
-		private String getSegment() {
-			return this.segments.get(0);
-		}
+    private String getSegment() {
+      return this.segments.get(0);
+    }
 
-		@SuppressWarnings("unchecked")
-		private <T> T getPayload() {
-			return (T) this.payload;
-		}
+    @SuppressWarnings("unchecked")
+    private <T> T getPayload() {
+      return (T) this.payload;
+    }
 
-		private boolean isLeaf() {
-			return this.segments.size() == 1;
-		}
+    private boolean isLeaf() {
+      return this.segments.size() == 1;
+    }
 
-		private Match getParentMatch() {
-			return this.parent;
-		}
+    private Match getParentMatch() {
+      return this.parent;
+    }
 
-		private ProcessingContext descend(Object payload, Match match) {
-			return new ProcessingContext(payload, this.path,
-					this.segments.subList(1, this.segments.size()), match);
-		}
-	}
+    private ProcessingContext descend(Object payload, Match match) {
+      return new ProcessingContext(payload, this.path,
+          this.segments.subList(1, this.segments.size()), match);
+    }
+  }
 
 }
