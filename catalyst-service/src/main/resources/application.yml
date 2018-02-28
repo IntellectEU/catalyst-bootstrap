@@ -177,7 +177,6 @@ initializr:
           groupId: org.apache.camel
           artifactId: camel-spring-boot-starter
           version: ${camel.version}
-          bom: camel
           links:
             - rel: guide
               href: http://camel.apache.org/spring-boot
@@ -185,16 +184,12 @@ initializr:
         - name: Camel File Endpoint
           id: camel-file-endpoint
           description: "Access to file systems, allowing files to be processed by any other Camel Components"
-          groupId: org.apache.camel
-          artifactId: camel-spring-boot-starter
-          version: ${camel.version}
-          starter: false
           facets:
             - file-endpoint
           links:
             - rel: guide
               href: http://camel.apache.org/file2.html
-          category: "camel"
+          category: "nodep"
         - name: Camel Rest Endpoint
           id: camel-rest-endpoint
           groupId: org.apache.camel
@@ -206,7 +201,6 @@ initializr:
           links:
             - rel: guide
               href: http://camel.apache.org/rest-dsl.html
-          category: "camel"
         - name: Camel MQTT Endpoint
           description: "Communicate with MQTT compliant message brokers, like Apache ActiveMQ or Mosquitto"
           id: camel-mqtt-endpoint
@@ -216,7 +210,6 @@ initializr:
           links:
             - rel: guide
               href: http://camel.apache.org/mqtt.html
-          category: "camel"
         - name: Camel SQL Endpoint
           id: camel-sql-endpoint
           groupId: org.apache.camel
@@ -228,7 +221,6 @@ initializr:
           links:
             - rel: guide
               href: http://camel.apache.org/sql-component.html
-          category: "camel"
     - name: Core
       content:
         - name: DevTools

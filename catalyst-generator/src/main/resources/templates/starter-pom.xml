@@ -46,7 +46,7 @@
 			<artifactId>groovy</artifactId>
 		</dependency>
 		{{/groovy}}
-		{{#kotlin}}                                                     
+		{{#kotlin}}
 		<dependency>
 			<groupId>org.jetbrains.kotlin</groupId>
 			<artifactId>{{kotlinStdlibArtifactId}}</artifactId>
