@@ -42,10 +42,9 @@ public class Dependency extends MetadataElement implements Describable {
   public static final String SCOPE_RUNTIME = "runtime";
   public static final String SCOPE_PROVIDED = "provided";
   public static final String SCOPE_TEST = "test";
-  public static final List<String> SCOPE_ALL = Arrays.asList(SCOPE_COMPILE,
+  public static final String CATEGORY_NO_DEPENDENCY = "nodep";
+  private static final List<String> SCOPE_ALL = Arrays.asList(SCOPE_COMPILE,
       SCOPE_RUNTIME, SCOPE_COMPILE_ONLY, SCOPE_PROVIDED, SCOPE_TEST);
-
-  public static final String CATEGORY_CAMEL = "camel";
 
   private List<String> aliases = new ArrayList<>();
   private List<String> facets = new ArrayList<>();
@@ -156,8 +155,15 @@ public class Dependency extends MetadataElement implements Describable {
    * Specify if the dependency has its coordinates set, i.e. {@code groupId} and {@code
    * artifactId}.
    */
-  private boolean hasCoordinates() {
-    return groupId != null && artifactId != null;
+  private boolean hasMissingCoordinates() {
+    return groupId == null || artifactId == null;
+  }
+
+  /**
+   * Check if the dependency can have no groi=upId and artifactId by design
+   */
+  private boolean hasNoDependencyCategory() {
+    return Dependency.CATEGORY_NO_DEPENDENCY.equals(getCategory());
   }
 
   /**
@@ -179,12 +185,12 @@ public class Dependency extends MetadataElement implements Describable {
    */
   public void resolve() {
     if (getId() == null) {
-      if (!hasCoordinates()) {
+      if (hasMissingCoordinates()) {
         throw new InvalidInitializrMetadataException(
             "Invalid dependency, should have at least an id or a groupId/artifactId pair.");
       }
       generateId();
-    } else if (!hasCoordinates()) {
+    } else if (hasMissingCoordinates() && !hasNoDependencyCategory()) {
       // Let"s build the coordinates from the id
       StringTokenizer st = new StringTokenizer(getId(), ":");
       if (st.countTokens() == 1) { // assume spring-boot-starter
@@ -204,6 +210,7 @@ public class Dependency extends MetadataElement implements Describable {
     links.forEach(Link::resolve);
     updateVersionRanges(VersionParser.DEFAULT);
   }
+
 
   public void updateVersionRanges(VersionParser versionParser) {
     if (versionRange != null) {
