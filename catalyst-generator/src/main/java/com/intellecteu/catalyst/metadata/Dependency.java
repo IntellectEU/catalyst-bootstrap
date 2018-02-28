@@ -162,8 +162,8 @@ public class Dependency extends MetadataElement implements Describable {
   /**
    * Check if the dependency can have no groi=upId and artifactId by design
    */
-  private boolean hasNoDependencyCategory() {
-    return Dependency.CATEGORY_NO_DEPENDENCY.equals(getCategory());
+  public boolean shouldAlwaysHaveArtifactCoordinates() {
+    return !Dependency.CATEGORY_NO_DEPENDENCY.equals(getCategory());
   }
 
   /**
@@ -190,7 +190,7 @@ public class Dependency extends MetadataElement implements Describable {
             "Invalid dependency, should have at least an id or a groupId/artifactId pair.");
       }
       generateId();
-    } else if (hasMissingCoordinates() && !hasNoDependencyCategory()) {
+    } else if (hasMissingCoordinates() && shouldAlwaysHaveArtifactCoordinates()) {
       // Let"s build the coordinates from the id
       StringTokenizer st = new StringTokenizer(getId(), ":");
       if (st.countTokens() == 1) { // assume spring-boot-starter
