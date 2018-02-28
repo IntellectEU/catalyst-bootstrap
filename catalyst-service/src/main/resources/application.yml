@@ -125,6 +125,16 @@ initializr:
     - name: Camel
       bom: camel
       content:
+        - name: Apache Camel
+          id: camel
+          description: Core Camel dependency. Required for all endpoints
+          groupId: org.apache.camel
+          artifactId: camel-spring-boot-starter
+          version: ${camel.version}
+          links:
+            - rel: guide
+              href: http://camel.apache.org/spring-boot
+              description: Using Apache Camel with Spring Boot
         - name: Camel File Endpoint
           id: camel-file-endpoint
           description: "Access to file systems, allowing files to be processed by any other Camel Components"

@@ -152,9 +152,9 @@ public class ProjectGenerator {
 
   private static List<Dependency> filterDependencies(List<Dependency> dependencies,
       String scope) {
-    return dependencies.stream().filter(
-        dep -> scope.equals(dep.getScope())
-            && !Dependency.CATEGORY_NO_DEPENDENCY.equals(dep.getCategory()))
+    return dependencies.stream()
+        .filter(dep -> scope.equals(dep.getScope()))
+        .filter(dep -> dep.shouldAlwaysHaveArtifactCoordinates())
         .sorted(DependencyComparator.INSTANCE)
         .collect(Collectors.toList());
   }

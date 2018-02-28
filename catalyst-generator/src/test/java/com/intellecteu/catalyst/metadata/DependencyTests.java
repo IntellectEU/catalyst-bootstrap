@@ -303,7 +303,7 @@ public class DependencyTests {
   }
 
   @Test
-  public void allowAmptyGroupAndArtifactForNodepCategory() {
+  public void allowEmptyGroupAndArtifactForNodepCategory() {
     Dependency dependency = Dependency
         .withId("web", null, null, "0.3.0.RELEASE", null, Dependency.CATEGORY_NO_DEPENDENCY);
     dependency.resolve();
