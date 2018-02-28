@@ -66,17 +66,6 @@ public class InitializrMetadata {
 
   private final TextCapability packageName = new PackageCapability(groupId, artifactId);
 
-  private final String LICENSE = "/*\n"
-      + "* Copyright (c) 2018 IntellectEU NV. All rights reserved.\n"
-      + "* Redistribution and use in source and binary forms are not permitted without direct consent of IntellectEU NV in writing.\n"
-      + "* THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, \n"
-      + "* EXPRESS OR IMPLIED,INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, \n"
-      + "* FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT. \n"
-      + "* IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, \n"
-      + "* DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, \n"
-      + "* ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n"
-      + "*/";
-
   public InitializrMetadata() {
     this(new InitializrConfiguration());
   }
@@ -275,7 +264,6 @@ public class InitializrMetadata {
     defaults.put("name", name.getContent());
     defaults.put("description", description.getContent());
     defaults.put("packageName", packageName.getContent());
-    defaults.put("license", LICENSE);
     return defaults;
   }
 
