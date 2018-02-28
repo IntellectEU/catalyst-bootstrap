@@ -28,6 +28,7 @@ import com.intellecteu.catalyst.util.VersionProperty;
 import java.beans.PropertyDescriptor;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -82,6 +83,10 @@ public class ProjectGenerator {
   private static final Version VERSION_2_0_0_M3 = Version.parse("2.0.0.M3");
 
   private static final Version VERSION_2_0_0_M6 = Version.parse("2.0.0.M6");
+  private static final String GRADLE = "gradle";
+  private static final String MAVEN = "maven";
+  private static final String WAR = "war";
+  private static final String KOTLIN = "kotlin";
 
   @Autowired
   private ApplicationEventPublisher eventPublisher;
@@ -110,15 +115,15 @@ public class ProjectGenerator {
   }
 
   private static boolean isGradleBuild(ProjectRequest request) {
-    return "gradle".equals(request.getBuild());
+    return GRADLE.equals(request.getBuild());
   }
 
   private static boolean isMavenBuild(ProjectRequest request) {
-    return "maven".equals(request.getBuild());
+    return MAVEN.equals(request.getBuild());
   }
 
   private static boolean isWar(ProjectRequest request) {
-    return "war".equals(request.getPackaging());
+    return WAR.equals(request.getPackaging());
   }
 
   private static boolean isNewTestInfrastructureAvailable(ProjectRequest request) {
@@ -265,7 +270,7 @@ public class ProjectGenerator {
     File src = new File(new File(dir, "src/main/" + codeLocation),
         request.getPackageName().replace(".", "/"));
     src.mkdirs();
-    String extension = ("kotlin".equals(language) ? "kt" : language);
+    String extension = (KOTLIN.equals(language) ? "kt" : language);
     write(new File(src, applicationName + "." + extension),
         "Application." + extension, model);
 
@@ -281,7 +286,7 @@ public class ProjectGenerator {
     write(new File(test, applicationName + "Tests." + extension),
         "ApplicationTests." + extension, model);
 
-    writeCamelEndpoints(request, model, src, appProperties);
+    writeCamelUsecases(request, model, src, appProperties);
 
     File resources = new File(dir, "src/main/resources");
     resources.mkdirs();
@@ -294,44 +299,56 @@ public class ProjectGenerator {
     return rootDir;
   }
 
-  private void writeCamelEndpoints(ProjectRequest request, Map<String, Object> model, File src,
+  /**
+   * Write routes, properties, and configuration for usecase facets e.g. file2sftp-usecase
+   */
+  private void writeCamelUsecases(ProjectRequest request, Map<String, Object> model, File src,
       StringBuilder appProperties) {
     try {
-      if (request.hasFacet("rest-endpoint")) {
-        appendRouter("Rest", src, model);
-        appendProperties("Rest", appProperties);
+      List<String> usecases = request.getUsecaseNames();
+      if (!usecases.isEmpty()) {
+        for (String usecase : usecases) {
+          appendRouter(usecase, src, model);
+          appendProperties(usecase, appProperties);
+          appendConfiguration(usecase, src, model);
+        }
       }
-
-      if (request.hasFacet("file-endpoint")) {
-        appendRouter("File", src, model);
-
-        appendProperties("File", appProperties);
-      }
-
-      if (request.hasFacet("sql-endpoint")) {
-        appendRouter("Sql", src, model);
-        appendProperties("Sql", appProperties);
-      }
-
     } catch (IOException ex) {
       throw new InitializrException("Failure while processing Camel Endpoints", ex);
     }
   }
 
-  private void appendRouter(String routerName, File srcDir, Map<String, Object> model) {
-    write(new File(srcDir, routerName + "Router.java"),
-        "camel/" + routerName + "Router.java", model);
+  private void appendRouter(String usecaseName, File srcDir, Map<String, Object> model) {
+    write(new File(srcDir, usecaseName + "Router.java"),
+        "camel/router/" + usecaseName + "Router.java", model);
   }
 
-  private void appendProperties(String routerName, StringBuilder appProperties) throws IOException {
-    InputStream is = ResourceUtils
-        .getURL("classpath:templates/camel/" + routerName + "Router.properties").openStream();
-    String content;
-    try (BufferedReader br = new BufferedReader(
-        new InputStreamReader(is, Charset.defaultCharset()))) {
-      content = br.lines().collect(Collectors.joining(System.lineSeparator()));
+  private void appendProperties(String usecaseName, StringBuilder appProperties)
+      throws IOException {
+    try {
+      InputStream is = ResourceUtils
+          .getURL("classpath:templates/camel/properties/" + usecaseName + ".properties")
+          .openStream();
+
+      String content;
+      try (BufferedReader br = new BufferedReader(
+          new InputStreamReader(is, Charset.defaultCharset()))) {
+        content = br.lines().collect(Collectors.joining(System.lineSeparator()));
+      }
+      appProperties.append(content).append(System.lineSeparator());
+    } catch (FileNotFoundException ex) {
+      log.warn("Property file for {} not found.", usecaseName, ex);
     }
-    appProperties.append(content).append(System.lineSeparator());
+
+  }
+
+  private void appendConfiguration(String usecaseName, File srcDir, Map<String, Object> model) {
+    try {
+      write(new File(srcDir, usecaseName + "Config.java"),
+          "camel/config/" + usecaseName + "Config.java", model);
+    } catch (IllegalStateException ex) {
+      log.warn("Configuration file for {} not found.", usecaseName, ex);
+    }
   }
 
   /**

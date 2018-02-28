@@ -18,7 +18,9 @@ package com.intellecteu.catalyst.generator;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import com.intellecteu.catalyst.metadata.BillOfMaterials;
 import com.intellecteu.catalyst.metadata.Dependency;
@@ -26,6 +28,7 @@ import com.intellecteu.catalyst.metadata.Dependency.Mapping;
 import com.intellecteu.catalyst.metadata.InitializrMetadata;
 import com.intellecteu.catalyst.metadata.InitializrMetadataBuilder;
 import com.intellecteu.catalyst.test.metadata.InitializrMetadataTestBuilder;
+import java.util.ArrayList;
 import java.util.Arrays;
 import org.junit.Rule;
 import org.junit.Test;
@@ -390,6 +393,33 @@ public class ProjectRequestTests {
   }
 
   @Test
+  public void getUseCaseName() {
+    ProjectRequest request = initProjectRequest();
+    request.setFacets(new ArrayList<String>() {{
+      add("file2sftp-usecase");
+    }});
+    assertEquals(request.getUsecaseNames().get(0), "file2sftp");
+  }
+
+  @Test
+  public void getUseCaseNameEmpty() {
+    ProjectRequest request = initProjectRequest();
+    request.setFacets(new ArrayList<String>() {{
+      add("");
+    }});
+    assertTrue(request.getUsecaseNames().isEmpty());
+  }
+
+  @Test
+  public void getUseCaseNameIncorrect() {
+    ProjectRequest request = initProjectRequest();
+    request.setFacets(new ArrayList<String>() {{
+      add("file2sftp-ussecase");
+    }});
+    assertTrue(request.getUsecaseNames().isEmpty());
+  }
+
+  @Test
   public void resolveAdditionalRepositoriesDuplicates() {
     Dependency dependency = Dependency.withId("foo");
     dependency.setBom("foo-bom");
@@ -422,4 +452,6 @@ public class ProjectRequestTests {
     request.initialize(this.metadata);
     return request;
   }
+
+
 }

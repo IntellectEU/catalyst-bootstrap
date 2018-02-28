@@ -16,6 +16,7 @@
 
 package com.intellecteu.catalyst.generator;
 
+import com.google.common.base.Strings;
 import com.intellecteu.catalyst.metadata.BillOfMaterials;
 import com.intellecteu.catalyst.metadata.DefaultMetadataElement;
 import com.intellecteu.catalyst.metadata.Dependency;
@@ -28,6 +29,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.util.StringUtils;
@@ -297,6 +299,17 @@ public class ProjectRequest extends BasicProjectRequest {
   public boolean hasFacet(String facet) {
     return facets.contains(facet);
   }
+
+  /**
+   * Get the usecase names if exists.
+   */
+  public List<String> getUsecaseNames() {
+    return facets.stream().filter(s -> s.contains("-usecase"))
+        .map(s -> s.split("-")[0])
+        .filter(((Predicate<String>) Strings::isNullOrEmpty).negate())
+        .collect(Collectors.toList());
+  }
+
 
   @Override
   public String toString() {
