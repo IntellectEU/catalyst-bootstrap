@@ -1,4 +1,7 @@
 {{=<% %>=}}
+
+<%license%>
+
 package <%packageName%>;
 
 import org.apache.camel.builder.RouteBuilder;
@@ -10,7 +13,7 @@ import org.springframework.stereotype.Component;
  * 
  */
 @Component
-public class SqlRouter extends RouteBuilder {
+public class Sql2LogRouter extends RouteBuilder {
     
     @Override
     public void configure() {

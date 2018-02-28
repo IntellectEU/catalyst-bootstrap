@@ -1,4 +1,7 @@
 {{=<% %>=}}
+
+<%license%>
+
 package <%packageName%>;
 
 import org.apache.camel.builder.RouteBuilder;
@@ -9,7 +12,7 @@ import org.springframework.stereotype.Component;
  * 
  */
 @Component
-public class RestRouter extends RouteBuilder {
+public class Rest2DirectRouter extends RouteBuilder {
     @Override
     public void configure() throws Exception {
         rest("/{{rest.base.path}}/")
