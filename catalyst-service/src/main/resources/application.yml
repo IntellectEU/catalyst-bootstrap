@@ -58,7 +58,7 @@ initializr:
         mappings:
           - versionRange: "[1.4.0.RELEASE,1.5.0.RELEASE)"
             version: 2.18.5
-          - versionRange: "[1.5.0.RELEASE,2.0.0.M1)"
+          - versionRange: "[1.5.0.RELEASE,2.0.0.RELEASE]"
             version: 2.20.2
       codecentric-spring-boot-admin:
         groupId: de.codecentric
