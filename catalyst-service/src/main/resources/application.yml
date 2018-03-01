@@ -100,7 +100,7 @@ initializr:
           description: Simple File to Log route
           category: nodep
           facets:
-            - File2log-usecase
+            - File2Log-usecase
           links:
             - rel: guide
               href: http://camel.apache.org/file2.html
