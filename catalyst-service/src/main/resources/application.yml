@@ -95,15 +95,17 @@ initializr:
   dependencies:
     - name: Camel Usecases
       content:
-        - name: File2log
-          id: file2log
-          description: Simple File to Log route
+        - name: File and Sftp
+          id: filesftp
+          description: "Simple File to/from Sftp server route. Depends on: Apache Camel, Camel File Endpoint, Camel FTP Endpoint, Configuration Processor"
           category: nodep
           facets:
-            - File2Log-usecase
+            - FileSftp-usecase
           links:
-            - rel: guide
+            - rel: file guide
               href: http://camel.apache.org/file2.html
+            - rel: sftp guide
+              href: http://camel.apache.org/ftp2.html
         - name: Rest2Direct
           id: rest2Direct
           description: Simple Rest to Direct route
@@ -151,6 +153,15 @@ initializr:
             - rel: guide
               href: http://camel.apache.org/file2.html
           category: nodep
+        - name: Camel FTP Endpoint
+          id: camel-ftp-endpoint
+          description: Camel FTP support
+          groupId: org.apache.camel
+          artifactId: camel-ftp
+          version: ${camel.version}
+          links:
+            - rel: guide
+              href: http://camel.apache.org/ftp2.html
         - name: Camel Rest Endpoint
           id: camel-rest-endpoint
           groupId: org.apache.camel
@@ -901,12 +912,6 @@ initializr:
       id: java
       default: true
   bootVersions:
-    - name : Latest SNAPSHOT
-      id: 1.2.4.BUILD-SNAPSHOT
-      default: false
-    - name: 1.2.3
-      id: 1.2.3.RELEASE
+    - name: 1.5.10
+      id: 1.5.10.RELEASE
       default: true
-    - name: 1.1.12
-      id: 1.1.12.RELEASE
-      default: false
