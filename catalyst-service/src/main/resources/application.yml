@@ -892,12 +892,6 @@ initializr:
       id: java
       default: true
   bootVersions:
-    - name : Latest SNAPSHOT
-      id: 1.2.4.BUILD-SNAPSHOT
-      default: false
-    - name: 1.2.3
-      id: 1.2.3.RELEASE
+    - name: 1.5.10
+      id: 1.5.10.RELEASE
       default: true
-    - name: 1.1.12
-      id: 1.1.12.RELEASE
-      default: false
