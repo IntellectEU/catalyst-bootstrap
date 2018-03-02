@@ -21,19 +21,19 @@ public class DuplicateCheckRouter extends RouteBuilder {
 
   @Override
   public void configure() {
-    from("direct:inbox")
+    from("timer:name?period=1000")
+        .setHeader("messageId", simple("random(10)", String.class))
         .log("Message identifier: ${header.messageId}")
-        .idempotentConsumer(header("messageId"))
-        .messageIdRepository(idempotentRepository)
-        .skipDuplicate(true)
-        // Needed to be able to process duplicates separately and not just consume them
+        .idempotentConsumer(header("messageId")).messageIdRepository(idempotentRepository)
+        .skipDuplicate(false) // Needed to be able to mark duplicates and not just consume them
         .filter(exchangeProperty(Exchange.DUPLICATE_MESSAGE).isEqualTo(true))
-        // filter out duplicate messages by sending them to someplace else and then stop
-        .log("Processing duplicate message with id: ${header.messageId}")
-        .to("mock:duplicate")
-        .stop()
+          // here we process duplicates
+          .log("Processing duplicate message with id: ${header.messageId}")
+          .to("mock:duplicate")
+          .stop()
         .end()
         // and here we process only new messages (no duplicates)
+        .log("Processing original message with id: ${header.messageId}")
         .to("mock:proceed");
   }
 }
