@@ -16,7 +16,11 @@
 
 package com.intellecteu.catalyst.service;
 
+import com.intellecteu.catalyst.metadata.InitializrMetadata;
+import com.intellecteu.catalyst.metadata.InitializrMetadataBuilder;
 import com.intellecteu.catalyst.metadata.InitializrMetadataProvider;
+import com.intellecteu.catalyst.metadata.InitializrProperties;
+import com.intellecteu.catalyst.metadata.SimpleInitializrMetadataProvider;
 import com.intellecteu.catalyst.web.project.LegacyStsController;
 import java.util.concurrent.Executor;
 import org.springframework.boot.SpringApplication;
@@ -47,6 +51,20 @@ public class CatalystService {
   public LegacyStsController legacyStsController(InitializrMetadataProvider metadataProvider,
       ResourceUrlProvider resourceUrlProvider) {
     return new LegacyStsController(metadataProvider, resourceUrlProvider);
+  }
+
+  //
+
+  /**
+   * This provider overrides the DefaultInitializrMetadataProvider, which fetches the list of
+   * available Spring Boot versions from Spring website. This is needed because the latest Camel
+   * 2.20.2 requires some classes that are not available in Spring Boot 2.0.0
+   */
+  @Bean
+  public InitializrMetadataProvider initializrMetadataProvider(InitializrProperties properties) {
+    InitializrMetadata metadata = InitializrMetadataBuilder
+        .fromInitializrProperties(properties).build();
+    return new SimpleInitializrMetadataProvider(metadata);
   }
 
   @Configuration
