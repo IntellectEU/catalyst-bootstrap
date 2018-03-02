@@ -97,7 +97,7 @@ initializr:
       content:
         - name: File and Sftp
           id: filesftp
-          description: Simple File to/from Sftp server route
+          description: "Simple File to/from Sftp server route. Depends on: Apache Camel, Camel File Endpoint, Camel FTP Endpoint, Configuration Processor"
           category: nodep
           facets:
             - FileSftp-usecase
@@ -144,6 +144,15 @@ initializr:
             - rel: guide
               href: http://camel.apache.org/file2.html
           category: nodep
+        - name: Camel FTP Endpoint
+          id: camel-ftp-endpoint
+          description: Camel FTP support
+          groupId: org.apache.camel
+          artifactId: camel-ftp
+          version: ${camel.version}
+          links:
+            - rel: guide
+              href: http://camel.apache.org/ftp2.html
         - name: Camel Rest Endpoint
           id: camel-rest-endpoint
           groupId: org.apache.camel
