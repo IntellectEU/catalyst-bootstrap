@@ -16,6 +16,8 @@
 
 package com.intellecteu.catalyst.generator;
 
+import com.google.common.base.Charsets;
+import com.google.common.io.CharStreams;
 import com.intellecteu.catalyst.InitializrException;
 import com.intellecteu.catalyst.metadata.BillOfMaterials;
 import com.intellecteu.catalyst.metadata.Dependency;
@@ -26,7 +28,6 @@ import com.intellecteu.catalyst.util.TemplateRenderer;
 import com.intellecteu.catalyst.util.Version;
 import com.intellecteu.catalyst.util.VersionProperty;
 import java.beans.PropertyDescriptor;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -343,17 +344,17 @@ public class ProjectGenerator {
 
   private void appendProperties(String usecaseName, StringBuilder appProperties)
       throws IOException {
-    try {
-      InputStream is = ResourceUtils
-          .getURL("classpath:templates/camel/properties/" + usecaseName + ".yml")
-          .openStream();
+    try (InputStream base = ResourceUtils
+        .getURL("classpath:templates/camel/properties/default.yml").openStream();
+        InputStream custom = ResourceUtils
+            .getURL("classpath:templates/camel/properties/" + usecaseName + ".yml").openStream()) {
+      String baseProperties = CharStreams.toString(
+          new InputStreamReader(base, Charsets.UTF_8));
+      String customProperties = CharStreams.toString(
+          new InputStreamReader(custom, Charsets.UTF_8));
 
-      String content;
-      try (BufferedReader br = new BufferedReader(
-          new InputStreamReader(is, Charset.defaultCharset()))) {
-        content = br.lines().collect(Collectors.joining(System.lineSeparator()));
-      }
-      appProperties.append(content).append(System.lineSeparator());
+      appProperties.append(baseProperties).append(System.lineSeparator())
+          .append(customProperties).append(System.lineSeparator());
     } catch (FileNotFoundException ex) {
       log.warn("Property file for {} not found: {}", usecaseName, ex.getMessage());
     }
