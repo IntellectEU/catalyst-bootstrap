@@ -40,10 +40,10 @@ import org.springframework.web.servlet.resource.ResourceUrlProvider;
  */
 @SpringBootApplication
 @EnableCaching
-public class InitializrService {
+public class CatalystService {
 
   public static void main(String[] args) {
-    SpringApplication.run(InitializrService.class, args);
+    SpringApplication.run(CatalystService.class, args);
   }
 
   @Bean

@@ -39,13 +39,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
- * Basic smoke tests for {@link InitializrService}.
+ * Basic smoke tests for {@link CatalystService}.
  *
  * @author Stephane Nicoll
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-public class InitializrServiceSmokeTests {
+public class CatalystServiceSmokeTests {
 
   @Autowired
   private TestRestTemplate restTemplate;
