@@ -122,6 +122,15 @@ initializr:
           links:
             - rel: guide
               href: http://camel.apache.org/sql-component.html
+        - name: Duplicate Check
+          id: duplicateCheck
+          description: How to check messages for duplication and process both original and duplicate messages separately
+          category: nodep
+          facets:
+            - DuplicateCheck-usecase
+          links:
+            - rel: guide
+              href: http://camel.apache.org/sql-component.html
     - name: Camel
       bom: camel
       content:
