@@ -1,0 +1,44 @@
+#### Properties for File/SFTP Router
+catalyst:
+  filesftp:
+    fileReader:
+        enabled: true
+    sftpReader:
+        enabled: true
+    maxRetries: 10
+    file:
+      dir:
+        done: ./catalyst/file/done
+        failed: ./catalyst/file/failed
+        in: ./catalyst/file/in
+        out: ./catalyst/file/out
+    sftp:
+      host: localhost
+      port: 21
+      dir:
+       in: catalyst/sftp/in
+       out: catalyst/sftp/out
+      throwExceptionOnConnectFailed: true
+      binary: false
+      passiveMode: false
+      readLock: changed
+      delete: true
+      readLockCheckInterval: 0
+      readLockTimeout: 0
+      include: .*
+      exclude: null
+      delay: 1000
+      localWorkDirectory: ./Config/temp
+      maxMessagesPerPoll: 100
+      consumer.bridgeErrorHandler: true
+      readLockLoggingLevel: DEBUG
+      username: admin
+      password: secret
+      preferredAuthentications: publickey,password
+      knownHostsFile:
+      privateKeyFile:
+      privateKeyPassphrase:
+
+
+
+

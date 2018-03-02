@@ -303,7 +303,7 @@ public class ProjectGenerator {
 
     File resources = new File(dir, "src/main/resources");
     resources.mkdirs();
-    writeText(new File(resources, "application.properties"), appProperties.toString());
+    writeText(new File(resources, "application.yml"), appProperties.toString());
 
     if (request.hasWebFacet()) {
       new File(dir, "src/main/resources/templates").mkdirs();
@@ -324,23 +324,28 @@ public class ProjectGenerator {
           appendRouter(usecase, src, model);
           appendProperties(usecase, appProperties);
           appendConfiguration(usecase, src, model);
+          appendPropertyClass(usecase, src, model);
         }
       }
     } catch (IOException ex) {
-      throw new InitializrException("Failure while processing Camel Endpoints", ex);
+      throw new InitializrException("Failure while processing Camel Usecases", ex);
     }
   }
 
   private void appendRouter(String usecaseName, File srcDir, Map<String, Object> model) {
-    write(new File(srcDir, usecaseName + "Router.java"),
-        "camel/router/" + usecaseName + "Router.java", model);
+    try {
+      write(new File(srcDir, usecaseName + "Router.java"),
+          "camel/router/" + usecaseName + "Router.java", model);
+    } catch (IllegalStateException ex) {
+      log.warn("Java Router file for {} not found: {} ", usecaseName, ex.getMessage());
+    }
   }
 
   private void appendProperties(String usecaseName, StringBuilder appProperties)
       throws IOException {
     try {
       InputStream is = ResourceUtils
-          .getURL("classpath:templates/camel/properties/" + usecaseName + ".properties")
+          .getURL("classpath:templates/camel/properties/" + usecaseName + ".yml")
           .openStream();
 
       String content;
@@ -352,7 +357,6 @@ public class ProjectGenerator {
     } catch (FileNotFoundException ex) {
       log.warn("Property file for {} not found: {}", usecaseName, ex.getMessage());
     }
-
   }
 
   private void appendConfiguration(String usecaseName, File srcDir, Map<String, Object> model) {
@@ -360,7 +364,16 @@ public class ProjectGenerator {
       write(new File(srcDir, usecaseName + "Config.java"),
           "camel/config/" + usecaseName + "Config.java", model);
     } catch (IllegalStateException ex) {
-      log.warn("Configuration file for {} not found: {} ", usecaseName, ex.getMessage());
+      log.warn("Java Configuration file for {} not found: {} ", usecaseName, ex.getMessage());
+    }
+  }
+
+  private void appendPropertyClass(String usecaseName, File srcDir, Map<String, Object> model) {
+    try {
+      write(new File(srcDir, usecaseName + "Properties.java"),
+          "camel/properties/" + usecaseName + "Properties.java", model);
+    } catch (IllegalStateException ex) {
+      log.warn("Java Properties file for {} not found: {} ", usecaseName, ex.getMessage());
     }
   }
 
