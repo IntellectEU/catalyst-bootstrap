@@ -132,7 +132,16 @@ initializr:
             - DuplicateCheck-usecase
           links:
             - rel: guide
-              href: http://camel.apache.org/sql-component.html
+              href: http://camel.apache.org/idempotent-consumer.html
+        - name: PGP
+          id: pgp
+          description: How to check messages for duplication and process both original and duplicate messages separately
+          category: nodep
+          facets:
+            - PGP-usecase
+          links:
+            - rel: guide
+              href: http://camel.apache.org/crypto.html
     - name: Camel
       bom: camel
       content:
@@ -181,14 +190,23 @@ initializr:
             - rel: guide
               href: http://camel.apache.org/mqtt.html
         - name: Camel SQL Endpoint
+          description: The sql component allows you to work with databases using JDBC queries.
           id: camel-sql-endpoint
           groupId: org.apache.camel
-          description: The sql component allows you to work with databases using JDBC queries.
           artifactId: camel-sql
           version: ${camel.version}
           links:
             - rel: guide
               href: http://camel.apache.org/sql-component.html
+        - name: Camel Crypto Endpoint
+          description: Support for cryptohgraphy operations
+          id: camel-crypto-endpoint
+          groupId: org.apache.camel
+          artifactId: camel-crypto
+          version: ${camel.version}
+          links:
+            - rel: guide
+              href: http://camel.apache.org/crypto.html
     - name: Core
       content:
         - name: DevTools
