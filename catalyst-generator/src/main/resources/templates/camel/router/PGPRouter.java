@@ -14,22 +14,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class PGPRouter extends RouteBuilder {
 
-  @Value("${catalyst.pgp.privateKeyFile}")
-  private String privateKeyFile;
-
-  @Value("${catalyst.pgp.privateKeyUserId}")
-  private String privateKeyUserId;
-
-  @Value("${catalyst.pgp.privateKeyPassword}")
-  private String privateKeyPassword;
-
-  @Value("${catalyst.pgp.publicKeyFile}")
-  private String publicKeyFile;
-
-  @Value("${catalyst.pgp.publicKeyUserId}")
-  private String publicKeyUserId;
-
-
   @Override
   public void configure() {
     from("timer:name?period=2000")
@@ -39,13 +23,16 @@ public class PGPRouter extends RouteBuilder {
 
     from("direct:encrypt")
         // Encrypt the message with public key
-        .marshal().pgp(publicKeyFile, publicKeyUserId)
+        .marshal().pgp("{{catalyst.pgp.publicKeyFile}}",
+        "{{catalyst.pgp.publicKeyUserId}}")
         .log("Encrypted message: ${bodyAs(java.lang.String)}")
         .to("direct:decrypt");
 
     from("direct:decrypt")
         // Decrypt using private key and password (passphrase)
-        .unmarshal().pgp(privateKeyFile, privateKeyUserId, privateKeyPassword)
+        .unmarshal().pgp("{{catalyst.pgp.privateKeyFile}}",
+        "{{catalyst.pgp.privateKeyUserId}}",
+        "{{catalyst.pgp.privateKeyPassword}}")
         .log("Decrypted message: ${body}");
   }
 }
