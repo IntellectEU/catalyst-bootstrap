@@ -1,0 +1,14 @@
+#### Properties for PGP Router
+catalyst:
+  pgp:
+# Own secret key used to decrypt incoming messages
+    privateKeyFile: "file:/path/to/private/key.gpg"
+    privateKeyUserId: "keyuser@example.com"
+    privateKeyPassword: "supersecurepassword"
+
+# Public key of counterparty, used to encrypt messages
+    publicKeyFile: "file:/path/to/public/key.gpg"
+    publicKeyUserId: "anotherkeyuser@example.com"
+
+
+
