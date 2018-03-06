@@ -320,7 +320,7 @@ public class ProjectGenerator {
       StringBuilder appProperties) {
 
     try {
-      appendBaseProperties(appProperties);
+      appendDefaultProperties(appProperties);
 
       List<String> usecases = request.getUsecaseNames();
 
@@ -346,12 +346,12 @@ public class ProjectGenerator {
     }
   }
 
-  private void appendBaseProperties(StringBuilder appProperties) throws IOException {
-    try (InputStream base = ResourceUtils
+  private void appendDefaultProperties(StringBuilder appProperties) throws IOException {
+    try (InputStream defaultPropsFile = ResourceUtils
         .getURL("classpath:templates/camel/properties/default.yml").openStream();) {
-      String baseProperties = CharStreams.toString(
-          new InputStreamReader(base, Charsets.UTF_8));
-      appProperties.append(baseProperties).append(System.lineSeparator());
+      String defaultProperties = CharStreams.toString(
+          new InputStreamReader(defaultPropsFile, Charsets.UTF_8));
+      appProperties.append(defaultProperties).append(System.lineSeparator());
     } catch (FileNotFoundException ex) {
       log.warn("Default property file not found: {}", ex.getMessage());
     }
