@@ -318,8 +318,12 @@ public class ProjectGenerator {
    */
   private void writeCamelUsecases(ProjectRequest request, Map<String, Object> model, File src,
       StringBuilder appProperties) {
+
     try {
+      appendBaseProperties(appProperties);
+
       List<String> usecases = request.getUsecaseNames();
+
       if (!usecases.isEmpty()) {
         for (String usecase : usecases) {
           appendRouter(usecase, src, model);
@@ -342,19 +346,25 @@ public class ProjectGenerator {
     }
   }
 
-  private void appendProperties(String usecaseName, StringBuilder appProperties)
-      throws IOException {
+  private void appendBaseProperties(StringBuilder appProperties) throws IOException {
     try (InputStream base = ResourceUtils
-        .getURL("classpath:templates/camel/properties/default.yml").openStream();
-        InputStream custom = ResourceUtils
-            .getURL("classpath:templates/camel/properties/" + usecaseName + ".yml").openStream()) {
+        .getURL("classpath:templates/camel/properties/default.yml").openStream();) {
       String baseProperties = CharStreams.toString(
           new InputStreamReader(base, Charsets.UTF_8));
+      appProperties.append(baseProperties).append(System.lineSeparator());
+    } catch (FileNotFoundException ex) {
+      log.warn("Default property file not found: {}", ex.getMessage());
+    }
+  }
+
+  private void appendProperties(String usecaseName, StringBuilder appProperties)
+      throws IOException {
+    try (InputStream custom = ResourceUtils
+        .getURL("classpath:templates/camel/properties/" + usecaseName + ".yml").openStream()) {
       String customProperties = CharStreams.toString(
           new InputStreamReader(custom, Charsets.UTF_8));
 
-      appProperties.append(baseProperties).append(System.lineSeparator())
-          .append(customProperties).append(System.lineSeparator());
+      appProperties.append(customProperties).append(System.lineSeparator());
     } catch (FileNotFoundException ex) {
       log.warn("Property file for {} not found: {}", usecaseName, ex.getMessage());
     }
