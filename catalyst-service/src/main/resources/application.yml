@@ -99,6 +99,11 @@ initializr:
           id: filesftp
           description: "Simple File to/from Sftp server route. Depends on: Apache Camel, Camel File Endpoint, Camel FTP Endpoint, Configuration Processor"
           category: nodep
+          dependsOn:
+            - camel
+            - camel-file-endpoint
+            - camel-ftp-endpoint
+            - configuration-processor
           facets:
             - FileSftp-usecase
           links:

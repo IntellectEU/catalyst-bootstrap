@@ -16,6 +16,8 @@
 
 package com.intellecteu.catalyst.web.mapper;
 
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.intellecteu.catalyst.metadata.Dependency;
 import com.intellecteu.catalyst.metadata.Type;
@@ -34,6 +36,7 @@ import org.springframework.hateoas.UriTemplate;
 public class InitializrMetadataV21JsonMapper extends InitializrMetadataV2JsonMapper {
 
   private final TemplateVariables dependenciesVariables;
+  private static final JsonNodeFactory nodeFactory = JsonNodeFactory.instance;
 
   public InitializrMetadataV21JsonMapper() {
     this.dependenciesVariables = new TemplateVariables(
@@ -61,6 +64,11 @@ public class InitializrMetadataV21JsonMapper extends InitializrMetadataV2JsonMap
     }
     if (dependency.getCategory() != null) {
       content.put("category", dependency.getCategory());
+    }
+    if (dependency.getDependsOn() != null && !dependency.getDependsOn().isEmpty()) {
+      ArrayNode array = nodeFactory.arrayNode();
+      dependency.getDependsOn().forEach(array::add);
+      content.set("dependsOn", array);
     }
     return content;
   }

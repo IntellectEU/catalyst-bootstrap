@@ -53,6 +53,11 @@ public class DependencyMetadataV21JsonMapper implements DependencyMetadataJsonMa
     if (dep.getCategory() != null) {
       node.put("category", dep.getCategory());
     }
+    if (dep.getDependsOn() != null && !dep.getDependsOn().isEmpty()) {
+      ArrayNode array = nodeFactory.arrayNode();
+      dep.getDependsOn().forEach(array::add);
+      node.set("dependsOn", array);
+    }
     return node;
   }
 

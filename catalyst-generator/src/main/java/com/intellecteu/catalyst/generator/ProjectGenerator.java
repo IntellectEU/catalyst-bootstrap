@@ -320,16 +320,16 @@ public class ProjectGenerator {
       StringBuilder appProperties) {
 
     try {
-      appendDefaultProperties(appProperties);
-
       List<String> usecases = request.getUsecaseNames();
+      appendProperties("classpath:templates/camel/properties/default.yml", appProperties);
 
       if (!usecases.isEmpty()) {
         for (String usecase : usecases) {
-          appendRouter(usecase, src, model);
-          appendProperties(usecase, appProperties);
-          appendConfiguration(usecase, src, model);
-          appendPropertyClass(usecase, src, model);
+          appendClass(usecase + "Router.java", "camel/router/", src, model);
+          appendClass(usecase + "Config.java", "camel/config/", src, model);
+          appendClass(usecase + "Properties.java", "camel/properties/", src, model);
+          appendProperties("classpath:templates/camel/properties/" + usecase + ".yml",
+              appProperties);
         }
       }
     } catch (IOException ex) {
@@ -337,54 +337,29 @@ public class ProjectGenerator {
     }
   }
 
-  private void appendRouter(String usecaseName, File srcDir, Map<String, Object> model) {
+  private void appendClass(String usecaseName, String templateLocation, File srcDir,
+      Map<String, Object> model) {
     try {
-      write(new File(srcDir, usecaseName + "Router.java"),
-          "camel/router/" + usecaseName + "Router.java", model);
+      write(new File(srcDir, usecaseName),
+          templateLocation + usecaseName, model);
     } catch (IllegalStateException ex) {
-      log.warn("Java Router file for {} not found: {} ", usecaseName, ex.getMessage());
+      log.warn("Class file: {} not found: {} ", usecaseName, ex.getMessage());
     }
   }
 
-  private void appendDefaultProperties(StringBuilder appProperties) throws IOException {
-    try (InputStream defaultPropsFile = ResourceUtils
-        .getURL("classpath:templates/camel/properties/default.yml").openStream();) {
-      String defaultProperties = CharStreams.toString(
-          new InputStreamReader(defaultPropsFile, Charsets.UTF_8));
-      appProperties.append(defaultProperties).append(System.lineSeparator());
-    }
-  }
-
-  private void appendProperties(String usecaseName, StringBuilder appProperties)
+  private void appendProperties(String propertiesLocation, StringBuilder appProperties)
       throws IOException {
     try (InputStream custom = ResourceUtils
-        .getURL("classpath:templates/camel/properties/" + usecaseName + ".yml").openStream()) {
+        .getURL(propertiesLocation).openStream()) {
       String customProperties = CharStreams.toString(
           new InputStreamReader(custom, Charsets.UTF_8));
 
       appProperties.append(customProperties).append(System.lineSeparator());
     } catch (FileNotFoundException ex) {
-      log.warn("Property file for {} not found: {}", usecaseName, ex.getMessage());
+      log.warn("Property file not found: {}", ex.getMessage());
     }
   }
 
-  private void appendConfiguration(String usecaseName, File srcDir, Map<String, Object> model) {
-    try {
-      write(new File(srcDir, usecaseName + "Config.java"),
-          "camel/config/" + usecaseName + "Config.java", model);
-    } catch (IllegalStateException ex) {
-      log.warn("Java Configuration file for {} not found: {} ", usecaseName, ex.getMessage());
-    }
-  }
-
-  private void appendPropertyClass(String usecaseName, File srcDir, Map<String, Object> model) {
-    try {
-      write(new File(srcDir, usecaseName + "Properties.java"),
-          "camel/properties/" + usecaseName + "Properties.java", model);
-    } catch (IllegalStateException ex) {
-      log.warn("Java Properties file for {} not found: {} ", usecaseName, ex.getMessage());
-    }
-  }
 
   /**
    * Create a distribution file for the specified project structure directory and extension

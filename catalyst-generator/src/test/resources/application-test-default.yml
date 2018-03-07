@@ -100,6 +100,9 @@ initializr:
         - name: My Camel dep
           id: camel-foobar
           category: camel
+          dependsOn:
+            - id1
+            - id2
   types:
     - name: Maven POM
       id: maven-build
