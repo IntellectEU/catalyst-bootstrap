@@ -50,6 +50,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.Environment;
 import org.springframework.web.servlet.resource.ResourceUrlProvider;
 
@@ -130,6 +131,12 @@ public class InitializrAutoConfiguration {
     @Bean
     public WebConfig webConfig() {
       return new WebConfig();
+    }
+
+    @Bean
+    @Profile("dev")
+    public DevConfig devConfig() {
+      return new DevConfig();
     }
 
     @Bean
