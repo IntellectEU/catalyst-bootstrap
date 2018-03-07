@@ -258,7 +258,8 @@
             "id": "camel-foobar",
             "name": "My Camel dep",
             "scope": "compile",
-            "category": "camel"
+            "category": "camel",
+            "dependsOn":["id1","id2"]
           }
         ],
         "name": "Other"

@@ -79,6 +79,8 @@ public class Dependency extends MetadataElement implements Describable {
 
   private List<Link> links = new ArrayList<>();
 
+  private List<String> dependsOn = new ArrayList<>();
+
   private String category;
 
   public Dependency() {
@@ -105,6 +107,7 @@ public class Dependency extends MetadataElement implements Describable {
     this.keywords.addAll(dependency.keywords);
     this.links.addAll(dependency.links);
     this.category = dependency.category;
+    this.dependsOn.addAll(dependency.dependsOn);
   }
 
   public static Dependency create(String groupId, String artifactId, String version,
@@ -129,7 +132,6 @@ public class Dependency extends MetadataElement implements Describable {
   public static Dependency withId(String id, String groupId, String artifactId,
       String version, String scope) {
     return withId(id, groupId, artifactId, version, scope, null);
-
   }
 
   public static Dependency withId(String id, String groupId, String artifactId,
@@ -442,6 +444,14 @@ public class Dependency extends MetadataElement implements Describable {
 
   public void setCategory(String category) {
     this.category = category;
+  }
+
+  public List<String> getDependsOn() {
+    return dependsOn;
+  }
+
+  public void setDependsOn(List<String> dependsOn) {
+    this.dependsOn = dependsOn;
   }
 
   @Override
