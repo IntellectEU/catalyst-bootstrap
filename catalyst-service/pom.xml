@@ -18,11 +18,11 @@
     </dependency>
 
     <dependency>
-      <groupId>com.intellecteu.catalyst</groupId>
+      <groupId>${project.groupId}</groupId>
       <artifactId>catalyst-web</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.intellecteu.catalyst</groupId>
+      <groupId>${project.groupId}</groupId>
       <artifactId>catalyst-actuator</artifactId>
     </dependency>
 
@@ -47,7 +47,7 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>com.intellecteu.catalyst</groupId>
+      <groupId>${project.groupId}</groupId>
       <artifactId>catalyst-generator</artifactId>
       <type>test-jar</type>
       <scope>test</scope>

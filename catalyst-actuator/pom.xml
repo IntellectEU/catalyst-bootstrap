@@ -42,18 +42,18 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>com.intellecteu.catalyst</groupId>
+      <groupId>${project.groupId}</groupId>
       <artifactId>catalyst-generator</artifactId>
       <type>test-jar</type>
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>com.intellecteu.catalyst</groupId>
+      <groupId>${project.groupId}</groupId>
       <artifactId>catalyst-web</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>com.intellecteu.catalyst</groupId>
+      <groupId>${project.groupId}</groupId>
       <artifactId>catalyst-web</artifactId>
       <type>test-jar</type>
       <scope>test</scope>
