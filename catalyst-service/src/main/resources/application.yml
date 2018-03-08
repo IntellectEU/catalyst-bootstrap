@@ -172,6 +172,8 @@ initializr:
           description: Camel FTP support
           groupId: org.apache.camel
           artifactId: camel-ftp
+          dependsOn:
+            - camel
           version: ${camel.version}
           links:
             - rel: guide

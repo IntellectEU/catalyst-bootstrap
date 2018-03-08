@@ -142,8 +142,9 @@ $(function () {
     while (depTree.length > treeSize) {
       treeSize = depTree.length;
       for (var i = 0; i < treeSize; i++) {
+        var currentDependecyId = depTree[i];
         var dependenciesStr = $("#dependencies input[name='dependsOn'][id='"
-            + depTree[i] + "']").val();
+            + currentDependecyId + "']").val();
         if (dependenciesStr) {
           dependenciesStr = dependenciesStr.replace(/,+$/, "");
           depTree = depTree.concat(dependenciesStr.split(','));
