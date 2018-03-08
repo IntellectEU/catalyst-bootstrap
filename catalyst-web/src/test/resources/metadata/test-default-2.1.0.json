@@ -94,7 +94,8 @@
           {
             "id": "camel-foobar",
             "name": "My Camel dep",
-            "category": "camel"
+            "category": "camel",
+            "dependsOn":["id1","id2"]
           }
         ]
       }

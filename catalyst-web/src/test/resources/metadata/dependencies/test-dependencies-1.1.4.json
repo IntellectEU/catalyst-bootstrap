@@ -61,7 +61,8 @@
       "groupId": "org.springframework.boot",
       "artifactId": "spring-boot-starter-camel-foobar",
       "scope": "compile",
-      "category": "camel"
+      "category": "camel",
+      "dependsOn":["id1","id2"]
     }
   }
 }
