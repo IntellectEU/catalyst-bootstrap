@@ -224,17 +224,6 @@ $(function () {
     }
   }
 
-  /**
-   * Returns list of all dependencies that depend on given id, including self
-   * @param id
-   * @returns {*[]}
-   */
-  var getDependsOn = function (id) {
-    var removeList = [id];
-
-    return removeList;
-  }
-
   var refreshDependencies = function (versionRange) {
     var versions = new Versions();
     $("#dependencies div.checkbox").each(function (idx, item) {
@@ -249,6 +238,7 @@ $(function () {
         removeWithDependencies($("input", item).val());
       }
     });
+    disableDependencyRemoval();
   };
 
   var addWithDependencies = function (id) {
@@ -267,15 +257,14 @@ $(function () {
         $("#dependencies input[value='" + depId + "']").prop('checked', true);
       }
     }
+    disableDependencyRemoval();
   };
 
   var removeWithDependencies = function (id) {
-    var toRemove = getDependsOn(id);
-    for (var i = 0; i < toRemove.length; i++) {
-      $("#starters div[data-id='" + toRemove[i] + "']").remove();
-      $("#dependencies input[value='" + toRemove[i] + "']").prop('checked',
-          false);
-    }
+    $("#starters div[data-id='" + id + "']").remove();
+    $("#dependencies input[value='" + id + "']").prop('checked',
+        false);
+    disableDependencyRemoval();
   };
 
   var initializeSearchEngine = function (engine, bootVersion) {
@@ -376,7 +365,6 @@ $(function () {
     else {
       addWithDependencies(suggestion.id);
     }
-    disableDependencyRemoval();
     $('#autocomplete').typeahead('val', '');
   });
   $("#starters").on("click", "button", function () {
@@ -391,7 +379,6 @@ $(function () {
     } else {
       removeWithDependencies(value);
     }
-    disableDependencyRemoval();
   });
   Mousetrap.bind(['command+enter', 'alt+enter'], function (e) {
     $("#form").submit();
