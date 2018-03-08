@@ -141,24 +141,98 @@ $(function () {
     $(".btn-primary").append("<kbd>alt + &#9166;</kbd>");
   }
 
-  var getDependencyTree = function (id) {
-    var depTree = [id];
+  /**
+   * Get the list of dependencies from hidden input field
+   * @param id
+   * @returns {*}
+   */
+  var arrayOfDependsOn = function (id) {
+    var dependenciesStr = $("#dependencies input[name='dependsOn'][id='"
+        + id + "']").val();
+    if (dependenciesStr) {
+      dependenciesStr = dependenciesStr.replace(/,+$/, "");
+      return dependenciesStr.split(',');
+    }
+    else {
+      return [];
+    }
+  }
+
+  /**
+   * Returns list with all transitive dependencies of the entry with given id, including self
+   * @param id
+   * @returns {*[]}
+   */
+  var getDependencies = function (id) {
+    var addList = [id];
     var treeSize = 0;
-    while (depTree.length > treeSize) {
-      treeSize = depTree.length;
+    while (addList.length > treeSize) {
+      treeSize = addList.length;
       for (var i = 0; i < treeSize; i++) {
-        var currentDependecyId = depTree[i];
-        var dependenciesStr = $("#dependencies input[name='dependsOn'][id='"
-            + currentDependecyId + "']").val();
-        if (dependenciesStr) {
-          dependenciesStr = dependenciesStr.replace(/,+$/, "");
-          depTree = depTree.concat(dependenciesStr.split(','));
+        var currentDependecyId = addList[i];
+        addList = addList.concat(arrayOfDependsOn(currentDependecyId));
+      }
+      addList = uniq(addList);
+    }
+    return addList;
+  }
+
+  /**
+   * Disable input controls for the dependencies that cannot be removed
+   * (because of references from other dependencies)
+   * @returns {Array}
+   */
+  var disableDependencyRemoval = function () {
+    var selectedDependencies = $("#dependencies input:checked")
+    .map(function () {
+      return $(this).val();
+    }).get();
+    var dependenciesToDisable = [];
+    for (var i = 0; i < selectedDependencies.length; i++) {
+      var currentDepId = selectedDependencies[i];
+      var currentDepIsReferenced = false;
+      for (var j = 0; j < selectedDependencies.length; j++) {
+        var otherDepId = selectedDependencies[j];
+        var otherDepsList = arrayOfDependsOn(otherDepId);
+        if ($.inArray(currentDepId, otherDepsList) >= 0) {
+          currentDepIsReferenced = true;
         }
       }
-      depTree = uniq(depTree);
+      if (currentDepIsReferenced) {
+        dependenciesToDisable.push(currentDepId);
+      }
     }
 
-    return depTree;
+    // Enable all
+    for (var i = 0; i < selectedDependencies.length; i++) {
+      $("#starters div[data-id='" + selectedDependencies[i] + "']")
+      .removeClass("tagdisabled");
+      $("#starters div[data-id='" + selectedDependencies[i] + "']")
+      .find(":button").prop('disabled', false);
+      $("#dependencies input[value='" + selectedDependencies[i] + "']")
+      .prop('disabled', false);
+    }
+
+    // Disable new list
+    for (var i = 0; i < dependenciesToDisable.length; i++) {
+      $("#starters div[data-id='" + dependenciesToDisable[i] + "']")
+      .addClass("tagdisabled")
+      $("#starters div[data-id='" + dependenciesToDisable[i] + "']")
+      .find(":button").prop('disabled', true);
+      $("#dependencies input[value='" + dependenciesToDisable[i] + "']")
+      .prop('disabled', true);
+    }
+  }
+
+  /**
+   * Returns list of all dependencies that depend on given id, including self
+   * @param id
+   * @returns {*[]}
+   */
+  var getDependsOn = function (id) {
+    var removeList = [id];
+
+    return removeList;
   }
 
   var refreshDependencies = function (versionRange) {
@@ -178,13 +252,14 @@ $(function () {
   };
 
   var addWithDependencies = function (id) {
-    var deps = getDependencyTree(id);
-    for (var i = 0; i < deps.length; i++) {
-      var depId = deps[i];
+    var toAdd = getDependencies(id);
+    for (var i = 0; i < toAdd.length; i++) {
+      var depId = toAdd[i];
 
       if ($("#starters div[data-id='" + depId + "']").length == 0) {
         var results = starters.get(depId);
         var depName = results[0].name;
+
         $("#starters").append("<div class='tag' data-id='" + depId + "'>"
             + depName
             +
@@ -195,8 +270,12 @@ $(function () {
   };
 
   var removeWithDependencies = function (id) {
-    $("#starters div[data-id='" + id + "']").remove();
-    $("#dependencies input[value='" + id + "']").prop('checked', false);
+    var toRemove = getDependsOn(id);
+    for (var i = 0; i < toRemove.length; i++) {
+      $("#starters div[data-id='" + toRemove[i] + "']").remove();
+      $("#dependencies input[value='" + toRemove[i] + "']").prop('checked',
+          false);
+    }
   };
 
   var initializeSearchEngine = function (engine, bootVersion) {
@@ -297,6 +376,7 @@ $(function () {
     else {
       addWithDependencies(suggestion.id);
     }
+    disableDependencyRemoval();
     $('#autocomplete').typeahead('val', '');
   });
   $("#starters").on("click", "button", function () {
@@ -311,6 +391,7 @@ $(function () {
     } else {
       removeWithDependencies(value);
     }
+    disableDependencyRemoval();
   });
   Mousetrap.bind(['command+enter', 'alt+enter'], function (e) {
     $("#form").submit();
@@ -337,4 +418,5 @@ $(function () {
       applyParams();
     }
   }
-});
+})
+;
