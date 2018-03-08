@@ -330,6 +330,7 @@ public class ProjectGenerator {
           appendFile(usecase + "Config.java", "camel/config/", src, model);
           appendFile(usecase + "Properties.java", "camel/properties/", src, model);
           appendFile("Dockerfile", "", root, model);
+          appendFile("Readme.adoc", "", root, model);
 
           appendProperties("classpath:templates/camel/properties/" + usecase + ".yml",
               appProperties);
