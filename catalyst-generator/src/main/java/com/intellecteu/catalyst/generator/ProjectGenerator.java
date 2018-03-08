@@ -300,7 +300,7 @@ public class ProjectGenerator {
     write(new File(test, applicationName + "Tests." + extension),
         "ApplicationTests." + extension, model);
 
-    writeCamelUsecases(request, model, src, appProperties);
+    writeCamelUsecases(request, model, dir, src, appProperties);
 
     File resources = new File(dir, "src/main/resources");
     resources.mkdirs();
@@ -316,7 +316,8 @@ public class ProjectGenerator {
   /**
    * Write routes, properties, and configuration for usecase facets e.g. file2sftp-usecase
    */
-  private void writeCamelUsecases(ProjectRequest request, Map<String, Object> model, File src,
+  private void writeCamelUsecases(ProjectRequest request, Map<String, Object> model, File root,
+      File src,
       StringBuilder appProperties) {
 
     try {
@@ -325,9 +326,11 @@ public class ProjectGenerator {
 
       if (!usecases.isEmpty()) {
         for (String usecase : usecases) {
-          appendClass(usecase + "Router.java", "camel/router/", src, model);
-          appendClass(usecase + "Config.java", "camel/config/", src, model);
-          appendClass(usecase + "Properties.java", "camel/properties/", src, model);
+          appendFile(usecase + "Router.java", "camel/router/", src, model);
+          appendFile(usecase + "Config.java", "camel/config/", src, model);
+          appendFile(usecase + "Properties.java", "camel/properties/", src, model);
+          appendFile("Dockerfile", "", root, model);
+
           appendProperties("classpath:templates/camel/properties/" + usecase + ".yml",
               appProperties);
         }
@@ -337,13 +340,13 @@ public class ProjectGenerator {
     }
   }
 
-  private void appendClass(String usecaseName, String templateLocation, File srcDir,
+  private void appendFile(String filename, String templateLocation, File srcDir,
       Map<String, Object> model) {
     try {
-      write(new File(srcDir, usecaseName),
-          templateLocation + usecaseName, model);
+      write(new File(srcDir, filename),
+          templateLocation + filename, model);
     } catch (IllegalStateException ex) {
-      log.warn("Class file: {} not found: {} ", usecaseName, ex.getMessage());
+      log.warn("Class file: {} not found: {} ", filename, ex.getMessage());
     }
   }
 
