@@ -21,13 +21,13 @@ before_script:
   - echo "MAVEN_OPTS='-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn'" > ~/.mavenrc
 
 script:
-  - mvn clean install -B -V
+  - mvn clean install -B -V -Pfull
 # Use these for maven wrapper - git strips the wrapper jar file so we have to force its download during the build.
 #  - mvn -N io.takari:maven:wrapper
 #  - ./mvnw install -Dmaven.javadoc.skip=true -B -V -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
 
 before_deploy:
-  - mvn sonar:sonar -Dsonar.organization=intellecteu -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_API_KEY
+  - mvn sonar:sonar -Dsonar.organization=intellecteu -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_API_KEY -Pfull
 
 deploy:
   provider: script
