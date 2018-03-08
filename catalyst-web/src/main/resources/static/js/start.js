@@ -171,16 +171,23 @@ $(function () {
         });
     };
 
-    var addTag = function (id, name) {
-      var allDependencies = getDependencyTree(id);
+  var addTag = function (id) {
+    var deps = getDependencyTree(id);
+    for (var i = 0; i < deps.length; i++) {
+      var depId = deps[i];
 
-      console.log(allDependencies);
-
-      if ($("#starters div[data-id='" + id + "']").length == 0) {
-            $("#starters").append("<div class='tag' data-id='" + id + "'>" + name +
-                "<button type='button' class='close' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div>");
+      if ($("#starters div[data-id='" + depId + "']").length == 0) {
+        var results = starters.get(depId);
+        var depName = results[0].name;
+        $("#starters").append("<div class='tag' data-id='" + depId + "'>"
+            + depName
+            +
+            "<button type='button' class='close' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div>");
+        $("#dependencies input[value='" + depId + "']").prop('checked', true);
         }
+    }
     };
+
     var removeTag = function (id) {
         $("#starters div[data-id='" + id + "']").remove();
     };
@@ -276,8 +283,7 @@ $(function () {
             $("#dependencies input[value='" + suggestion.id + "']").prop('checked', false);
         }
         else {
-            addTag(suggestion.id, suggestion.name);
-            $("#dependencies input[value='" + suggestion.id + "']").prop('checked', true);
+          addTag(suggestion.id);
         }
         $('#autocomplete').typeahead('val', '');
     });
@@ -289,8 +295,7 @@ $(function () {
     $("#dependencies input").bind("change", function () {
         var value = $(this).val()
         if ($(this).prop('checked')) {
-            var results = starters.get(value);
-            addTag(results[0].id, results[0].name);
+          addTag(value);
         } else {
             removeTag(value);
         }
