@@ -323,15 +323,14 @@ public class ProjectGenerator {
     try {
       List<String> usecases = request.getUsecaseNames();
       appendProperties("classpath:templates/camel/properties/default.yml", appProperties);
+      appendFile("Dockerfile", "", root, model);
+      appendFile("Readme.adoc", "", root, model);
 
       if (!usecases.isEmpty()) {
         for (String usecase : usecases) {
           appendFile(usecase + "Router.java", "camel/router/", src, model);
           appendFile(usecase + "Config.java", "camel/config/", src, model);
           appendFile(usecase + "Properties.java", "camel/properties/", src, model);
-          appendFile("Dockerfile", "", root, model);
-          appendFile("Readme.adoc", "", root, model);
-
           appendProperties("classpath:templates/camel/properties/" + usecase + ".yml",
               appProperties);
         }
