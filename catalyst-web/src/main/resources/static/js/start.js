@@ -112,6 +112,20 @@
         });
     }
 
+  uniq = function (arr) {
+    var prims = {"boolean": {}, "number": {}, "string": {}}, objs = [];
+
+    return arr.filter(function (item) {
+      var type = typeof item;
+      if (type in prims) {
+        return prims[type].hasOwnProperty(item) ? false
+            : (prims[type][item] = true);
+      } else {
+        return objs.indexOf(item) >= 0 ? false : objs.push(item);
+      }
+    });
+  }
+
 }());
 
 $(function () {
@@ -121,6 +135,25 @@ $(function () {
     else {
         $(".btn-primary").append("<kbd>alt + &#9166;</kbd>");
     }
+
+  var getDependencyTree = function (id) {
+    var depTree = [id];
+    var treeSize = 0;
+    while (depTree.length > treeSize) {
+      treeSize = depTree.length;
+      for (var i = 0; i < treeSize; i++) {
+        var dependenciesStr = $("#dependencies input[name='dependsOn'][id='"
+            + depTree[i] + "']").val();
+        if (dependenciesStr) {
+          dependenciesStr = dependenciesStr.replace(/,+$/, "");
+          depTree = depTree.concat(dependenciesStr.split(','));
+        }
+      }
+      depTree = uniq(depTree);
+    }
+
+    return depTree;
+  }
 
     var refreshDependencies = function (versionRange) {
         var versions = new Versions();
@@ -136,8 +169,13 @@ $(function () {
             }
         });
     };
+
     var addTag = function (id, name) {
-        if ($("#starters div[data-id='" + id + "']").length == 0) {
+      var allDependencies = getDependencyTree(id);
+
+      console.log(allDependencies);
+
+      if ($("#starters div[data-id='" + id + "']").length == 0) {
             $("#starters").append("<div class='tag' data-id='" + id + "'>" + name +
                 "<button type='button' class='close' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div>");
         }
