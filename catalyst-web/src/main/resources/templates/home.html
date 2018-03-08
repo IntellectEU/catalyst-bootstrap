@@ -145,10 +145,13 @@ new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
                     <div class="form-group col-sm-6">
                         <h3>{{name}}</h3>
                         {{#content}}
+                      <input type="hidden" name="dependsOn" id="{{id}}"
+                             value="{{#dependsOn}}{{.}},{{/dependsOn}}">
                         <div class="checkbox" data-range="{{#versionRange}}{{versionRange}}{{/versionRange}}">
                             <label>
                                 <input tabindex="13" type="checkbox" name="style" value="{{id}}">{{name}}
                                 <p class="help-block">{{#description}}{{.}}{{/description}}</p>
+                              <p class="help-block">{{#dependsOn}}{{.}}{{/dependsOn}}</p>
                                 {{#versionRequirement}}
                                 <p class="help-block version-requirement">requires Spring Boot {{.}}</p>
                                 {{/versionRequirement}}
