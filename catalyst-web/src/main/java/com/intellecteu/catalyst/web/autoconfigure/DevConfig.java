@@ -30,6 +30,9 @@ public class DevConfig extends WebMvcConfigurerAdapter {
     registry.addResourceHandler("/js/**").addResourceLocations(
         "file:catalyst-web/src/main/resources/static/js/")
         .setCachePeriod(0);
+    registry.addResourceHandler("/css/**").addResourceLocations(
+        "file:catalyst-web/src/main/resources/static/css/")
+        .setCachePeriod(0);
   }
 
 }
