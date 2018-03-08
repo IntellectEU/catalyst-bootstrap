@@ -166,12 +166,12 @@ $(function () {
                 $("input", item).prop('checked', false);
                 $(item).addClass("disabled has-error");
                 $("input", item).attr("disabled", true);
-                removeTag($("input", item).val());
+              removeWithDependencies($("input", item).val());
             }
         });
     };
 
-  var addTag = function (id) {
+  var addWithDependencies = function (id) {
     var deps = getDependencyTree(id);
     for (var i = 0; i < deps.length; i++) {
       var depId = deps[i];
@@ -188,9 +188,11 @@ $(function () {
     }
     };
 
-    var removeTag = function (id) {
-        $("#starters div[data-id='" + id + "']").remove();
+  var removeWithDependencies = function (id) {
+    $("#starters div[data-id='" + id + "']").remove();
+    $("#dependencies input[value='" + id + "']").prop('checked', false);
     };
+
     var initializeSearchEngine = function (engine, bootVersion) {
         $.getJSON("/ui/dependencies.json?version=" + bootVersion, function (data) {
             engine.clear();
@@ -279,25 +281,24 @@ $(function () {
     $('#autocomplete').bind('typeahead:select', function (ev, suggestion) {
         var alreadySelected = $("#dependencies input[value='" + suggestion.id + "']").prop('checked');
         if(alreadySelected) {
-            removeTag(suggestion.id);
-            $("#dependencies input[value='" + suggestion.id + "']").prop('checked', false);
+          removeWithDependencies(suggestion.id);
         }
         else {
-          addTag(suggestion.id);
+          addWithDependencies(suggestion.id);
         }
         $('#autocomplete').typeahead('val', '');
     });
     $("#starters").on("click", "button", function () {
         var id = $(this).parent().attr("data-id");
         $("#dependencies input[value='" + id + "']").prop('checked', false);
-        removeTag(id);
+      removeWithDependencies(id);
     });
     $("#dependencies input").bind("change", function () {
         var value = $(this).val()
         if ($(this).prop('checked')) {
-          addTag(value);
+          addWithDependencies(value);
         } else {
-            removeTag(value);
+          removeWithDependencies(value);
         }
     });
     Mousetrap.bind(['command+enter', 'alt+enter'], function (e) {
