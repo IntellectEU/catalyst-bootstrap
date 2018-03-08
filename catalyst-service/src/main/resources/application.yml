@@ -176,7 +176,7 @@ initializr:
           links:
             - rel: guide
               href: http://camel.apache.org/ftp2.html
-        - name: Camel Rest Endpoint
+        - name: IBM Blockchain Connector
           id: camel-rest-endpoint
           groupId: org.apache.camel
           description: "REST styled DSL to allow defining REST services with verbs such as GET, POST, DELETE etc"
@@ -185,7 +185,7 @@ initializr:
           links:
             - rel: guide
               href: http://camel.apache.org/rest-dsl.html
-        - name: Camel MQTT Endpoint
+        - name: IoT MQTT Connector
           description: "Communicate with MQTT compliant message brokers, like Apache ActiveMQ or Mosquitto"
           id: camel-mqtt-endpoint
           groupId: org.apache.camel
