@@ -1,5 +1,6 @@
 image:https://travis-ci.org/IntellectEU/catalyst-bootstrap.svg?branch=master["Build Status", link="https://travis-ci.org/IntellectEU/catalyst-bootstrap"]
 image:https://sonarcloud.io/api/badges/measure?key=com.intellecteu.catalyst:catalyst&metric=coverage["Coverage", link="https://sonarcloud.io/component_measures/metric/coverage/list?id=com.intellecteu.catalyst:catalyst"]
+image:https://img.shields.io/badge/License-Apache%202.0-green.svg["License", link="https://opensource.org/licenses/Apache-2.0"]
 
 == Catalyst
 
