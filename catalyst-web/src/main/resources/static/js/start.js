@@ -312,7 +312,7 @@ $(function () {
   };
 
   var initializeSearchEngine = function (engine, bootVersion) {
-    $.getJSON("/ui/dependencies.json?version=" + bootVersion, function (data) {
+    $.getJSON("/ui/dependencies?version=" + bootVersion, function (data) {
       engine.clear();
       $.each(data.dependencies, function (idx, item) {
         if (item.weight === undefined) {
