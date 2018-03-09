@@ -292,8 +292,7 @@ $(function () {
       var depId = toAdd[i];
 
       if ($("#starters div[data-id='" + depId + "']").length == 0) {
-        var results = starters.get(depId);
-        var depName = results[0].name;
+        var depName = depMap[depId].name;
 
         $("#starters").append("<div class='tag' data-id='" + depId + "'>"
             + depName
