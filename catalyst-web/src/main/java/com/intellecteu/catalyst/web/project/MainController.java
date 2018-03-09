@@ -60,12 +60,13 @@ import org.springframework.http.ResponseEntity.BodyBuilder;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.DigestUtils;
 import org.springframework.util.StreamUtils;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.resource.ResourceUrlProvider;
+
 
 /**
  * The main initializr controller provides access to the configured metadata and serves as a central
@@ -77,9 +78,11 @@ import org.springframework.web.servlet.resource.ResourceUrlProvider;
 @Controller
 public class MainController extends AbstractInitializrController {
 
+  private static final Logger log = LoggerFactory.getLogger(MainController.class);
+
   public static final MediaType HAL_JSON_CONTENT_TYPE = MediaType
       .parseMediaType("application/hal+json");
-  private static final Logger log = LoggerFactory.getLogger(MainController.class);
+
   private final ProjectGenerator projectGenerator;
   private final DependencyMetadataProvider dependencyMetadataProvider;
   private final CommandLineHelpGenerator commandLineHelpGenerator;
@@ -94,31 +97,6 @@ public class MainController extends AbstractInitializrController {
     this.commandLineHelpGenerator = new CommandLineHelpGenerator(templateRenderer);
   }
 
-  private static InitializrMetadataJsonMapper getJsonMapper(
-      InitializrMetadataVersion version) {
-    switch (version) {
-      case V2:
-        return new InitializrMetadataV2JsonMapper();
-      default:
-        return new InitializrMetadataV21JsonMapper();
-    }
-  }
-
-  private static String generateFileName(ProjectRequest request, String extension) {
-    String tmp = request.getArtifactId().replaceAll(" ", "_");
-    try {
-      return URLEncoder.encode(tmp, "UTF-8") + "." + extension;
-    } catch (UnsupportedEncodingException e) {
-      throw new IllegalStateException("Cannot encode URL", e);
-    }
-  }
-
-  private static String getWrapperScript(ProjectRequest request) {
-    String script = "gradle".equals(request.getBuild()) ? "gradlew" : "mvnw";
-    return request.getBaseDir() != null
-        ? request.getBaseDir() + "/" + script : script;
-  }
-
   @ModelAttribute
   public BasicProjectRequest projectRequest(
       @RequestHeader Map<String, String> headers) {
@@ -128,18 +106,18 @@ public class MainController extends AbstractInitializrController {
     return request;
   }
 
-  @RequestMapping(value = "/metadata/config", produces = "application/json")
+  @GetMapping(path = "/metadata/config", produces = "application/json")
   @ResponseBody
   public InitializrMetadata config() {
     return metadataProvider.get();
   }
 
-  @RequestMapping(value = "/metadata/client")
+  @GetMapping("/metadata/client")
   public String client() {
     return "redirect:/";
   }
 
-  @RequestMapping(value = "/", produces = "text/plain")
+  @GetMapping(path = "/", produces = "text/plain")
   public ResponseEntity<String> serviceCapabilitiesText(
       @RequestHeader(value = HttpHeaders.USER_AGENT, required = false) String userAgent) {
     String appUrl = generateAppUrl();
@@ -171,19 +149,19 @@ public class MainController extends AbstractInitializrController {
     return builder.eTag(createUniqueId(content)).body(content);
   }
 
-  @RequestMapping(value = "/", produces = "application/hal+json")
+  @GetMapping(path = "/", produces = "application/hal+json")
   public ResponseEntity<String> serviceCapabilitiesHal() {
     return serviceCapabilitiesFor(InitializrMetadataVersion.V2_1,
         HAL_JSON_CONTENT_TYPE);
   }
 
-  @RequestMapping(value = "/", produces = {"application/vnd.initializr.v2.1+json",
+  @GetMapping(path = "/", produces = {"application/vnd.initializr.v2.1+json",
       "application/json"})
   public ResponseEntity<String> serviceCapabilitiesV21() {
     return serviceCapabilitiesFor(InitializrMetadataVersion.V2_1);
   }
 
-  @RequestMapping(value = "/", produces = "application/vnd.initializr.v2+json")
+  @GetMapping(path = "/", produces = "application/vnd.initializr.v2+json")
   public ResponseEntity<String> serviceCapabilitiesV2() {
     return serviceCapabilitiesFor(InitializrMetadataVersion.V2);
   }
@@ -201,7 +179,17 @@ public class MainController extends AbstractInitializrController {
         .cacheControl(CacheControl.maxAge(7, TimeUnit.DAYS)).body(content);
   }
 
-  @RequestMapping(value = "/dependencies", produces = {
+  private static InitializrMetadataJsonMapper getJsonMapper(
+      InitializrMetadataVersion version) {
+    switch (version) {
+      case V2:
+        return new InitializrMetadataV2JsonMapper();
+      default:
+        return new InitializrMetadataV21JsonMapper();
+    }
+  }
+
+  @GetMapping(path = "/dependencies", produces = {
       "application/vnd.initializr.v2.1+json", "application/json"})
   public ResponseEntity<String> dependenciesV21(
       @RequestParam(required = false) String bootVersion) {
@@ -226,25 +214,25 @@ public class MainController extends AbstractInitializrController {
     return (frag, out) -> out.write(this.getLinkTo().apply(frag.execute()));
   }
 
-  @RequestMapping(value = "/", produces = "text/html")
+  @GetMapping(path = "/", produces = "text/html")
   public String home(Map<String, Object> model) {
     renderHome(model);
     return "home";
   }
 
-  @RequestMapping("/spring")
+  @GetMapping(path = {"/spring", "/spring.zip"})
   public String spring() {
     String url = metadataProvider.get().createCliDistributionURl("zip");
     return "redirect:" + url;
   }
 
-  @RequestMapping(value = {"/spring.tar.gz", "spring.tgz"})
+  @GetMapping(path = {"/spring.tar.gz", "spring.tgz"})
   public String springTgz() {
     String url = metadataProvider.get().createCliDistributionURl("tar.gz");
     return "redirect:" + url;
   }
 
-  @RequestMapping("/pom")
+  @GetMapping(path = {"/pom", "/pom.xml"})
   @ResponseBody
   public ResponseEntity<byte[]> pom(BasicProjectRequest request) {
     request.setType("maven-build");
@@ -252,7 +240,7 @@ public class MainController extends AbstractInitializrController {
     return createResponseEntity(mavenPom, "application/octet-stream", "pom.xml");
   }
 
-  @RequestMapping("/build")
+  @GetMapping(path = {"/build", "/build.gradle"})
   @ResponseBody
   public ResponseEntity<byte[]> gradle(BasicProjectRequest request) {
     request.setType("gradle-build");
@@ -262,7 +250,7 @@ public class MainController extends AbstractInitializrController {
         "build.gradle");
   }
 
-  @RequestMapping("/starter.zip")
+  @GetMapping("/starter.zip")
   @ResponseBody
   public ResponseEntity<byte[]> springZip(BasicProjectRequest basicRequest)
       throws IOException {
@@ -293,7 +281,7 @@ public class MainController extends AbstractInitializrController {
     return upload(download, dir, generateFileName(request, "zip"), "application/zip");
   }
 
-  @RequestMapping(value = "/starter.tgz", produces = "application/x-compress")
+  @GetMapping(path = "/starter.tgz", produces = "application/x-compress")
   @ResponseBody
   public ResponseEntity<byte[]> springTgz(BasicProjectRequest basicRequest)
       throws IOException {
@@ -324,6 +312,21 @@ public class MainController extends AbstractInitializrController {
     zip.execute();
     return upload(download, dir, generateFileName(request, "tar.gz"),
         "application/x-compress");
+  }
+
+  private static String generateFileName(ProjectRequest request, String extension) {
+    String tmp = request.getArtifactId().replaceAll(" ", "_");
+    try {
+      return URLEncoder.encode(tmp, "UTF-8") + "." + extension;
+    } catch (UnsupportedEncodingException e) {
+      throw new IllegalStateException("Cannot encode URL", e);
+    }
+  }
+
+  private static String getWrapperScript(ProjectRequest request) {
+    String script = "gradle".equals(request.getBuild()) ? "gradlew" : "mvnw";
+    return request.getBaseDir() != null
+        ? request.getBaseDir() + "/" + script : script;
   }
 
   private ResponseEntity<byte[]> upload(File download, File dir, String fileName,

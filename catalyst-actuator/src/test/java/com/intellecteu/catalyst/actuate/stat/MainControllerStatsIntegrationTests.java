@@ -37,8 +37,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.util.Base64Utils;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpClientErrorException;
 
@@ -176,14 +175,14 @@ public class MainControllerStatsIntegrationTests
 
     private final List<Content> stats = new ArrayList<>();
 
-    @RequestMapping(path = "/elastic/test/my-entity", method = RequestMethod.POST)
+    @PostMapping("/elastic/test/my-entity")
     public void handleProjectRequestDocument(RequestEntity<String> input) {
       String authorization = input.getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
       Content content = new Content(authorization, input.getBody());
       this.stats.add(content);
     }
 
-    @RequestMapping(path = "/elastic-error/test/my-entity", method = RequestMethod.POST)
+    @PostMapping("/elastic-error/test/my-entity")
     public void handleExpectedError() {
       throw new IllegalStateException("Expected exception");
     }

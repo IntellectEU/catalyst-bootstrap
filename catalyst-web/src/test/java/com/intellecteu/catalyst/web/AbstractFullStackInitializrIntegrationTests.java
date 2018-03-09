@@ -20,8 +20,8 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 
 import com.intellecteu.catalyst.web.AbstractInitializrIntegrationTests.Config;
 import org.junit.runner.RunWith;
-import org.springframework.boot.context.embedded.LocalServerPort;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.context.junit4.SpringRunner;
 
 /**

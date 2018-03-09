@@ -17,7 +17,11 @@
 package com.intellecteu.catalyst.actuate.autoconfigure;
 
 import com.intellecteu.catalyst.actuate.metric.ProjectGenerationMetricsListener;
-import org.springframework.boot.actuate.metrics.CounterService;
+import io.micrometer.core.instrument.MeterRegistry;
+import org.springframework.boot.actuate.autoconfigure.metrics.CompositeMeterRegistryAutoConfiguration;
+import org.springframework.boot.autoconfigure.AutoConfigureAfter;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnSingleCandidate;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -28,12 +32,15 @@ import org.springframework.context.annotation.Configuration;
  * @author Dave Syer
  */
 @Configuration
+@ConditionalOnClass(MeterRegistry.class)
+@AutoConfigureAfter(CompositeMeterRegistryAutoConfiguration.class)
 public class InitializrMetricsConfiguration {
 
   @Bean
+  @ConditionalOnSingleCandidate(MeterRegistry.class)
   public ProjectGenerationMetricsListener metricsListener(
-      CounterService counterService) {
-    return new ProjectGenerationMetricsListener(counterService);
+      MeterRegistry meterRegistry) {
+    return new ProjectGenerationMetricsListener(meterRegistry);
   }
 
 }
