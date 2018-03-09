@@ -97,7 +97,7 @@ initializr:
       content:
         - name: File and Sftp
           id: filesftp
-          description: "Simple File to/from Sftp server route. Depends on: Apache Camel, Camel File Endpoint, Camel FTP Endpoint, Configuration Processor"
+          description: "Simple File to/from Sftp server route"
           category: nodep
           dependsOn:
             - camel
