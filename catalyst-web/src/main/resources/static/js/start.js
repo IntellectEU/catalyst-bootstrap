@@ -1,3 +1,5 @@
+var depMap = {};
+
 (function () {
 
   Versions = function () {
@@ -130,7 +132,6 @@
       }
     });
   }
-
 }());
 
 $(function () {
@@ -152,10 +153,39 @@ $(function () {
     if (dependenciesStr) {
       dependenciesStr = dependenciesStr.replace(/,+$/, "");
       return dependenciesStr.split(',');
-    }
-    else {
+    } else {
       return [];
     }
+  }
+
+  /**
+   * Iterate over dependencies and build map of their details and depends-ons
+   */
+  var populateDependendsOnMap = function () {
+    // First, get the map of all dependencies
+    $("#dependencies input[name='dependencyName']").each(function () {
+      var id = $(this).prop("id");
+      var name = $(this).val();
+      var dependsOn = arrayOfDependsOn(id);
+      depMap[id] = {id: id, name: name, dependsOn: dependsOn};
+    });
+
+    // Now, build their dependsOn descriptions
+    Object.keys(depMap).forEach(function (key) {
+      var dep = depMap[key];
+      var dependsOnArr = dep["dependsOn"];
+      if (typeof dependsOnArr !== 'undefined' && dependsOnArr.length > 0) {
+        var depNames = [];
+        for (var i = 0; i < dependsOnArr.length; i++) {
+          var otherDepId = dependsOnArr[i];
+          var otherDependency = depMap[otherDepId];
+          depNames.push(otherDependency.name);
+        }
+        dep.dependsOnDescr = depNames.join(", ");
+        depMap[key] = dep;
+      }
+    });
+
   }
 
   /**
@@ -170,7 +200,8 @@ $(function () {
       treeSize = addList.length;
       for (var i = 0; i < treeSize; i++) {
         var currentDependecyId = addList[i];
-        addList = addList.concat(arrayOfDependsOn(currentDependecyId));
+        var currentDependency = depMap[currentDependecyId];
+        addList = addList.concat(currentDependency.dependsOn);
       }
       addList = uniq(addList);
     }
@@ -193,7 +224,7 @@ $(function () {
       var currentDepIsReferenced = false;
       for (var j = 0; j < selectedDependencies.length; j++) {
         var otherDepId = selectedDependencies[j];
-        var otherDepsList = arrayOfDependsOn(otherDepId);
+        var otherDepsList = depMap[otherDepId].dependsOn;
         if ($.inArray(currentDepId, otherDepsList) >= 0) {
           currentDepIsReferenced = true;
         }
@@ -222,6 +253,20 @@ $(function () {
       $("#dependencies input[value='" + dependenciesToDisable[i] + "']")
       .prop('disabled', true);
     }
+  }
+
+  /**
+   * Add "Depends on: " text to the deps that depend on others
+   */
+  var appendDependsOnDescription = function () {
+    $("div[class='checkbox'] label").each(function () {
+      var depId = $(this).find("input").prop("value");
+      var dependsOnNames = depMap[depId].dependsOnDescr;
+      if (dependsOnNames) {
+        $(this).append("<p class='help-block depends-on'>Depends on: "
+            + dependsOnNames) + "</p>";
+      }
+    })
   }
 
   var refreshDependencies = function (versionRange) {
@@ -405,5 +450,7 @@ $(function () {
       applyParams();
     }
   }
+  populateDependendsOnMap();
+  appendDependsOnDescription();
 })
 ;

@@ -184,3 +184,8 @@ footer {
 footer a:hover, footer a:focus {
   color: #0a45db;
 }
+
+.depends-on {
+  color: #8c8c8c;
+  font-style: italic;
+}

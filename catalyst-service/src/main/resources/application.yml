@@ -129,7 +129,7 @@ initializr:
           category: nodep
           dependsOn:
             - camel
-            - сфьуд-sql-endpoint
+            - camel-sql-endpoint
           facets:
             - Sql2Log-usecase
           links:
