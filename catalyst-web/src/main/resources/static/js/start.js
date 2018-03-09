@@ -1,3 +1,5 @@
+var depMap = {};
+
 (function () {
 
   Versions = function () {
@@ -117,6 +119,19 @@
     });
   }
 
+  uniq = function (arr) {
+    var prims = {"boolean": {}, "number": {}, "string": {}}, objs = [];
+
+    return arr.filter(function (item) {
+      var type = typeof item;
+      if (type in prims) {
+        return prims[type].hasOwnProperty(item) ? false
+            : (prims[type][item] = true);
+      } else {
+        return objs.indexOf(item) >= 0 ? false : objs.push(item);
+      }
+    });
+  }
 }());
 
 $(function () {
@@ -125,6 +140,133 @@ $(function () {
   }
   else {
     $(".btn-primary").append("<kbd>alt + &#9166;</kbd>");
+  }
+
+  /**
+   * Get the list of dependencies from hidden input field
+   * @param id
+   * @returns {*}
+   */
+  var arrayOfDependsOn = function (id) {
+    var dependenciesStr = $("#dependencies input[name='dependsOn'][id='"
+        + id + "']").val();
+    if (dependenciesStr) {
+      dependenciesStr = dependenciesStr.replace(/,+$/, "");
+      return dependenciesStr.split(',');
+    } else {
+      return [];
+    }
+  }
+
+  /**
+   * Iterate over dependencies and build map of their details and depends-ons
+   */
+  var populateDependendsOnMap = function () {
+    // First, get the map of all dependencies
+    $("#dependencies input[name='dependencyName']").each(function () {
+      var id = $(this).prop("id");
+      var name = $(this).val();
+      var dependsOn = arrayOfDependsOn(id);
+      depMap[id] = {id: id, name: name, dependsOn: dependsOn};
+    });
+
+    // Now, build their dependsOn descriptions
+    Object.keys(depMap).forEach(function (key) {
+      var dep = depMap[key];
+      var dependsOnArr = dep["dependsOn"];
+      if (typeof dependsOnArr !== 'undefined' && dependsOnArr.length > 0) {
+        var depNames = [];
+        for (var i = 0; i < dependsOnArr.length; i++) {
+          var otherDepId = dependsOnArr[i];
+          var otherDependency = depMap[otherDepId];
+          depNames.push(otherDependency.name);
+        }
+        dep.dependsOnDescr = depNames.join(", ");
+        depMap[key] = dep;
+      }
+    });
+
+  }
+
+  /**
+   * Returns list with all transitive dependencies of the entry with given id, including self
+   * @param id
+   * @returns {*[]}
+   */
+  var getDependencies = function (id) {
+    var addList = [id];
+    var treeSize = 0;
+    while (addList.length > treeSize) {
+      treeSize = addList.length;
+      for (var i = 0; i < treeSize; i++) {
+        var currentDependecyId = addList[i];
+        var currentDependency = depMap[currentDependecyId];
+        addList = addList.concat(currentDependency.dependsOn);
+      }
+      addList = uniq(addList);
+    }
+    return addList;
+  }
+
+  /**
+   * Disable input controls for the dependencies that cannot be removed
+   * (because of references from other dependencies)
+   * @returns {Array}
+   */
+  var disableDependencyRemoval = function () {
+    var selectedDependencies = $("#dependencies input:checked")
+    .map(function () {
+      return $(this).val();
+    }).get();
+    var dependenciesToDisable = [];
+    for (var i = 0; i < selectedDependencies.length; i++) {
+      var currentDepId = selectedDependencies[i];
+      var currentDepIsReferenced = false;
+      for (var j = 0; j < selectedDependencies.length; j++) {
+        var otherDepId = selectedDependencies[j];
+        var otherDepsList = depMap[otherDepId].dependsOn;
+        if ($.inArray(currentDepId, otherDepsList) >= 0) {
+          currentDepIsReferenced = true;
+        }
+      }
+      if (currentDepIsReferenced) {
+        dependenciesToDisable.push(currentDepId);
+      }
+    }
+
+    // Enable all
+    for (var i = 0; i < selectedDependencies.length; i++) {
+      $("#starters div[data-id='" + selectedDependencies[i] + "']")
+      .removeClass("tagdisabled");
+      $("#starters div[data-id='" + selectedDependencies[i] + "']")
+      .find(":button").prop('disabled', false);
+      $("#dependencies input[value='" + selectedDependencies[i] + "']")
+      .prop('disabled', false);
+    }
+
+    // Disable new list
+    for (var i = 0; i < dependenciesToDisable.length; i++) {
+      $("#starters div[data-id='" + dependenciesToDisable[i] + "']")
+      .addClass("tagdisabled")
+      $("#starters div[data-id='" + dependenciesToDisable[i] + "']")
+      .find(":button").prop('disabled', true);
+      $("#dependencies input[value='" + dependenciesToDisable[i] + "']")
+      .prop('disabled', true);
+    }
+  }
+
+  /**
+   * Add "Depends on: " text to the deps that depend on others
+   */
+  var appendDependsOnDescription = function () {
+    $("div[class='checkbox'] label").each(function () {
+      var depId = $(this).find("input").prop("value");
+      var dependsOnNames = depMap[depId].dependsOnDescr;
+      if (dependsOnNames) {
+        $(this).append("<p class='help-block depends-on'>Depends on: "
+            + dependsOnNames) + "</p>";
+      }
+    })
   }
 
   var refreshDependencies = function (versionRange) {
@@ -138,21 +280,39 @@ $(function () {
         $("input", item).prop('checked', false);
         $(item).addClass("disabled has-error");
         $("input", item).attr("disabled", true);
-        removeTag($("input", item).val());
+        removeWithDependencies($("input", item).val());
       }
     });
+    disableDependencyRemoval();
   };
-  var addTag = function (id, name) {
-    if ($("#starters div[data-id='" + id + "']").length == 0) {
-      $("#starters").append("<div class='tag' data-id='" + id + "'>" + name +
-          "<button type='button' class='close' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div>");
+
+  var addWithDependencies = function (id) {
+    var toAdd = getDependencies(id);
+    for (var i = 0; i < toAdd.length; i++) {
+      var depId = toAdd[i];
+
+      if ($("#starters div[data-id='" + depId + "']").length == 0) {
+        var depName = depMap[depId].name;
+
+        $("#starters").append("<div class='tag' data-id='" + depId + "'>"
+            + depName
+            +
+            "<button type='button' class='close' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div>");
+        $("#dependencies input[value='" + depId + "']").prop('checked', true);
+      }
     }
+    disableDependencyRemoval();
   };
-  var removeTag = function (id) {
+
+  var removeWithDependencies = function (id) {
     $("#starters div[data-id='" + id + "']").remove();
+    $("#dependencies input[value='" + id + "']").prop('checked',
+        false);
+    disableDependencyRemoval();
   };
+
   var initializeSearchEngine = function (engine, bootVersion) {
-    $.getJSON("/ui/dependencies?version=" + bootVersion, function (data) {
+    $.getJSON("/ui/dependencies.json?version=" + bootVersion, function (data) {
       engine.clear();
       $.each(data.dependencies, function (idx, item) {
         if (item.weight === undefined) {
@@ -244,29 +404,24 @@ $(function () {
     var alreadySelected = $("#dependencies input[value='" + suggestion.id
         + "']").prop('checked');
     if (alreadySelected) {
-      removeTag(suggestion.id);
-      $("#dependencies input[value='" + suggestion.id + "']").prop('checked',
-          false);
+      removeWithDependencies(suggestion.id);
     }
     else {
-      addTag(suggestion.id, suggestion.name);
-      $("#dependencies input[value='" + suggestion.id + "']").prop('checked',
-          true);
+      addWithDependencies(suggestion.id);
     }
     $('#autocomplete').typeahead('val', '');
   });
   $("#starters").on("click", "button", function () {
     var id = $(this).parent().attr("data-id");
     $("#dependencies input[value='" + id + "']").prop('checked', false);
-    removeTag(id);
+    removeWithDependencies(id);
   });
   $("#dependencies input").bind("change", function () {
     var value = $(this).val()
     if ($(this).prop('checked')) {
-      var results = starters.get(value);
-      addTag(results[0].id, results[0].name);
+      addWithDependencies(value);
     } else {
-      removeTag(value);
+      removeWithDependencies(value);
     }
   });
   Mousetrap.bind(['command+enter', 'alt+enter'], function (e) {
@@ -294,4 +449,7 @@ $(function () {
       applyParams();
     }
   }
-});
+  populateDependendsOnMap();
+  appendDependsOnDescription();
+})
+;
