@@ -24,7 +24,7 @@ import java.util.Collections;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.autoconfigure.web.WebClientAutoConfiguration;
+import org.springframework.boot.autoconfigure.web.client.RestTemplateAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
@@ -42,7 +42,7 @@ import org.springframework.retry.support.RetryTemplate;
 @Configuration
 @EnableConfigurationProperties(StatsProperties.class)
 @ConditionalOnProperty("initializr.stats.elastic.uri")
-@AutoConfigureAfter(WebClientAutoConfiguration.class)
+@AutoConfigureAfter(RestTemplateAutoConfiguration.class)
 class InitializrStatsAutoConfiguration {
 
   private final StatsProperties statsProperties;
