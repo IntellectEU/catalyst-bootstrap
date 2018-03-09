@@ -53,8 +53,6 @@ public class CatalystService {
     return new LegacyStsController(metadataProvider, resourceUrlProvider);
   }
 
-  //
-
   /**
    * This provider overrides the DefaultInitializrMetadataProvider, which fetches the list of
    * available Spring Boot versions from Spring website. This is needed because the latest Camel
