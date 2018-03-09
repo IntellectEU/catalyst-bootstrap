@@ -32,6 +32,7 @@ import org.junit.Test;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.Actions;
@@ -64,7 +65,8 @@ public class ProjectGenerationSmokeTests
     fxProfile.setPreference("browser.helperApps.neverAsk.saveToDisk",
         "application/zip,application/x-compress,application/octet-stream");
 
-    driver = new FirefoxDriver(fxProfile);
+    FirefoxOptions options = new FirefoxOptions().setProfile(fxProfile);
+    driver = new FirefoxDriver(options);
     Actions actions = new Actions(driver);
 
     enterAction = actions.sendKeys(Keys.ENTER).build();

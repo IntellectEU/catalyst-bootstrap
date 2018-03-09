@@ -17,13 +17,13 @@
 package com.intellecteu.catalyst.actuate.metric;
 
 import com.intellecteu.catalyst.actuate.test.MetricsAssert;
-import com.intellecteu.catalyst.actuate.test.TestCounterService;
 import com.intellecteu.catalyst.generator.ProjectFailedEvent;
 import com.intellecteu.catalyst.generator.ProjectGeneratedEvent;
 import com.intellecteu.catalyst.generator.ProjectRequest;
 import com.intellecteu.catalyst.metadata.Dependency;
 import com.intellecteu.catalyst.metadata.InitializrMetadata;
 import com.intellecteu.catalyst.test.metadata.InitializrMetadataTestBuilder;
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import java.util.Arrays;
 import org.junit.Before;
 import org.junit.Test;
@@ -41,9 +41,9 @@ public class ProjectGenerationMetricsListenerTests {
 
   @Before
   public void setup() {
-    TestCounterService counterService = new TestCounterService();
-    listener = new ProjectGenerationMetricsListener(counterService);
-    metricsAssert = new MetricsAssert(counterService);
+    SimpleMeterRegistry meterRegistry = new SimpleMeterRegistry();
+    listener = new ProjectGenerationMetricsListener(meterRegistry);
+    metricsAssert = new MetricsAssert(meterRegistry);
   }
 
   @Test

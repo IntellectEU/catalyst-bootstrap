@@ -16,47 +16,41 @@
 
 package com.intellecteu.catalyst.actuate.test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.assertj.core.api.Assertions.assertThat;
 
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.search.Search;
 import java.util.Arrays;
 
 /**
- * Metrics assertion based on {@link TestCounterService}.
+ * Metrics assertion based on {@link MeterRegistry}.
  *
  * @author Stephane Nicoll
  */
 public class MetricsAssert {
 
-  private final TestCounterService counterService;
+  private final MeterRegistry meterRegistry;
 
-  public MetricsAssert(TestCounterService counterService) {
-    this.counterService = counterService;
+  public MetricsAssert(MeterRegistry meterRegistry) {
+    this.meterRegistry = meterRegistry;
   }
 
   public MetricsAssert hasValue(long value, String... metrics) {
-    Arrays.asList(metrics).forEach(it -> {
-      Long actual = counterService.getValues().get(it);
-      if (actual == null) {
-        fail("Metric '" + it + "' not found, got '"
-            + counterService.getValues().keySet() + "'");
-      }
-      assertEquals("Wrong value for metric " + it, value, actual.longValue());
-    });
+    Arrays.asList(metrics).forEach(metric ->
+        assertThat(meterRegistry.get(metric).counter().count()).isEqualTo(value));
     return this;
   }
 
   public MetricsAssert hasNoValue(String... metrics) {
-    Arrays.asList(metrics).forEach(it ->
-        assertEquals("Metric '" + it + "' should not be registered", null,
-            counterService.getValues().get(it)));
+    Arrays.asList(metrics).forEach(metric ->
+        assertThat(Search.in(this.meterRegistry).name(n -> n.startsWith(metric))
+            .counter()).isNull());
     return this;
   }
 
   public MetricsAssert metricsCount(int count) {
-    assertEquals(
-        "Wrong number of metrics, got '" + counterService.getValues().keySet() + "'",
-        count, counterService.getValues().size());
+    assertThat(Search.in(this.meterRegistry).meters()).hasSize(count);
     return this;
   }
+
 }
