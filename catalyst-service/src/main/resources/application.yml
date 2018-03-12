@@ -72,7 +72,7 @@ initializr:
       content:
         - name: File and Sftp
           id: filesftp
-          description: "Simple File to/from Sftp server route. Depends on: Apache Camel, Camel File Endpoint, Camel FTP Endpoint, Configuration Processor"
+          description: "Simple File to/from Sftp server route"
           category: nodep
           dependsOn:
             - camel
@@ -90,6 +90,9 @@ initializr:
           id: rest2Direct
           description: Simple Rest to Direct route
           category: nodep
+          dependsOn:
+            - camel
+            - camel-rest-endpoint
           facets:
             - Rest2Direct-usecase
           links:
@@ -99,6 +102,9 @@ initializr:
           id: sql2Log
           description: Simple Sql to Log route
           category: nodep
+          dependsOn:
+            - camel
+            - camel-sql-endpoint
           facets:
             - Sql2Log-usecase
           links:
@@ -108,6 +114,8 @@ initializr:
           id: duplicateCheck
           description: How to check messages for duplication and process both original and duplicate messages separately
           category: nodep
+          dependsOn:
+            - camel
           facets:
             - DuplicateCheck-usecase
           links:
@@ -117,6 +125,9 @@ initializr:
           id: pgp
           description: How to check messages for duplication and process both original and duplicate messages separately
           category: nodep
+          dependsOn:
+            - camel
+            - camel-crypto-endpoint
           facets:
             - PGP-usecase
           links:
@@ -138,6 +149,8 @@ initializr:
         - name: Camel File Endpoint
           id: camel-file-endpoint
           description: "Access to file systems, allowing files to be processed by any other Camel Components"
+          dependsOn:
+            - camel
           links:
             - rel: guide
               href: http://camel.apache.org/file2.html
@@ -147,42 +160,52 @@ initializr:
           description: Camel FTP support
           groupId: org.apache.camel
           artifactId: camel-ftp
+          dependsOn:
+            - camel
           version: ${camel.version}
           links:
             - rel: guide
               href: http://camel.apache.org/ftp2.html
         - name: IBM Blockchain Connector
           id: camel-rest-endpoint
-          groupId: org.apache.camel
           description: "REST styled DSL to allow defining REST services with verbs such as GET, POST, DELETE etc"
+          groupId: org.apache.camel
           artifactId: camel-servlet-starter
+          dependsOn:
+            - camel
           version: ${camel.version}
           links:
             - rel: guide
               href: http://camel.apache.org/rest-dsl.html
         - name: IoT MQTT Connector
-          description: "Communicate with MQTT compliant message brokers, like Apache ActiveMQ or Mosquitto"
           id: camel-mqtt-endpoint
+          description: "Communicate with MQTT compliant message brokers, like Apache ActiveMQ or Mosquitto"
           groupId: org.apache.camel
           artifactId: camel-mqtt
+          dependsOn:
+            - camel
           version: ${camel.version}
           links:
             - rel: guide
               href: http://camel.apache.org/mqtt.html
         - name: Camel SQL Endpoint
-          description: The sql component allows you to work with databases using JDBC queries.
           id: camel-sql-endpoint
+          description: The sql component allows you to work with databases using JDBC queries.
           groupId: org.apache.camel
           artifactId: camel-sql
+          dependsOn:
+            - camel
           version: ${camel.version}
           links:
             - rel: guide
               href: http://camel.apache.org/sql-component.html
         - name: Camel Crypto Endpoint
-          description: Support for cryptohgraphy operations
           id: camel-crypto-endpoint
+          description: Support for cryptohgraphy operations
           groupId: org.apache.camel
           artifactId: camel-crypto
+          dependsOn:
+            - camel
           version: ${camel.version}
           links:
             - rel: guide
