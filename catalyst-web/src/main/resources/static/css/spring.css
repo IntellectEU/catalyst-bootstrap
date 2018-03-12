@@ -73,10 +73,6 @@ input[type=text] {
   margin: 0.2em;
 }
 
-.tagdisabled {
-  background-color: #b3b3b3;
-}
-
 .tag .close {
   float: none;
   margin-left: 0.2em;
@@ -189,3 +185,13 @@ footer a:hover, footer a:focus {
   color: #8c8c8c;
   font-style: italic;
 }
+
+.disabled-text {
+  color: #cccccc;
+  font-style: italic;
+}
+
+.disabled-tag {
+  background-color: #b3b3b3;
+}
+

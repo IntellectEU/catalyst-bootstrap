@@ -248,11 +248,13 @@ $(function () {
    */
   var enableDependency = function (data_id) {
     $("#starters div[data-id='" + data_id + "']")
-    .removeClass("tagdisabled");
+    .removeClass("disabled-tag");
     $("#starters div[data-id='" + data_id + "']")
     .find(":button").prop('disabled', false);
-    $("#dependencies input[value='" + data_id + "']")
-    .prop('disabled', false);
+    var $checkboxSelector = $("#dependencies input[value='" + data_id + "']");
+    $checkboxSelector.prop('onclick', null).off('click');
+    $checkboxSelector.closest("label").removeClass("disabled-text");
+    $checkboxSelector.closest("label").find("p").removeClass("disabled-text");
   }
 
   /**
@@ -260,11 +262,15 @@ $(function () {
    */
   var disableDependency = function (data_id) {
     $("#starters div[data-id='" + data_id + "']")
-    .addClass("tagdisabled")
+    .addClass("disabled-tag")
     $("#starters div[data-id='" + data_id + "']")
     .find(":button").prop('disabled', true);
-    $("#dependencies input[value='" + data_id + "']")
-    .prop('disabled', true);
+    var $checkboxSelector = $("#dependencies input[value='" + data_id + "']");
+    $checkboxSelector.on("click", function () {
+      return false;
+    });
+    $checkboxSelector.closest("label").addClass("disabled-text");
+    $checkboxSelector.closest("label").find("p").addClass("disabled-text");
   }
 
   /**
