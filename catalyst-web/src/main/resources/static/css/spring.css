@@ -63,6 +63,14 @@ input[type=text] {
   background-color: #fafafa;
 }
 
+input[type="checkbox"][readonly]::before {
+  background: rgba(255, 255, 255, .5);
+  /* content: ''; */
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+
 .tag {
   background-color: #0a45db;
   color: #fff;
