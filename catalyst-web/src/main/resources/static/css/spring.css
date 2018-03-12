@@ -12,6 +12,14 @@ body, h1, h2, h3 {
   font-family: "Varela Round", sans-serif;
 }
 
+[type="checkbox"][readonly]::before {
+  background: rgba(255,255,255,.5);
+  content: '';
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+
 .start-header {
   color: #eee;
   background-color: #34302d;

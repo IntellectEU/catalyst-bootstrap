@@ -252,6 +252,7 @@ $(function () {
     $("#starters div[data-id='" + data_id + "']")
     .find(":button").prop('disabled', false);
     var $checkboxSelector = $("#dependencies input[value='" + data_id + "']");
+    $checkboxSelector.prop('readonly', false);
     $checkboxSelector.prop('onclick', null).off('click');
     $checkboxSelector.closest("label").removeClass("disabled-text");
     $checkboxSelector.closest("label").find("p").removeClass("disabled-text");
@@ -266,9 +267,10 @@ $(function () {
     $("#starters div[data-id='" + data_id + "']")
     .find(":button").prop('disabled', true);
     var $checkboxSelector = $("#dependencies input[value='" + data_id + "']");
-    $checkboxSelector.on("click", function () {
-      return false;
+    $checkboxSelector.on("click", function (e) {
+      e.preventDefault();
     });
+    $checkboxSelector.prop('readonly', true);
     $checkboxSelector.closest("label").addClass("disabled-text");
     $checkboxSelector.closest("label").find("p").addClass("disabled-text");
   }
