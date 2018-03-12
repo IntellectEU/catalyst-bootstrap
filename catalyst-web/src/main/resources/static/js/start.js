@@ -161,7 +161,7 @@ $(function () {
   /**
    * Iterate over dependencies and build map of their details and depends-ons
    */
-  var populateDependendsOnMap = function () {
+  var populateDependsOnMap = function () {
     // First, get the map of all dependencies
     $("#dependencies input[name='dependencyName']").each(function () {
       var id = $(this).prop("id");
@@ -234,25 +234,37 @@ $(function () {
       }
     }
 
-    // Enable all
     for (var i = 0; i < selectedDependencies.length; i++) {
-      $("#starters div[data-id='" + selectedDependencies[i] + "']")
-      .removeClass("tagdisabled");
-      $("#starters div[data-id='" + selectedDependencies[i] + "']")
-      .find(":button").prop('disabled', false);
-      $("#dependencies input[value='" + selectedDependencies[i] + "']")
-      .prop('disabled', false);
+      enableDependency(selectedDependencies[i]);
     }
 
-    // Disable new list
     for (var i = 0; i < dependenciesToDisable.length; i++) {
-      $("#starters div[data-id='" + dependenciesToDisable[i] + "']")
-      .addClass("tagdisabled")
-      $("#starters div[data-id='" + dependenciesToDisable[i] + "']")
-      .find(":button").prop('disabled', true);
-      $("#dependencies input[value='" + dependenciesToDisable[i] + "']")
-      .prop('disabled', true);
+      disableDependency(dependenciesToDisable[i]);
     }
+  }
+
+  /**
+   * Make dependency active
+   */
+  var enableDependency = function (data_id) {
+    $("#starters div[data-id='" + data_id + "']")
+    .removeClass("tagdisabled");
+    $("#starters div[data-id='" + data_id + "']")
+    .find(":button").prop('disabled', false);
+    $("#dependencies input[value='" + data_id + "']")
+    .prop('disabled', false);
+  }
+
+  /**
+   * Make dependency passive
+   */
+  var disableDependency = function (data_id) {
+    $("#starters div[data-id='" + data_id + "']")
+    .addClass("tagdisabled")
+    $("#starters div[data-id='" + data_id + "']")
+    .find(":button").prop('disabled', true);
+    $("#dependencies input[value='" + data_id + "']")
+    .prop('disabled', true);
   }
 
   /**
@@ -449,7 +461,7 @@ $(function () {
       applyParams();
     }
   }
-  populateDependendsOnMap();
+  populateDependsOnMap();
   appendDependsOnDescription();
 })
 ;
