@@ -38,6 +38,8 @@ services:
         logging:
             driver: syslog
             options:
+                {{=<% %>=}}
                 tag: "{{.ImageName}}/{{.Name}}/{{.ID}}"
+                <%={{ }}=%>
                 syslog-address: udp://localhost:1514
         restart: always
