@@ -1,0 +1,43 @@
+version: '3.4'
+services:
+    splunk:
+        hostname: splunk
+        image: splunk/splunk
+        environment:
+            SPLUNK_START_ARGS: --accept-license --answer-yes
+            SPLUNK_ENABLE_LISTEN: 9997
+            SPLUNK_ADD: tcp 1514
+        ports:
+        - 18000:8000
+        restart: always
+    forwarder:
+        hostname: forwarder
+        image: splunk/universalforwarder
+        depends_on:
+        - splunk
+        environment:
+            SPLUNK_START_ARGS: --accept-license --answer-yes
+            SPLUNK_FORWARD_SERVER: splunk:9997
+            SPLUNK_FORWARD_SERVER_ARGS: -method clone
+            SPLUNK_ADD: udp 1514
+        ports:
+        - 1514:1514/udp
+        restart: always
+        healthcheck:
+            test:
+            - CMD
+            - nc -uv forwarder 1514
+            interval: 10s
+            timeout: 5s
+            retries: 3
+            start_period: 5s
+    catalyst:
+        build: .
+        depends_on:
+        - forwarder
+        logging:
+            driver: syslog
+            options:
+                tag: "{{.ImageName}}/{{.Name}}/{{.ID}}"
+                syslog-address: udp://localhost:1514
+        restart: always
