@@ -313,6 +313,7 @@ public class ProjectGenerator {
       List<String> usecases = request.getUsecaseNames();
       appendProperties("classpath:templates/camel/properties/default.yml", appProperties);
       appendFile("Dockerfile", "", root, model);
+      appendFile("docker-compose.yml", "", root, model);
       appendFile("Readme.adoc", "", root, model);
 
       if (!usecases.isEmpty()) {
