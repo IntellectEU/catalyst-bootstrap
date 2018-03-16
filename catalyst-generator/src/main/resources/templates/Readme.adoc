@@ -24,7 +24,7 @@ mvn dockerfile:build
 ```
 
 === Monitoring
-Monitoring is provided with Splunk log analyzer. It receiving the app logs over TCP from Splunk forwarder.
+Monitoring is provided with Splunk log analyzer. It is receiving the app logs over TCP from Splunk forwarder.
 The logs that are logged to system.out inside a Docker container, are sent via UDP to forwarder through syslog driver
 
 - To build and run the app with Splunk monitoring:
