@@ -33,4 +33,4 @@ mvn clean install
 docker-compose  up -d --build
 ```
 
-- After all apps are up, open http://localkhost:18000 for Splunk UI
+- After all apps are up, open http://localhost:18000 for Splunk UI
