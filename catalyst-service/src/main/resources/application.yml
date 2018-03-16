@@ -68,7 +68,7 @@ initializr:
     kotlin:
       default-version: 1.2.20
   dependencies:
-    - name: Camel Usecases
+    - name: Camel Use Cases
       content:
         - name: File and Sftp
           id: filesftp
