@@ -117,11 +117,12 @@ initializr:
               href: http://camel.apache.org/rest-dsl.html
         - name: Sql to Log
           id: sql2Log
-          description: Simple Sql to Log route
+          description: Simple Sql to Log route, using MySQL database as example
           category: nodep
           dependsOn:
             - camel
             - camel-sql-endpoint
+            - mysql
           facets:
             - Sql2Log-usecase
           links:
