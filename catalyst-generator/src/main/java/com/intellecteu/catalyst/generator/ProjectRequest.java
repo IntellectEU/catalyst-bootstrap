@@ -16,7 +16,6 @@
 
 package com.intellecteu.catalyst.generator;
 
-import com.google.common.base.Strings;
 import com.intellecteu.catalyst.metadata.BillOfMaterials;
 import com.intellecteu.catalyst.metadata.DefaultMetadataElement;
 import com.intellecteu.catalyst.metadata.Dependency;
@@ -29,7 +28,6 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.util.StringUtils;
@@ -127,7 +125,7 @@ public class ProjectRequest extends BasicProjectRequest {
     String actualBootVersion = getBootVersion() != null ? getBootVersion()
         : metadata.getBootVersions().getDefault().getId();
     Version requestedVersion = Version.parse(actualBootVersion);
-    this.resolvedDependencies = depIds.stream().map(it -> {
+    this.resolvedDependencies = depIds.stream().distinct().map(it -> {
       Dependency dependency = metadata.getDependencies().get(it);
       if (dependency == null) {
         throw new InvalidProjectRequestException(
@@ -303,13 +301,30 @@ public class ProjectRequest extends BasicProjectRequest {
   /**
    * Get the usecase names if exists.
    */
-  public List<String> getUsecaseNames() {
-    return facets.stream().filter(s -> s.contains("-usecase"))
-        .map(s -> s.split("-")[0])
-        .filter(((Predicate<String>) Strings::isNullOrEmpty).negate())
+  public List<FileTemplate> getProjectFiles() {
+    return facets.stream().filter(s -> s.contains(","))
+        .map(s -> new FileTemplate(s.split(",")))
         .collect(Collectors.toList());
   }
 
+  public class FileTemplate {
+
+    private String templateLocation;
+    private String fileDestination;
+
+    public FileTemplate(String... args) {
+      this.templateLocation = args[0];
+      this.fileDestination = args[1];
+    }
+
+    public String getTemplateLocation() {
+      return templateLocation;
+    }
+
+    public String getFileDestination() {
+      return fileDestination;
+    }
+  }
 
   @Override
   public String toString() {

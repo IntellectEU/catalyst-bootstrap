@@ -19,6 +19,7 @@ package com.intellecteu.catalyst.generator;
 import com.google.common.base.Charsets;
 import com.google.common.io.CharStreams;
 import com.intellecteu.catalyst.InitializrException;
+import com.intellecteu.catalyst.generator.ProjectRequest.FileTemplate;
 import com.intellecteu.catalyst.metadata.BillOfMaterials;
 import com.intellecteu.catalyst.metadata.Dependency;
 import com.intellecteu.catalyst.metadata.InitializrConfiguration.Env.Maven.ParentPom;
@@ -310,24 +311,43 @@ public class ProjectGenerator {
       StringBuilder appProperties) {
 
     try {
-      List<String> usecases = request.getUsecaseNames();
-      appendProperties("classpath:templates/camel/properties/default.yml", appProperties);
+      List<FileTemplate> projectFiles = request.getProjectFiles();
+      appendProperties("classpath:templates/camel/default.yml", appProperties);
       appendFile("Dockerfile", "", root, model);
       appendFile("docker-compose.yml", "", root, model);
       appendFile("Readme.adoc", "", root, model);
 
-      if (!usecases.isEmpty()) {
-        for (String usecase : usecases) {
-          appendFile(usecase + "Router.java", "camel/router/", src, model);
-          appendFile(usecase + "Config.java", "camel/config/", src, model);
-          appendFile(usecase + "Properties.java", "camel/properties/", src, model);
-          appendProperties("classpath:templates/camel/properties/" + usecase + ".yml",
-              appProperties);
+      if (!projectFiles.isEmpty()) {
+        for (FileTemplate template : projectFiles) {
+          if (template.getTemplateLocation().contains(".yml") || template
+              .getTemplateLocation().contains(".properties")) {
+            appendProperties(template.getTemplateLocation(),
+                appProperties);
+          } else {
+            appendFile(
+                processPath(request, root, template.getFileDestination()),
+                template.getTemplateLocation(), model);
+          }
         }
       }
     } catch (IOException ex) {
       throw new InitializrException("Failure while processing Camel Usecases", ex);
     }
+  }
+
+  /**
+   * Process path. Creates subfolders. Replaces {sources}, {tests}, {resources} with appropriate
+   * locations.
+   */
+  private File processPath(ProjectRequest request, File root, String destPath) {
+    String packageName = request.getLanguage() + "/" + request.getPackageName().replace(".", "/");
+    File dest = new File(root, destPath.replace("{sources}",
+        "src/main/" + packageName)
+        .replace("{tests}",
+            "src/test/" + packageName)
+        .replace("{resources}", "src/main/resources"));
+    dest.getParentFile().mkdirs();
+    return dest;
   }
 
   private void appendFile(String filename, String templateLocation, File srcDir,
@@ -336,7 +356,17 @@ public class ProjectGenerator {
       write(new File(srcDir, filename),
           templateLocation + filename, model);
     } catch (IllegalStateException ex) {
-      log.warn("Class file: {} not found: {} ", filename, ex.getMessage());
+      log.error("Class file: {} not found: {} ", filename, ex.getMessage());
+    }
+  }
+
+  private void appendFile(File file, String templateLocation,
+      Map<String, Object> model) {
+    try {
+      write(file,
+          templateLocation, model);
+    } catch (IllegalStateException ex) {
+      log.error("Class file: {} not found: {} ", file.getName(), ex.getMessage());
     }
   }
 
@@ -349,7 +379,7 @@ public class ProjectGenerator {
 
       appProperties.append(customProperties).append(System.lineSeparator());
     } catch (FileNotFoundException ex) {
-      log.warn("Property file not found: {}", ex.getMessage());
+      log.error("Property file not found: {}", ex.getMessage());
     }
   }
 
