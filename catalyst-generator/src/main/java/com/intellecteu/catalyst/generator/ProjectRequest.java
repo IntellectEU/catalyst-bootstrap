@@ -125,7 +125,7 @@ public class ProjectRequest extends BasicProjectRequest {
     String actualBootVersion = getBootVersion() != null ? getBootVersion()
         : metadata.getBootVersions().getDefault().getId();
     Version requestedVersion = Version.parse(actualBootVersion);
-    this.resolvedDependencies = depIds.stream().distinct().map(it -> {
+    this.resolvedDependencies = depIds.stream().map(it -> {
       Dependency dependency = metadata.getDependencies().get(it);
       if (dependency == null) {
         throw new InvalidProjectRequestException(
@@ -313,8 +313,8 @@ public class ProjectRequest extends BasicProjectRequest {
     private String fileDestination;
 
     public FileTemplate(String... args) {
-      this.templateLocation = args[0];
-      this.fileDestination = args[1];
+      this.templateLocation = StringUtils.trimWhitespace(args[0]);
+      this.fileDestination = StringUtils.trimWhitespace(args[1]);
     }
 
     public String getTemplateLocation() {

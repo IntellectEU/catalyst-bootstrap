@@ -59,16 +59,16 @@ public class CustomProjectGeneratorTests extends AbstractProjectGeneratorTests {
     request.setName("MyDemo");
     request.setPackageName("foo");
     request.setFacets(new ArrayList<String>() {{
-      add("empty.txt,{sources}/empty.txt");
-      add("empty.txt,{tests}/empty.txt");
-      add("empty.txt,{resources}/empty.txt");
-      add("empty.txt,empty.txt");
+      add("custom.txt,{sources}/custom.txt");
+      add("custom.txt,{tests}/custom.txt");
+      add("custom.txt,{resources}/custom.txt");
+      add("custom.txt,custom.txt");
     }});
     ProjectAssert project = generateProject(request);
-    project.sourceCodeAssert("empty.txt");
-    project.sourceCodeAssert("src/main/java/foo/empty.txt");
-    project.sourceCodeAssert("src/test/java/foo/empty.txt");
-    project.sourceCodeAssert("src/main/resources/empty.txt");
+    project.sourceCodeAssert("custom.txt");
+    project.sourceCodeAssert("src/main/java/foo/custom.txt");
+    project.sourceCodeAssert("src/test/java/foo/custom.txt");
+    project.sourceCodeAssert("src/main/resources/custom.txt");
   }
 
   @Test
