@@ -130,6 +130,7 @@ initializr:
           facets:
             - "usecase/sql2log/Sql2Log.yml"
             - "usecase/sql2log/Sql2LogRouter.java,{sources}/Sql2LogRouter.java"
+            - "usecase/sql2log/Sql2LogConfig.java,{sources}/Sql2LogConfig.java"
           links:
             - rel: guide
               href: http://camel.apache.org/sql-component.html
