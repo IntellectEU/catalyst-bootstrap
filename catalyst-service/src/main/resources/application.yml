@@ -121,11 +121,12 @@ initializr:
               href: http://camel.apache.org/rest-dsl.html
         - name: Sql to Log
           id: sql2Log
-          description: Simple Sql to Log route
+          description: Simple Sql to Log route, using MySQL database as example
           category: nodep
           dependsOn:
             - camel
             - camel-sql-endpoint
+            - mysql
           facets:
             - "usecase/sql2log/Sql2Log.yml"
             - "usecase/sql2log/Sql2LogRouter.java,{sources}/Sql2LogRouter.java"
@@ -219,6 +220,7 @@ initializr:
           artifactId: camel-sql
           dependsOn:
             - camel
+            - hikaricp
           version: ${camel.version}
           links:
             - rel: guide
@@ -630,6 +632,16 @@ initializr:
           links:
             - rel: reference
               href: http://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-jooq
+        - name: Hikari Connection Pool
+          id: hikaricp
+          description: Fast, simple, reliable "zero-overhead" production ready JDBC connection pool.
+          groupId: com.zaxxer
+          artifactId: HikariCP
+          version: 2.7.8
+          starter: false
+          links:
+            - rel: reference
+              href: https://github.com/brettwooldridge/HikariCP
     - name: NoSQL
       content:
         - name: Redis
