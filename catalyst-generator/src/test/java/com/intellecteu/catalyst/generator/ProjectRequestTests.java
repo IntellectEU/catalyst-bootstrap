@@ -396,9 +396,9 @@ public class ProjectRequestTests {
   public void getUseCaseName() {
     ProjectRequest request = initProjectRequest();
     request.setFacets(new ArrayList<String>() {{
-      add("file2sftp-usecase");
+      add("test.java,{sources}/test.java");
     }});
-    assertEquals(request.getUsecaseNames().get(0), "file2sftp");
+    assertEquals(request.getProjectFiles().get(0).getFileDestination(), "{sources}/test.java");
   }
 
   @Test
@@ -407,7 +407,7 @@ public class ProjectRequestTests {
     request.setFacets(new ArrayList<String>() {{
       add("");
     }});
-    assertTrue(request.getUsecaseNames().isEmpty());
+    assertTrue(request.getProjectFiles().isEmpty());
   }
 
   @Test
@@ -416,7 +416,7 @@ public class ProjectRequestTests {
     request.setFacets(new ArrayList<String>() {{
       add("file2sftp-ussecase");
     }});
-    assertTrue(request.getUsecaseNames().isEmpty());
+    assertTrue(request.getProjectFiles().isEmpty());
   }
 
   @Test

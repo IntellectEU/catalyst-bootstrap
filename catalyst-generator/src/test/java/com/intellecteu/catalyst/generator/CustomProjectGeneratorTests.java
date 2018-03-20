@@ -22,6 +22,7 @@ import static org.mockito.Mockito.times;
 
 import com.intellecteu.catalyst.test.generator.ProjectAssert;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Map;
 import org.junit.Test;
 import org.mockito.InOrder;
@@ -48,6 +49,26 @@ public class CustomProjectGeneratorTests extends AbstractProjectGeneratorTests {
     ProjectAssert project = generateProject(request);
     project.sourceCodeAssert("custom.txt")
         .equalsTo(new ClassPathResource("project/custom/custom.txt"));
+  }
+
+  @Test
+  public void camelUsecaseTest() {
+    ProjectRequest request = createProjectRequest();
+    request.setType("maven-project");
+    request.setLanguage("java");
+    request.setName("MyDemo");
+    request.setPackageName("foo");
+    request.setFacets(new ArrayList<String>() {{
+      add("custom.txt,{sources}/custom.txt");
+      add("custom.txt,{tests}/custom.txt");
+      add("custom.txt,{resources}/custom.txt");
+      add("custom.txt,custom.txt");
+    }});
+    ProjectAssert project = generateProject(request);
+    project.sourceCodeAssert("custom.txt");
+    project.sourceCodeAssert("src/main/java/foo/custom.txt");
+    project.sourceCodeAssert("src/test/java/foo/custom.txt");
+    project.sourceCodeAssert("src/main/resources/custom.txt");
   }
 
   @Test

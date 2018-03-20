@@ -19,6 +19,7 @@ package com.intellecteu.catalyst.generator;
 import com.google.common.base.Charsets;
 import com.google.common.io.CharStreams;
 import com.intellecteu.catalyst.InitializrException;
+import com.intellecteu.catalyst.generator.ProjectRequest.FileTemplate;
 import com.intellecteu.catalyst.metadata.BillOfMaterials;
 import com.intellecteu.catalyst.metadata.Dependency;
 import com.intellecteu.catalyst.metadata.InitializrConfiguration.Env.Maven.ParentPom;
@@ -29,7 +30,6 @@ import com.intellecteu.catalyst.util.Version;
 import com.intellecteu.catalyst.util.VersionProperty;
 import java.beans.PropertyDescriptor;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -289,7 +289,7 @@ public class ProjectGenerator {
     write(new File(test, applicationName + "Tests." + extension),
         "ApplicationTests." + extension, model);
 
-    writeCamelUsecases(request, model, dir, src, appProperties);
+    writeCamelUsecases(request, model, dir, appProperties);
 
     File resources = new File(dir, "src/main/resources");
     resources.mkdirs();
@@ -306,38 +306,48 @@ public class ProjectGenerator {
    * Write routes, properties, and configuration for usecase facets e.g. file2sftp-usecase
    */
   private void writeCamelUsecases(ProjectRequest request, Map<String, Object> model, File root,
-      File src,
       StringBuilder appProperties) {
 
     try {
-      List<String> usecases = request.getUsecaseNames();
-      appendProperties("classpath:templates/camel/properties/default.yml", appProperties);
-      appendFile("Dockerfile", "", root, model);
-      appendFile("docker-compose.yml", "", root, model);
-      appendFile("Readme.adoc", "", root, model);
+      List<FileTemplate> projectFiles = request.getProjectFiles();
+      //default files
+      appendProperties("classpath:templates/usecase/default.yml", appProperties);
+      write(new File(root, "Dockerfile"), "", model);
+      write(new File(root, "docker-compose.yml"), "", model);
+      write(new File(root, "Readme.adoc"), "", model);
 
-      if (!usecases.isEmpty()) {
-        for (String usecase : usecases) {
-          appendFile(usecase + "Router.java", "camel/router/", src, model);
-          appendFile(usecase + "Config.java", "camel/config/", src, model);
-          appendFile(usecase + "Properties.java", "camel/properties/", src, model);
-          appendProperties("classpath:templates/camel/properties/" + usecase + ".yml",
-              appProperties);
+      //usecase files
+      if (!projectFiles.isEmpty()) {
+        for (FileTemplate template : projectFiles) {
+          if (template.getTemplateLocation().contains(".yml") || template
+              .getTemplateLocation().contains(".properties")) {
+            appendProperties(template.getTemplateLocation(),
+                appProperties);
+          } else {
+            write(
+                processDestinationPath(request, root, template.getFileDestination()),
+                template.getTemplateLocation(), model);
+          }
         }
       }
-    } catch (IOException ex) {
-      throw new InitializrException("Failure while processing Camel Usecases", ex);
+    } catch (Exception ex) {
+      throw new InitializrException("Failure while processing use cases", ex);
     }
   }
 
-  private void appendFile(String filename, String templateLocation, File srcDir,
-      Map<String, Object> model) {
-    try {
-      write(new File(srcDir, filename),
-          templateLocation + filename, model);
-    } catch (IllegalStateException ex) {
-      log.warn("Class file: {} not found: {} ", filename, ex.getMessage());
-    }
+  /**
+   * Process path. Creates subfolders. Replaces {sources}, {tests}, {resources} with appropriate
+   * locations.
+   */
+  private File processDestinationPath(ProjectRequest request, File root, String destPath) {
+    String packageName = request.getLanguage() + "/" + request.getPackageName().replace(".", "/");
+    File dest = new File(root, destPath.replace("{sources}",
+        "src/main/" + packageName)
+        .replace("{tests}",
+            "src/test/" + packageName)
+        .replace("{resources}", "src/main/resources"));
+    dest.getParentFile().mkdirs();
+    return dest;
   }
 
   private void appendProperties(String propertiesLocation, StringBuilder appProperties)
@@ -348,11 +358,8 @@ public class ProjectGenerator {
           new InputStreamReader(custom, Charsets.UTF_8));
 
       appProperties.append(customProperties).append(System.lineSeparator());
-    } catch (FileNotFoundException ex) {
-      log.warn("Property file not found: {}", ex.getMessage());
     }
   }
-
 
   /**
    * Create a distribution file for the specified project structure directory and extension

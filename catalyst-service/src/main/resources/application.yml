@@ -81,12 +81,12 @@ initializr:
             - camel-sql-endpoint
             - configuration-processor
           facets:
-            - IotIbm-usecase
+            - "usecase/iotibm/IotIbm.yml"
           links:
-            - rel: file guide
-              href: http://camel.apache.org/file2.html
-            - rel: sftp guide
-              href: http://camel.apache.org/ftp2.html
+            - rel: guide
+              href: http://camel.apache.org/rest-dsl.html
+            - rel: guide
+              href: http://camel.apache.org/sql-component.html
         - name: File and Sftp
           id: filesftp
           description: "Simple File to/from Sftp server route"
@@ -97,7 +97,10 @@ initializr:
             - camel-ftp-endpoint
             - configuration-processor
           facets:
-            - FileSftp-usecase
+            - "usecase/filesftp/FileSftp.yml"
+            - "usecase/filesftp/FileSftpConfig.java,{sources}/FileSftpConfig.java"
+            - "usecase/filesftp/FileSftpProperties.java,{sources}/FileSftpProperties.java"
+            - "usecase/filesftp/FileSftpRouter.java,{sources}/FileSftpRouter.java"
           links:
             - rel: file guide
               href: http://camel.apache.org/file2.html
@@ -111,7 +114,8 @@ initializr:
             - camel
             - camel-rest-endpoint
           facets:
-            - Rest2Direct-usecase
+            - "usecase/rest2direct/Rest2Direct.yml"
+            - "usecase/rest2direct/Rest2DirectRouter.java,{sources}/Rest2DirectRouter.java"
           links:
             - rel: guide
               href: http://camel.apache.org/rest-dsl.html
@@ -124,18 +128,21 @@ initializr:
             - camel-sql-endpoint
             - mysql
           facets:
-            - Sql2Log-usecase
+            - "usecase/sql2log/Sql2Log.yml"
+            - "usecase/sql2log/Sql2LogRouter.java,{sources}/Sql2LogRouter.java"
+            - "usecase/sql2log/Sql2LogConfig.java,{sources}/Sql2LogConfig.java"
           links:
             - rel: guide
               href: http://camel.apache.org/sql-component.html
         - name: Duplicate Check
-          id: duplicateCheck
+          id: duplicatecheck
           description: How to check messages for duplication and process both original and duplicate messages separately
           category: nodep
           dependsOn:
             - camel
           facets:
-            - DuplicateCheck-usecase
+            - "usecase/duplicatecheck/DuplicateCheckConfig.java,{sources}/DuplicateCheckConfig.java"
+            - "usecase/duplicatecheck/DuplicateCheckRouter.java,{sources}/DuplicateCheckRouter.java"
           links:
             - rel: guide
               href: http://camel.apache.org/idempotent-consumer.html
@@ -147,7 +154,8 @@ initializr:
             - camel
             - camel-crypto-endpoint
           facets:
-            - PGP-usecase
+            - "usecase/pgp/PGP.yml"
+            - "usecase/pgp/PGPRouter.java,{sources}/PGPRouter.java"
           links:
             - rel: guide
               href: http://camel.apache.org/crypto.html

@@ -25,6 +25,7 @@ import com.intellecteu.catalyst.metadata.InitializrMetadata;
 import com.intellecteu.catalyst.test.generator.ProjectAssert;
 import com.intellecteu.catalyst.test.metadata.InitializrMetadataTestBuilder;
 import com.intellecteu.catalyst.util.VersionProperty;
+import java.util.ArrayList;
 import java.util.Collections;
 import org.junit.Rule;
 import org.junit.Test;
