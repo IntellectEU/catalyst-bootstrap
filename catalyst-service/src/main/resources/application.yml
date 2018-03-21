@@ -81,7 +81,7 @@ initializr:
             - camel-sql-endpoint
             - configuration-processor
           facets:
-            - "usecase/iotibm/IotIbm.yml"
+            - "usecase/iotibm/IotIbm.yml,{properties}"
           links:
             - rel: guide
               href: http://camel.apache.org/rest-dsl.html
@@ -97,7 +97,7 @@ initializr:
             - camel-ftp-endpoint
             - configuration-processor
           facets:
-            - "usecase/filesftp/FileSftp.yml"
+            - "usecase/filesftp/FileSftp.yml,{properties}"
             - "usecase/filesftp/FileSftpConfig.java,{sources}/FileSftpConfig.java"
             - "usecase/filesftp/FileSftpProperties.java,{sources}/FileSftpProperties.java"
             - "usecase/filesftp/FileSftpRouter.java,{sources}/FileSftpRouter.java"
@@ -114,7 +114,7 @@ initializr:
             - camel
             - camel-rest-endpoint
           facets:
-            - "usecase/rest2direct/Rest2Direct.yml"
+            - "usecase/rest2direct/Rest2Direct.yml,{properties}"
             - "usecase/rest2direct/Rest2DirectRouter.java,{sources}/Rest2DirectRouter.java"
           links:
             - rel: guide
@@ -128,7 +128,7 @@ initializr:
             - camel-sql-endpoint
             - mysql
           facets:
-            - "usecase/sql2log/Sql2Log.yml"
+            - "usecase/sql2log/Sql2Log.yml,{properties}"
             - "usecase/sql2log/Sql2LogRouter.java,{sources}/Sql2LogRouter.java"
             - "usecase/sql2log/Sql2LogConfig.java,{sources}/Sql2LogConfig.java"
           links:
@@ -154,7 +154,7 @@ initializr:
             - camel
             - camel-crypto-endpoint
           facets:
-            - "usecase/pgp/PGP.yml"
+            - "usecase/pgp/PGP.yml,{properties}"
             - "usecase/pgp/PGPRouter.java,{sources}/PGPRouter.java"
           links:
             - rel: guide

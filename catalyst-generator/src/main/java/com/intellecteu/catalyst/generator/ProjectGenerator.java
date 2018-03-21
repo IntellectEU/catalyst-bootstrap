@@ -312,16 +312,15 @@ public class ProjectGenerator {
       List<FileTemplate> projectFiles = request.getProjectFiles();
       //default files
       appendProperties("classpath:templates/usecase/default.yml", appProperties);
-      write(new File(root, "Dockerfile"), "", model);
-      write(new File(root, "docker-compose.yml"), "", model);
-      write(new File(root, "Readme.adoc"), "", model);
+      write(new File(root, "Dockerfile"), "Dockerfile", model);
+      write(new File(root, "docker-compose.yml"), "docker-compose.yml", model);
+      write(new File(root, "Readme.adoc"), "Readme.adoc", model);
 
       //usecase files
       if (!projectFiles.isEmpty()) {
         for (FileTemplate template : projectFiles) {
-          if (template.getTemplateLocation().contains(".yml") || template
-              .getTemplateLocation().contains(".properties")) {
-            appendProperties(template.getTemplateLocation(),
+          if (template.getFileDestination().contains("{properties}")) {
+            appendProperties("classpath:templates/" + template.getTemplateLocation(),
                 appProperties);
           } else {
             write(
