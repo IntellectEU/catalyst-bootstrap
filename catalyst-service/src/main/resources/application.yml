@@ -76,12 +76,36 @@ initializr:
           category: nodep
           dependsOn:
             - camel
+            - camel-jsonpath
+            - camel-gson
             - camel-mqtt-endpoint
             - camel-rest-endpoint
             - camel-sql-endpoint
             - configuration-processor
+            - web
           facets:
             - "usecase/iotibm/IotIbm.yml,{properties}"
+            # Routes
+            - "usecase/iotibm/routes/BankApprovesPaymentRoutes.java,{sources}/routes/BankApprovesPaymentRoutes.java"
+            - "usecase/iotibm/routes/LedgerSqlRoutes.java,{sources}/routes/LedgerSqlRoutes.java"
+            - "usecase/iotibm/routes/MqttSqlRoutes.java,{sources}/routes/MqttSqlRoutes.java"
+            - "usecase/iotibm/routes/SetPaymentStatusRoutes.java,{sources}/routes/SetPaymentStatusRoutes.java"
+            - "usecase/iotibm/routes/UserApprovesPaymentRoutes.java,{sources}/routes/UserApprovesPaymentRoutes.java"
+            # Config
+            - "usecase/iotibm/config/AppConfig.java,{sources}/config/AppConfig.java"
+            - "usecase/iotibm/config/Constants.java,{sources}/config/Constants.java"
+            - "usecase/iotibm/config/DatasourceConfig.java,{sources}/config/DatasourceConfig.java"
+            # Domain
+            - "usecase/iotibm/domain/CarData.java,{sources}/domain/CarData.java"
+            - "usecase/iotibm/domain/InsuranceData.java,{sources}/domain/InsuranceData.java"
+            - "usecase/iotibm/domain/PaymentResponse.java,{sources}/domain/PaymentResponse.java"
+            # Exception
+            - "usecase/iotibm/exception/TokenReceiverException.java,{sources}/exception/TokenReceiverException.java"
+            # Service
+            - "usecase/iotibm/service/BlockchainConnector.java,{sources}/service/BlockchainConnector.java"
+            - "usecase/iotibm/service/impl/BlockchainConnectorImpl.java,{sources}/service/impl/BlockchainConnectorImpl.java"
+            # Util
+            - "usecase/iotibm/util/TokenReceiver.java,{sources}/util/TokenReceiver.java"
           links:
             - rel: guide
               href: http://camel.apache.org/rest-dsl.html
@@ -237,6 +261,22 @@ initializr:
           links:
             - rel: guide
               href: http://camel.apache.org/crypto.html
+        - name: JSonPath
+          id: camel-jsonpath
+          description: JsonPath is to JSON what XPATH is to XML, a simple way to extract parts of a given document
+          groupId: org.apache.camel
+          artifactId: camel-jsonpath
+          dependsOn:
+            - camel
+          version: ${camel.version}
+        - name: GSON
+          id: camel-gson
+          description: Gson is a Java library that can be used to convert Java Objects into their JSON representation
+          groupId: org.apache.camel
+          artifactId: camel-gson
+          dependsOn:
+            - camel
+          version: ${camel.version}
     - name: Core
       content:
         - name: DevTools

@@ -324,7 +324,7 @@ public class ProjectGenerator {
                 appProperties);
           } else {
             write(
-                processDestinationPath(request, root, template.getFileDestination()),
+                processDestinationPath(request, root, template.getFileDestination(), model),
                 template.getTemplateLocation(), model);
           }
         }
@@ -338,15 +338,43 @@ public class ProjectGenerator {
    * Process path. Creates subfolders. Replaces {sources}, {tests}, {resources} with appropriate
    * locations.
    */
-  private File processDestinationPath(ProjectRequest request, File root, String destPath) {
-    String packageName = request.getLanguage() + "/" + request.getPackageName().replace(".", "/");
-    File dest = new File(root, destPath.replace("{sources}",
-        "src/main/" + packageName)
-        .replace("{tests}",
-            "src/test/" + packageName)
-        .replace("{resources}", "src/main/resources"));
+  private File processDestinationPath(ProjectRequest request, File root, String destPath,
+      Map<String, Object> model) {
+    String packageFolder = request.getPackageName().replace(".", "/");
+    String packageFolderWithLang = request.getLanguage() + "/" + packageFolder;
+
+    if (destPath.contains("{sources}")) {
+      destPath = destPath.replace("{sources}",
+          "src/main/" + packageFolderWithLang);
+      File dest = getFile(root, destPath);
+      addFullPackageToModel(model, packageFolder, dest);
+      return dest;
+    } else if (destPath.contains("{tests}")) {
+      destPath = destPath.replace("{tests}",
+          "src/test/" + packageFolderWithLang);
+      File dest = getFile(root, destPath);
+      addFullPackageToModel(model, packageFolder, dest);
+      return dest;
+    } else if (destPath.contains("{resources}")) {
+      destPath = destPath.replace("{resources}", "src/main/resources");
+      return getFile(root, destPath);
+    } else {
+      return getFile(root, destPath);
+    }
+  }
+
+  private File getFile(File root, String destPath) {
+    File dest = new File(root, destPath);
     dest.getParentFile().mkdirs();
     return dest;
+  }
+
+  //add full package name
+  private void addFullPackageToModel(Map<String, Object> model, String packageFolder, File dest) {
+    String parentFolder = dest.getParentFile().getPath();
+    String fullPackageName = parentFolder.substring(parentFolder.indexOf(packageFolder))
+        .replace("/", ".");
+    model.put("fullPackageName", fullPackageName);
   }
 
   private void appendProperties(String propertiesLocation, StringBuilder appProperties)
