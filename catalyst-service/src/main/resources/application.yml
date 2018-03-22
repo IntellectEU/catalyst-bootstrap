@@ -90,6 +90,10 @@ initializr:
             - "usecase/iotibm/routes/MqttSqlRoutes.java,{sources}/routes/MqttSqlRoutes.java"
             - "usecase/iotibm/routes/SetPaymentStatusRoutes.java,{sources}/routes/SetPaymentStatusRoutes.java"
             - "usecase/iotibm/routes/UserApprovesPaymentRoutes.java,{sources}/routes/UserApprovesPaymentRoutes.java"
+            # Config
+            - "usecase/iotibm/config/AppConfig.java,{sources}/config/AppConfig.java"
+            - "usecase/iotibm/config/Constants.java,{sources}/config/Constants.java"
+            - "usecase/iotibm/config/DatasourceConfig.java,{sources}/config/DatasourceConfig.java"
           links:
             - rel: guide
               href: http://camel.apache.org/rest-dsl.html
