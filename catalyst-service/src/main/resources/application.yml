@@ -84,6 +84,12 @@ initializr:
             - configuration-processor
           facets:
             - "usecase/iotibm/IotIbm.yml,{properties}"
+            # Routes
+            - "usecase/iotibm/routes/BankApprovesPaymentRoutes.java,{sources}/BankApprovesPaymentRoutes.java"
+            - "usecase/iotibm/routes/LedgerSqlRoutes.java,{sources}/LedgerSqlRoutes.java"
+            - "usecase/iotibm/routes/MqttSqlRoutes.java,{sources}/MqttSqlRoutes.java"
+            - "usecase/iotibm/routes/SetPaymentStatusRoutes.java,{sources}/SetPaymentStatusRoutes.java"
+            - "usecase/iotibm/routes/UserApprovesPaymentRoutes.java,{sources}/UserApprovesPaymentRoutes.java"
           links:
             - rel: guide
               href: http://camel.apache.org/rest-dsl.html
