@@ -6,7 +6,7 @@ package <%fullPackageName%>;
 
 import static com.catalyst.cardemo.config.Constants.REST_API_ADDRESS;
 
-import com.catalyst.cardemo.service.BlockchainConnector;
+import <%packageName%>.service.BlockchainConnector;
 import java.io.IOException;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;

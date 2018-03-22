@@ -16,9 +16,9 @@ import static com.catalyst.cardemo.config.Constants.PUT_FUNCTION;
 import static com.catalyst.cardemo.config.Constants.REJECTED_STATUS;
 import static com.catalyst.cardemo.config.Constants.SET_FUNCTION;
 
-import com.catalyst.cardemo.domain.CarData;
-import com.catalyst.cardemo.domain.InsuranceData;
-import com.catalyst.cardemo.service.BlockchainConnector;
+import <%packageName%>.domain.CarData;
+import <%packageName%>.domain.InsuranceData;
+import <%packageName%>.service.BlockchainConnector;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;

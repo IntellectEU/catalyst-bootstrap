@@ -7,10 +7,10 @@ package <%fullPackageName%>;
 import static com.catalyst.cardemo.config.Constants.AUTHORIZATION_HEADER;
 import static com.catalyst.cardemo.config.Constants.BEAR_HEADER;
 
-import com.catalyst.cardemo.config.Constants;
-import com.catalyst.cardemo.exception.TokenReceiverException;
-import com.catalyst.cardemo.service.BlockchainConnector;
-import com.catalyst.cardemo.util.TokenReceiver;
+import <%packageName%>.config.Constants;
+import <%packageName%>.exception.TokenReceiverException;
+import <%packageName%>.service.BlockchainConnector;
+import <%packageName%>.util.TokenReceiver;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.HashMap;
