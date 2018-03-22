@@ -4,8 +4,8 @@
 
 package <%fullPackageName%>;
 
-import static com.catalyst.cardemo.config.Constants.AUTHORIZATION_HEADER;
-import static com.catalyst.cardemo.config.Constants.BEAR_HEADER;
+import static <%packageName%>.config.Constants.AUTHORIZATION_HEADER;
+import static <%packageName%>.config.Constants.BEAR_HEADER;
 
 import <%packageName%>.config.Constants;
 import <%packageName%>.exception.TokenReceiverException;

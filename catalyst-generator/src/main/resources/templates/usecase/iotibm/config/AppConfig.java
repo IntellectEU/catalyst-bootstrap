@@ -4,17 +4,17 @@
 
 package <%fullPackageName%>;
 
-import static com.catalyst.cardemo.config.Constants.CHAINCODE;
-import static com.catalyst.cardemo.config.Constants.CHANNEL;
-import static com.catalyst.cardemo.config.Constants.GET_FUNCTION;
-import static com.catalyst.cardemo.config.Constants.HOST;
-import static com.catalyst.cardemo.config.Constants.OWNER;
-import static com.catalyst.cardemo.config.Constants.PAID_STATUS;
-import static com.catalyst.cardemo.config.Constants.PEER;
-import static com.catalyst.cardemo.config.Constants.PENDING_STATUS;
-import static com.catalyst.cardemo.config.Constants.PUT_FUNCTION;
-import static com.catalyst.cardemo.config.Constants.REJECTED_STATUS;
-import static com.catalyst.cardemo.config.Constants.SET_FUNCTION;
+import static <%packageName%>.config.Constants.CHAINCODE;
+import static <%packageName%>.config.Constants.CHANNEL;
+import static <%packageName%>.config.Constants.GET_FUNCTION;
+import static <%packageName%>.config.Constants.HOST;
+import static <%packageName%>.config.Constants.OWNER;
+import static <%packageName%>.config.Constants.PAID_STATUS;
+import static <%packageName%>.config.Constants.PEER;
+import static <%packageName%>.config.Constants.PENDING_STATUS;
+import static <%packageName%>.config.Constants.PUT_FUNCTION;
+import static <%packageName%>.config.Constants.REJECTED_STATUS;
+import static <%packageName%>.config.Constants.SET_FUNCTION;
 
 import <%packageName%>.domain.CarData;
 import <%packageName%>.domain.InsuranceData;

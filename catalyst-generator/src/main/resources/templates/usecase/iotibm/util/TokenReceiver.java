@@ -4,7 +4,7 @@
 
 package <%fullPackageName%>;
 
-import static com.catalyst.cardemo.config.Constants.REST_API_ADDRESS;
+import static <%packageName%>.config.Constants.REST_API_ADDRESS;
 
 import <%packageName%>.service.BlockchainConnector;
 import java.io.IOException;
