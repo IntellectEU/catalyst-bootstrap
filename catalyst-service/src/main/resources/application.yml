@@ -77,6 +77,7 @@ initializr:
           dependsOn:
             - camel
             - camel-jsonpath
+            - camel-gson
             - camel-mqtt-endpoint
             - camel-rest-endpoint
             - camel-sql-endpoint
@@ -243,6 +244,14 @@ initializr:
           description: JsonPath is to JSON what XPATH is to XML, a simple way to extract parts of a given document
           groupId: org.apache.camel
           artifactId: camel-jsonpath
+          dependsOn:
+            - camel
+          version: ${camel.version}
+        - name: GSON
+          id: camel-gson
+          description: Gson is a Java library that can be used to convert Java Objects into their JSON representation
+          groupId: org.apache.camel
+          artifactId: camel-gson
           dependsOn:
             - camel
           version: ${camel.version}
