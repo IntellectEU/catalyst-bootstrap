@@ -99,6 +99,13 @@ initializr:
             - "usecase/iotibm/domain/CarData.java,{sources}/domain/CarData.java"
             - "usecase/iotibm/domain/InsuranceData.java,{sources}/domain/InsuranceData.java"
             - "usecase/iotibm/domain/PaymentResponse.java,{sources}/domain/PaymentResponse.java"
+            # Exception
+            - "usecase/iotibm/exception/TokenReceiverException.java,{sources}/exception/TokenReceiverException.java"
+            # Service
+            - "usecase/iotibm/service/BlockchainConnector.java,{sources}/service/BlockchainConnector.java"
+            - "usecase/iotibm/service/impl/BlockchainConnectorImpl.java,{sources}/service/impl/BlockchainConnectorImpl.java"
+            # Util
+            - "usecase/iotibm/util/TokenReceiver.java,{sources}/util/TokenReceiver.java"
           links:
             - rel: guide
               href: http://camel.apache.org/rest-dsl.html
