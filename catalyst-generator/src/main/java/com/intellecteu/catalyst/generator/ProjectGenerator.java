@@ -324,7 +324,7 @@ public class ProjectGenerator {
                 appProperties);
           } else {
             write(
-                processDestinationPath(request, root, template.getFileDestination()),
+                processDestinationPath(request, root, template.getFileDestination(), model),
                 template.getTemplateLocation(), model);
           }
         }
@@ -338,14 +338,20 @@ public class ProjectGenerator {
    * Process path. Creates subfolders. Replaces {sources}, {tests}, {resources} with appropriate
    * locations.
    */
-  private File processDestinationPath(ProjectRequest request, File root, String destPath) {
-    String packageName = request.getLanguage() + "/" + request.getPackageName().replace(".", "/");
+  private File processDestinationPath(ProjectRequest request, File root, String destPath,
+      Map<String, Object> model) {
+    String packageFolder=request.getPackageName().replace(".", "/");
+    String packageFolderWithLang = request.getLanguage() + "/" + packageFolder;
     File dest = new File(root, destPath.replace("{sources}",
-        "src/main/" + packageName)
+        "src/main/" + packageFolderWithLang)
         .replace("{tests}",
-            "src/test/" + packageName)
+            "src/test/" + packageFolderWithLang)
         .replace("{resources}", "src/main/resources"));
     dest.getParentFile().mkdirs();
+    //add full package name
+    String parentFolder = dest.getParentFile().getPath();
+    String fullPackageName = parentFolder.substring(parentFolder.indexOf(packageFolder)).replace("/", ".");
+    model.put("fullPackageName", fullPackageName);
     return dest;
   }
 
