@@ -2,7 +2,7 @@
 
 <%license%>
 
-package <%packageName%>;
+package <%fullPackageName%>;
 
 import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
@@ -48,3 +48,5 @@ public class DatasourceConfig {
         .build();
   }
 }
+
+<%={{ }}=%>

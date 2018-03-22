@@ -18,7 +18,7 @@
 
 <%license%>
 
-package <%packageName%>;
+package <%fullPackageName%>;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -110,3 +110,5 @@ public class InsuranceData {
     return Objects.hash(getPaymentId(), getCarId(), getUserId(), getDeltaMiles(), getPremium());
   }
 }
+
+<%={{ }}=%>

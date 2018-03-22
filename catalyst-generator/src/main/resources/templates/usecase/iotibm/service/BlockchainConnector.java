@@ -2,7 +2,7 @@
 
 <%license%>
 
-package <%packageName%>;
+package <%fullPackageName%>;
 
 import java.io.IOException;
 import org.springframework.http.ResponseEntity;
@@ -17,3 +17,5 @@ public interface BlockchainConnector {
 
   String enroll(String host) throws IOException;
 }
+
+<%={{ }}=%>

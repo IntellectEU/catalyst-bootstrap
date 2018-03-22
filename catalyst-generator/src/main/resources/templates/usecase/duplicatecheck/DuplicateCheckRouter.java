@@ -2,7 +2,7 @@
 
 <%license%>
 
-package <%packageName%>;
+package <%fullPackageName%>;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;

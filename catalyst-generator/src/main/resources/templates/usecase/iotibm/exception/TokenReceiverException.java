@@ -2,7 +2,7 @@
 
 <%license%>
 
-package <%packageName%>;
+package <%fullPackageName%>;
 
 public class TokenReceiverException extends RuntimeException {
 
@@ -18,3 +18,5 @@ public class TokenReceiverException extends RuntimeException {
     return super.getMessage();
   }
 }
+
+<%={{ }}=%>

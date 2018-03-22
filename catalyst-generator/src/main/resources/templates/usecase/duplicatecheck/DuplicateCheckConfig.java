@@ -2,7 +2,7 @@
 
 <%license%>
 
-package <%packageName%>;
+package <%fullPackageName%>;
 
 import org.apache.camel.processor.idempotent.MemoryIdempotentRepository;
 import org.apache.camel.spi.IdempotentRepository;

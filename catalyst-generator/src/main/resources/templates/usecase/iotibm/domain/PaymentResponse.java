@@ -2,7 +2,7 @@
 
 <%license%>
 
-package <%packageName%>;
+package <%fullPackageName%>;
 
 public class PaymentResponse {
   private int id;
@@ -35,3 +35,5 @@ public class PaymentResponse {
         '}';
   }
 }
+
+<%={{ }}=%>

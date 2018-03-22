@@ -2,7 +2,7 @@
 
 <%license%>
 
-package <%packageName%>;
+package <%fullPackageName%>;
 
 import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;
@@ -48,3 +48,5 @@ public class MqttSqlRoutes extends RouteBuilder {
 // @formatter:on
   }
 }
+
+<%={{ }}=%>

@@ -2,7 +2,7 @@
 
 <%license%>
 
-package <%packageName%>;
+package <%fullPackageName%>;
 
 import static com.catalyst.cardemo.config.Constants.AUTHORIZATION_HEADER;
 import static com.catalyst.cardemo.config.Constants.BEAR_HEADER;
@@ -103,3 +103,5 @@ public class BlockchainConnectorImpl implements BlockchainConnector {
         .get(Constants.TOKEN);
   }
 }
+
+<%={{ }}=%>

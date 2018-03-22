@@ -2,7 +2,7 @@
 
 <%license%>
 
-package <%packageName%>;
+package <%fullPackageName%>;
 
 import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;
@@ -33,3 +33,5 @@ public class LedgerSqlRoutes extends RouteBuilder {
 // @formatter:on
   }
 }
+
+<%={{ }}=%>

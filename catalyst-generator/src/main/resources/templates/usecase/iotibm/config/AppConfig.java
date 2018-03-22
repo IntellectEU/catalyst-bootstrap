@@ -2,7 +2,7 @@
 
 <%license%>
 
-package <%packageName%>;
+package <%fullPackageName%>;
 
 import static com.catalyst.cardemo.config.Constants.CHAINCODE;
 import static com.catalyst.cardemo.config.Constants.CHANNEL;
@@ -167,3 +167,5 @@ public class AppConfig {
     return new GsonDataFormat();
   }
 }
+
+<%={{ }}=%>

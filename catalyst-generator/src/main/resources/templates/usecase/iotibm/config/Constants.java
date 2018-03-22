@@ -2,7 +2,7 @@
 
 <%license%>
 
-package <%packageName%>;
+package <%fullPackageName%>;
 
 public interface Constants {
 
@@ -22,3 +22,5 @@ public interface Constants {
   String REJECTED_STATUS = "rejected";
   String PENDING_STATUS = "pending";
 }
+
+<%={{ }}=%>

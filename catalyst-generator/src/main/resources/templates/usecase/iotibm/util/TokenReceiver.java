@@ -2,7 +2,7 @@
 
 <%license%>
 
-package <%packageName%>;
+package <%fullPackageName%>;
 
 import static com.catalyst.cardemo.config.Constants.REST_API_ADDRESS;
 
@@ -37,3 +37,5 @@ public class TokenReceiver implements InitializingBean {
     initIt();
   }
 }
+
+<%={{ }}=%>

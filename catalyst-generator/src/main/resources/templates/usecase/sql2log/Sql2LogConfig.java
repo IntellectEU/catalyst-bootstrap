@@ -2,7 +2,7 @@
 
 <%license%>
 
-package <%packageName%>;
+package <%fullPackageName%>;
 
 import com.zaxxer.hikari.HikariDataSource;
 import org.apache.camel.component.sql.SqlComponent;

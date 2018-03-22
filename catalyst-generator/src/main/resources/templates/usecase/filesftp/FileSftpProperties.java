@@ -1,9 +1,8 @@
-
 {{=<% %>=}}
 
 <%license%>
 
-package <%packageName%>;
+package <%fullPackageName%>;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

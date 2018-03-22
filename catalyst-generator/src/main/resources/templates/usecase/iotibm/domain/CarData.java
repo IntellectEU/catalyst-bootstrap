@@ -18,7 +18,7 @@
 
 <%license%>
 
-package <%packageName%>;
+package <%fullPackageName%>;
 
 import java.util.Objects;
 
@@ -85,3 +85,5 @@ public class CarData {
     return Objects.hash(getDeviceId(), getCarId(), getMiles());
   }
 }
+
+<%={{ }}=%>
