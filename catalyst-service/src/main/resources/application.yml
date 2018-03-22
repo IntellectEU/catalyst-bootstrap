@@ -82,6 +82,7 @@ initializr:
             - camel-rest-endpoint
             - camel-sql-endpoint
             - configuration-processor
+            - web
           facets:
             - "usecase/iotibm/IotIbm.yml,{properties}"
             # Routes
@@ -94,6 +95,10 @@ initializr:
             - "usecase/iotibm/config/AppConfig.java,{sources}/config/AppConfig.java"
             - "usecase/iotibm/config/Constants.java,{sources}/config/Constants.java"
             - "usecase/iotibm/config/DatasourceConfig.java,{sources}/config/DatasourceConfig.java"
+            # Domain
+            - "usecase/iotibm/domain/CarData.java,{sources}/domain/CarData.java"
+            - "usecase/iotibm/domain/InsuranceData.java,{sources}/domain/InsuranceData.java"
+            - "usecase/iotibm/domain/PaymentResponse.java,{sources}/domain/PaymentResponse.java"
           links:
             - rel: guide
               href: http://camel.apache.org/rest-dsl.html
