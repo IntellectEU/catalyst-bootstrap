@@ -76,6 +76,7 @@ initializr:
           category: nodep
           dependsOn:
             - camel
+            - camel-jsonpath
             - camel-mqtt-endpoint
             - camel-rest-endpoint
             - camel-sql-endpoint
@@ -237,6 +238,14 @@ initializr:
           links:
             - rel: guide
               href: http://camel.apache.org/crypto.html
+        - name: JSonPath
+          id: camel-jsonpath
+          description: JsonPath is to JSON what XPATH is to XML, a simple way to extract parts of a given document
+          groupId: org.apache.camel
+          artifactId: camel-jsonpath
+          dependsOn:
+            - camel
+          version: ${camel.version}
     - name: Core
       content:
         - name: DevTools
