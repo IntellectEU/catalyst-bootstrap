@@ -340,19 +340,41 @@ public class ProjectGenerator {
    */
   private File processDestinationPath(ProjectRequest request, File root, String destPath,
       Map<String, Object> model) {
-    String packageFolder=request.getPackageName().replace(".", "/");
+    String packageFolder = request.getPackageName().replace(".", "/");
     String packageFolderWithLang = request.getLanguage() + "/" + packageFolder;
-    File dest = new File(root, destPath.replace("{sources}",
-        "src/main/" + packageFolderWithLang)
-        .replace("{tests}",
-            "src/test/" + packageFolderWithLang)
-        .replace("{resources}", "src/main/resources"));
+
+    if (destPath.contains("{sources}")) {
+      destPath = destPath.replace("{sources}",
+          "src/main/" + packageFolderWithLang);
+      File dest = getFile(root, destPath);
+      addFullPackageToModel(model, packageFolder, dest);
+      return dest;
+    } else if (destPath.contains("{tests}")) {
+      destPath = destPath.replace("{tests}",
+          "src/test/" + packageFolderWithLang);
+      File dest = getFile(root, destPath);
+      addFullPackageToModel(model, packageFolder, dest);
+      return dest;
+    } else if (destPath.contains("{resources}")) {
+      destPath = destPath.replace("{resources}", "src/main/resources");
+      return getFile(root, destPath);
+    } else {
+      return getFile(root, destPath);
+    }
+  }
+
+  private File getFile(File root, String destPath) {
+    File dest = new File(root, destPath);
     dest.getParentFile().mkdirs();
-    //add full package name
-    String parentFolder = dest.getParentFile().getPath();
-    String fullPackageName = parentFolder.substring(parentFolder.indexOf(packageFolder)).replace("/", ".");
-    model.put("fullPackageName", fullPackageName);
     return dest;
+  }
+
+  //add full package name
+  private void addFullPackageToModel(Map<String, Object> model, String packageFolder, File dest) {
+    String parentFolder = dest.getParentFile().getPath();
+    String fullPackageName = parentFolder.substring(parentFolder.indexOf(packageFolder))
+        .replace("/", ".");
+    model.put("fullPackageName", fullPackageName);
   }
 
   private void appendProperties(String propertiesLocation, StringBuilder appProperties)
