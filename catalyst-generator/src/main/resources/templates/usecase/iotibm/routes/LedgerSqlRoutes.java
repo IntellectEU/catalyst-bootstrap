@@ -23,12 +23,13 @@ public class LedgerSqlRoutes extends RouteBuilder {
 
     onException(Exception.class)
         // Insert general error handling
-        .log("Root Exception Handler");
+        .log(LoggingLevel.ERROR,"Root Exception Handler - Caught unhandled exception ${exception.message}");
 
     onException(IllegalArgumentException.class)
         .handled(true) // Prevent Camel error handlers to process exception, as we handle it ourselves
         // Insert specific error handling
-        .log("Specific exception handler");
+        .log("Specific exception handler")
+        .to("log:error?showCaughtException=true&showStackTrace=true");
 
 // @formatter:off
     from("timer://foo?fixedRate=true&amp;period=5000")
