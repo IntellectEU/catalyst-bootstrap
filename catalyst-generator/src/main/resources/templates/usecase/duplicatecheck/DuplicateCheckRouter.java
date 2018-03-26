@@ -5,6 +5,7 @@
 package <%fullPackageName%>;
 
 import org.apache.camel.Exchange;
+import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.spi.IdempotentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,17 @@ public class DuplicateCheckRouter extends RouteBuilder {
 
   @Override
   public void configure() {
+
+    onException(Exception.class)
+        // Insert general error handling
+        .log(LoggingLevel.ERROR,"Root Exception Handler - Caught unhandled exception ${exception.message}");
+
+    onException(IllegalArgumentException.class)
+        .handled(true) // Prevent Camel error handlers to process exception, as we handle it ourselves
+        // Insert specific error handling
+        .log("Specific exception handler")
+        .to("log:error?showCaughtException=true&showStackTrace=true");
+
     from("timer:name?period=1000")
         .setHeader("messageId", simple("random(10)", String.class))
         .log("Message identifier: ${header.messageId}")

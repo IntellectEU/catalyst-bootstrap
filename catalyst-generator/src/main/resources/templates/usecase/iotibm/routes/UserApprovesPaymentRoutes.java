@@ -4,6 +4,7 @@
 
 package <%fullPackageName%>;
 
+import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.spi.DataFormat;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,17 @@ public class UserApprovesPaymentRoutes extends RouteBuilder {
 
   @Override
   public void configure() {
+
+    onException(Exception.class)
+        // Insert general error handling
+        .log(LoggingLevel.ERROR,"Root Exception Handler - Caught unhandled exception ${exception.message}");
+
+    onException(IllegalArgumentException.class)
+        .handled(true) // Prevent Camel error handlers to process exception, as we handle it ourselves
+        // Insert specific error handling
+        .log("Specific exception handler")
+        .to("log:error?showCaughtException=true&showStackTrace=true");
+
 // @formatter:off
     from("sql:{{select.from.cardata.status.new}}?dataSource=insuranceDataSource")
         .id("getTransaction")

@@ -5,6 +5,7 @@
 package <%fullPackageName%>;
 
 import org.apache.camel.Endpoint;
+import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteBuilder;
 import org.springframework.stereotype.Component;
 
@@ -61,6 +62,16 @@ public class FileSftpRouter extends RouteBuilder {
         "file://{{catalyst.filesftp.file.dir.in}}?move={{catalyst.filesftp.file.dir.done}}&moveFailed={{catalyst.filesftp.file.dir.failed}}");
     Endpoint fileEndpointOut = getContext()
         .getEndpoint("file://{{catalyst.filesftp.file.dir.out}}?fileName=${headers.CamelFileName}");
+
+    onException(Exception.class)
+        // Insert general error handling
+        .log(LoggingLevel.ERROR,"Root Exception Handler - Caught unhandled exception ${exception.message}");
+
+    onException(IllegalArgumentException.class)
+        .handled(true) // Prevent Camel error handlers to process exception, as we handle it ourselves
+        // Insert specific error handling
+        .log("Specific exception handler")
+        .to("log:error?showCaughtException=true&showStackTrace=true");
 
     // Consume files from fileEndpointIn
     // Save file into sftpEndpointOut using CamelFileName header (Exchange.FILE_NAME).

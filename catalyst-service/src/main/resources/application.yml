@@ -83,6 +83,7 @@ initializr:
             - camel-sql-endpoint
             - configuration-processor
             - web
+            - lombok
           facets:
             - "usecase/iotibm/IotIbm.yml,{properties}"
             # Routes
@@ -120,6 +121,7 @@ initializr:
             - camel-file-endpoint
             - camel-ftp-endpoint
             - configuration-processor
+            - lombok
           facets:
             - "usecase/filesftp/FileSftp.yml,{properties}"
             - "usecase/filesftp/FileSftpConfig.java,{sources}/FileSftpConfig.java"
@@ -137,6 +139,7 @@ initializr:
           dependsOn:
             - camel
             - camel-rest-endpoint
+            - lombok
           facets:
             - "usecase/rest2direct/Rest2Direct.yml,{properties}"
             - "usecase/rest2direct/Rest2DirectRouter.java,{sources}/Rest2DirectRouter.java"
@@ -151,6 +154,7 @@ initializr:
             - camel
             - camel-sql-endpoint
             - mysql
+            - lombok
           facets:
             - "usecase/sql2log/Sql2Log.yml,{properties}"
             - "usecase/sql2log/Sql2LogRouter.java,{sources}/Sql2LogRouter.java"
@@ -164,6 +168,7 @@ initializr:
           category: nodep
           dependsOn:
             - camel
+            - lombok
           facets:
             - "usecase/duplicatecheck/DuplicateCheckConfig.java,{sources}/DuplicateCheckConfig.java"
             - "usecase/duplicatecheck/DuplicateCheckRouter.java,{sources}/DuplicateCheckRouter.java"
@@ -177,6 +182,7 @@ initializr:
           dependsOn:
             - camel
             - camel-crypto-endpoint
+            - lombok
           facets:
             - "usecase/pgp/PGP.yml,{properties}"
             - "usecase/pgp/PGPRouter.java,{sources}/PGPRouter.java"
@@ -314,7 +320,7 @@ initializr:
           description: Java annotation library which helps to reduce boilerplate code and code faster
           mappings:
             - versionRange: "[1.2.0.RELEASE,1.4.0.M1)"
-              version: 1.16.6
+              version: 1.16.20
           starter: false
         - name: Configuration Processor
           id: configuration-processor

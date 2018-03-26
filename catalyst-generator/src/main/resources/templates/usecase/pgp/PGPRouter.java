@@ -4,6 +4,7 @@
 
 package <%fullPackageName%>;
 
+import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteBuilder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -16,6 +17,17 @@ public class PGPRouter extends RouteBuilder {
 
   @Override
   public void configure() {
+
+    onException(Exception.class)
+        // Insert general error handling
+        .log(LoggingLevel.ERROR,"Root Exception Handler - Caught unhandled exception ${exception.message}");
+
+    onException(IllegalArgumentException.class)
+        .handled(true) // Prevent Camel error handlers to process exception, as we handle it ourselves
+        // Insert specific error handling
+        .log("Specific exception handler")
+        .to("log:error?showCaughtException=true&showStackTrace=true");
+
     from("timer:name?period=2000")
         .setBody(simple("${bean:java.lang.System?method=currentTimeMillis}", String.class))
         .log("Original message: ${body}")
