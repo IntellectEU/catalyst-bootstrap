@@ -20,6 +20,16 @@ public class LedgerSqlRoutes extends RouteBuilder {
 
   @Override
   public void configure() {
+
+    onException(Exception.class)
+        // Insert general error handling
+        .log("Root Exception Handler");
+
+    onException(IllegalArgumentException.class)
+        .handled(true) // Prevent Camel error handlers to process exception, as we handle it ourselves
+        // Insert specific error handling
+        .log("Specific exception handler");
+
 // @formatter:off
     from("timer://foo?fixedRate=true&amp;period=5000")
         .id("fromLedgerToInsuranceDB")

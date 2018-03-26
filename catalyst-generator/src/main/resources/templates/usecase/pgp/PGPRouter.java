@@ -16,6 +16,16 @@ public class PGPRouter extends RouteBuilder {
 
   @Override
   public void configure() {
+
+    onException(Exception.class)
+        // Insert general error handling
+        .log("Root Exception Handler");
+
+    onException(IllegalArgumentException.class)
+        .handled(true) // Prevent Camel error handlers to process exception, as we handle it ourselves
+        // Insert specific error handling
+        .log("Specific exception handler");
+
     from("timer:name?period=2000")
         .setBody(simple("${bean:java.lang.System?method=currentTimeMillis}", String.class))
         .log("Original message: ${body}")

@@ -17,6 +17,16 @@ public class Sql2LogRouter extends RouteBuilder {
     
     @Override
     public void configure() {
+
+        onException(Exception.class)
+            // Insert general error handling
+            .log("Root Exception Handler");
+
+        onException(IllegalArgumentException.class)
+            .handled(true) // Prevent Camel error handlers to process exception, as we handle it ourselves
+            // Insert specific error handling
+            .log("Specific exception handler");
+
         // Consume files from sql.query
         from("sql:{{sql.query}}?onConsumeBatchComplete={{sql.onConsume}}").id("ReadSQlRoute")
                 .autoStartup("{{sql.enabled}}")

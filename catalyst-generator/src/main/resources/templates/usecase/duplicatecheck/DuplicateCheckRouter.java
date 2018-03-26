@@ -21,6 +21,16 @@ public class DuplicateCheckRouter extends RouteBuilder {
 
   @Override
   public void configure() {
+
+    onException(Exception.class)
+        // Insert general error handling
+        .log("Root Exception Handler");
+
+    onException(IllegalArgumentException.class)
+        .handled(true) // Prevent Camel error handlers to process exception, as we handle it ourselves
+        // Insert specific error handling
+        .log("Specific exception handler");
+
     from("timer:name?period=1000")
         .setHeader("messageId", simple("random(10)", String.class))
         .log("Message identifier: ${header.messageId}")

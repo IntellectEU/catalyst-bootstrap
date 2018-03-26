@@ -28,6 +28,15 @@ public class MqttSqlRoutes extends RouteBuilder {
   @Override
   public void configure() {
 
+    onException(Exception.class)
+        // Insert general error handling
+        .log("Root Exception Handler");
+
+    onException(IllegalArgumentException.class)
+        .handled(true) // Prevent Camel error handlers to process exception, as we handle it ourselves
+        // Insert specific error handling
+        .log("Specific exception handler");
+
     from("timer://runOnce?fixedRate=true&amp;period=55000")
         .id("mqttRoute")
         .process(fillMqttProcessor)

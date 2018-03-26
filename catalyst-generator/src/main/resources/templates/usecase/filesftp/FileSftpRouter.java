@@ -62,6 +62,15 @@ public class FileSftpRouter extends RouteBuilder {
     Endpoint fileEndpointOut = getContext()
         .getEndpoint("file://{{catalyst.filesftp.file.dir.out}}?fileName=${headers.CamelFileName}");
 
+    onException(Exception.class)
+        // Insert general error handling
+        .log("Root Exception Handler");
+
+    onException(IllegalArgumentException.class)
+        .handled(true) // Prevent Camel error handlers to process exception, as we handle it ourselves
+        // Insert specific error handling
+        .log("Specific exception handler");
+
     // Consume files from fileEndpointIn
     // Save file into sftpEndpointOut using CamelFileName header (Exchange.FILE_NAME).
     from(fileEndpointIn)

@@ -17,6 +17,16 @@ public class UserApprovesPaymentRoutes extends RouteBuilder {
 
   @Override
   public void configure() {
+
+    onException(Exception.class)
+        // Insert general error handling
+        .log("Root Exception Handler");
+
+    onException(IllegalArgumentException.class)
+        .handled(true) // Prevent Camel error handlers to process exception, as we handle it ourselves
+        // Insert specific error handling
+        .log("Specific exception handler");
+
 // @formatter:off
     from("sql:{{select.from.cardata.status.new}}?dataSource=insuranceDataSource")
         .id("getTransaction")

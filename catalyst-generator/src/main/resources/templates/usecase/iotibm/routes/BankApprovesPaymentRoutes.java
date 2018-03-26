@@ -18,6 +18,15 @@ public class BankApprovesPaymentRoutes extends RouteBuilder {
   @Override
   public void configure() {
 
+    onException(Exception.class)
+        // Insert general error handling
+        .log("Root Exception Handler");
+
+    onException(IllegalArgumentException.class)
+        .handled(true) // Prevent Camel error handlers to process exception, as we handle it ourselves
+        // Insert specific error handling
+        .log("Specific exception handler");
+
     // @formatter:off
     from("direct:{{direct.userApproval}}").id("userPays")
         .convertBodyTo(String.class)
