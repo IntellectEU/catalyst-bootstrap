@@ -35,7 +35,7 @@ public class UserApprovesPaymentRoutes extends RouteBuilder {
         .choice()
           .when(body().isNotNull())
             .split(body())
-              .to("sql:{{update.cardata.status.pending}}?dataSource=insuranceDataSource")
+              .to("insuranceSqlComponent:UPDATE car_data SET status = 'pending' WHERE payment_id = :#${property.payment_id}")
               .to("direct:newBills");
 
     from("direct:newBills").id("getUserApproval")
@@ -43,7 +43,7 @@ public class UserApprovesPaymentRoutes extends RouteBuilder {
         .setHeader("Content-Type", constant("application/json"))
         .marshal(jsonMarshal)
         .to("http4://{{user.host}}")
-        .to("direct:{{direct.userApproval}}?failIfNoConsumers=false");
+        .to("direct:{{direct.userApproval}}");
 // @formatter:on
   }
 }

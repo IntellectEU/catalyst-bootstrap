@@ -35,16 +35,16 @@ public class SetPaymentStatusRoutes extends RouteBuilder {
         .log("${body}     --   from payment")
         .setHeader("status").jsonpath("$.message")
         .setProperty("paymentId").jsonpath("$.paymentId")
-        .toD("sql:{{select.from.cardata}}?dataSource=insuranceDataSource")
+        .to("insuranceSqlComponent:SELECT * FROM car_data WHERE payment_id = :#${property.paymentId}")
         .log("${body}     --   from DB")
         .split(body())
           .process(changeStatusOfPaymentProcessor)
         .end()
         .choice()
           .when(header("status").isEqualTo("OK"))
-            .toD("sql:{{update.cardata.status.paid}}?dataSource=insuranceDataSource")
+            .to("insuranceSqlComponent:UPDATE car_data SET status = 'paid' WHERE payment_id = :#${property.paymentId}")
           .otherwise()
-            .toD("sql:{{update.cardata.status.rejected}}?dataSource=insuranceDataSource");
+            .to("insuranceSqlComponent:UPDATE car_data SET status = 'rejected' WHERE payment_id = :#${property.paymentId}");
 // @formatter:on
   }
 }
