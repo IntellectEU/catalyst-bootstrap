@@ -327,6 +327,8 @@ public class ProjectGenerator {
                 processDestinationPath(request, root, template.getFileDestination(), model),
                 template.getTemplateLocation(), model);
           }
+          //removing per file model variable
+          model.remove("fullPackageName");
         }
       }
     } catch (Exception ex) {
@@ -335,41 +337,37 @@ public class ProjectGenerator {
   }
 
   /**
-   * Process path. Creates subfolders. Replaces {sources}, {tests}, {resources} with appropriate
+   * Process path. Creates sub folders. Replaces {sources}, {tests}, {resources} with appropriate
    * locations.
    */
   private File processDestinationPath(ProjectRequest request, File root, String destPath,
       Map<String, Object> model) {
     String packageFolder = request.getPackageName().replace(".", "/");
     String packageFolderWithLang = request.getLanguage() + "/" + packageFolder;
-
+    File destFile;
     if (destPath.contains("{sources}")) {
       destPath = destPath.replace("{sources}",
           "src/main/" + packageFolderWithLang);
-      File dest = getFile(root, destPath);
-      addFullPackageToModel(model, packageFolder, dest);
-      return dest;
+      destFile = new File(root, destPath);
+      addFullPackageToModel(model, packageFolder, destFile);
     } else if (destPath.contains("{tests}")) {
       destPath = destPath.replace("{tests}",
           "src/test/" + packageFolderWithLang);
-      File dest = getFile(root, destPath);
-      addFullPackageToModel(model, packageFolder, dest);
-      return dest;
+      destFile = new File(root, destPath);
+      addFullPackageToModel(model, packageFolder, destFile);
     } else if (destPath.contains("{resources}")) {
       destPath = destPath.replace("{resources}", "src/main/resources");
-      return getFile(root, destPath);
+      destFile = new File(root, destPath);
     } else {
-      return getFile(root, destPath);
+      destFile = new File(root, destPath);
     }
+    destFile.getParentFile().mkdirs();
+    return destFile;
   }
 
-  private File getFile(File root, String destPath) {
-    File dest = new File(root, destPath);
-    dest.getParentFile().mkdirs();
-    return dest;
-  }
-
-  //add full package name
+  /**
+   * fullPackageName variable has file scope and cannot be reused.
+   */
   private void addFullPackageToModel(Map<String, Object> model, String packageFolder, File dest) {
     String parentFolder = dest.getParentFile().getPath();
     String fullPackageName = parentFolder.substring(parentFolder.indexOf(packageFolder))

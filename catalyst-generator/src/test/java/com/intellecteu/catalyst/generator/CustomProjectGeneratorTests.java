@@ -16,14 +16,17 @@
 
 package com.intellecteu.catalyst.generator;
 
+import static junit.framework.TestCase.assertTrue;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 
+import com.intellecteu.catalyst.InitializrException;
 import com.intellecteu.catalyst.test.generator.ProjectAssert;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Map;
+import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.Mockito;
@@ -59,16 +62,40 @@ public class CustomProjectGeneratorTests extends AbstractProjectGeneratorTests {
     request.setName("MyDemo");
     request.setPackageName("foo");
     request.setFacets(new ArrayList<String>() {{
-      add("custom.txt,{sources}/custom.txt");
-      add("custom.txt,{tests}/custom.txt");
+      add("code.txt,{sources}/code.txt");
+      add("code.txt,{tests}/code.txt");
       add("custom.txt,{resources}/custom.txt");
       add("custom.txt,custom.txt");
     }});
     ProjectAssert project = generateProject(request);
-    project.sourceCodeAssert("custom.txt");
-    project.sourceCodeAssert("src/main/java/foo/custom.txt");
-    project.sourceCodeAssert("src/test/java/foo/custom.txt");
+    project.sourceCodeAssert("src/main/java/foo/code.txt").contains("foo");
+    project.sourceCodeAssert("src/test/java/foo/code.txt").contains("foo");
     project.sourceCodeAssert("src/main/resources/custom.txt");
+    project.sourceCodeAssert("custom.txt");
+  }
+
+  @Test
+  public void camelUsecase_fullPackageName_empty_Test() {
+    ProjectRequest request = createProjectRequest();
+    request.setType("maven-project");
+    request.setLanguage("java");
+    request.setName("MyDemo");
+    request.setPackageName("foo");
+    request.setFacets(new ArrayList<String>() {{
+      add("code.txt,{resources}/code.txt");
+    }});
+    try {
+      generateProject(request);
+      Assert.fail("Exception is not thrown !");
+    } catch (final Exception exception) {
+      // Verify if the thrown exception is instance of MyException, otherwise throws an assert failure
+      assertTrue("An exception other than MyException is thrown !",
+          exception instanceof InitializrException);
+      // Verifying the error message
+      assertTrue(exception.getCause().getCause().getMessage()
+          .contains("No method or field with name 'fullPackageName'"));
+    }
+
   }
 
   @Test
