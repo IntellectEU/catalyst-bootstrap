@@ -30,25 +30,25 @@ public class BankApprovesPaymentRoutes extends RouteBuilder {
         .to("log:error?showCaughtException=true&showStackTrace=true");
 
     // @formatter:off
-    from("direct:{{direct.userApproval}}").id("userPays")
+    from("direct:{{catalyst.iotibm.direct.userApproval}}").routeId("userPays")
         .convertBodyTo(String.class)
         .log("${body}   - user result")
         .setProperty("status").jsonpath("$.status")
         .choice()
           .when().simple("${property.status} == 'ACCEPT'")
           .setProperty("paymentId").jsonpath("$.id")
-          .toD("sql:{{select.from.cardata}}?dataSource=insuranceDataSource")
+          .toD("sql:{{catalyst.iotibm.select.from.cardata}}?dataSource=insuranceDataSource")
           .process(paymentProcessor)
           .choice()
             .when(body().isNotNull())
               .setHeader("CamelHttpMethod",constant("POST"))
               .setHeader("Content-Type",constant("application/json"))
               .log("${body}     --- p")
-              .to("http4://{{payment.host}}")
-              .to("direct:{{direct.banking}}")
+              .to("http4://{{catalyst.iotibm.payment.host}}")
+              .to("direct:{{catalyst.iotibm.direct.banking}}")
           .endChoice()
         .otherwise()
-          .to("direct:{{direct.banking}}")
+          .to("direct:{{catalyst.iotibm.direct.banking}}")
         .endChoice()
         .end();
     // @formatter:on

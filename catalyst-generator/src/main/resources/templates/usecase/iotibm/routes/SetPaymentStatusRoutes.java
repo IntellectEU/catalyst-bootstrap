@@ -30,7 +30,7 @@ public class SetPaymentStatusRoutes extends RouteBuilder {
         .to("log:error?showCaughtException=true&showStackTrace=true");
 
 // @formatter:off
-    from("direct:{{direct.banking}}").id("changeStatusOfPayment")
+    from("direct:{{catalyst.iotibm.direct.banking}}").routeId("changeStatusOfPayment")
         .convertBodyTo(String.class)
         .log("${body}     --   from payment")
         .setHeader("status").jsonpath("$.message")

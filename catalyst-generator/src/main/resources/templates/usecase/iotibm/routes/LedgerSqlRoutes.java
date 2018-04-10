@@ -35,7 +35,7 @@ public class LedgerSqlRoutes extends RouteBuilder {
 
 // @formatter:off
     from("timer://foo?fixedRate=true&period=5000")
-        .id("fromLedgerToInsuranceDB")
+        .routeId("fromLedgerToInsuranceDB")
         .process(fromLedgerToInsuranceDB)
         .choice()
           .when(body().isNotNull())

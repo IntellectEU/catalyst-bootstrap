@@ -30,20 +30,20 @@ public class UserApprovesPaymentRoutes extends RouteBuilder {
         .to("log:error?showCaughtException=true&showStackTrace=true");
 
 // @formatter:off
-    from("sql:{{select.from.cardata.status.new}}?dataSource=insuranceDataSource")
-        .id("getTransaction")
+    from("sql:{{catalyst.iotibm.elect.from.cardata.status.new}}?dataSource=insuranceDataSource")
+        .routeId("getTransaction")
         .choice()
           .when(body().isNotNull())
             .split(body())
               .to("insuranceSqlComponent:UPDATE car_data SET status = 'pending' WHERE payment_id = :#${property.payment_id}")
               .to("direct:newBills");
 
-    from("direct:newBills").id("getUserApproval")
+    from("direct:newBills").routeId("getUserApproval")
         .setHeader("CamelHttpMethod", constant("POST"))
         .setHeader("Content-Type", constant("application/json"))
         .marshal(jsonMarshal)
         .to("http4://{{user.host}}")
-        .to("direct:{{direct.userApproval}}");
+        .to("direct:{{catalyst.iotibm.direct.userApproval}}");
 // @formatter:on
   }
 }

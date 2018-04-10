@@ -41,13 +41,12 @@ public class MqttSqlRoutes extends RouteBuilder {
         .log("Specific exception handler")
         .to("log:error?showCaughtException=true&showStackTrace=true");
 
-    from("timer://runOnce?fixedRate=true&period=60000")
-        .id("mqttRoute")
+    from("timer://runOnce?fixedRate=true&period=60000").routeId("mqttRoute")
         .process(fillMqttProcessor)
         .log("\\r\\n -- Fill mqtt ---- ${body}     \\r\\n")
-        .to("mqtt:mosquitoTo?{{mosquitto.host}}&publishTopicName={{mqtt.topic}");
+        .to("mqtt:mosquitoTo?host={{catalyst.iotibm.mosquitto.host}}&publishTopicName={{catalyst.iotibm.mqtt.topic}}");
 
-    from("mqtt:mosquittoFrom?{{mosquitto.host}}&subscribeTopicNames={{mqtt.topic}}")
+    from("mqtt:mosquittoFrom?host={{catalyst.iotibm.mosquitto.host}}&subscribeTopicNames={{catalyst.iotibm.mqtt.topic}}")
         .routeId("mqttEnrichSqlRoute")
         .to("seda:toLedger");
 // @formatter:off
