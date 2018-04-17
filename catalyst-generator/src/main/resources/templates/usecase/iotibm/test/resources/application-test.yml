@@ -1,0 +1,7 @@
+#### Properties for IOT IBM Router
+catalyst:
+  iotibm:
+    mosquitto:
+        host: "tcp://mosquitto:1883"
+    mqtt:
+        topic: "CarService/incident"

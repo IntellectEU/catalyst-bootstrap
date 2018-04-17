@@ -106,7 +106,6 @@ public class InsuranceData {
 
   @Override
   public int hashCode() {
-
     return Objects.hash(getPaymentId(), getCarId(), getUserId(), getDeltaMiles(), getPremium());
   }
 }

@@ -36,15 +36,15 @@ catalyst:
         host: "payment:8899/payments"
     select:
         from:
-            cardata: "SELECT * FROM car_data WHERE payment_id = ${property.paymentId}"
+            cardata: "SELECT * FROM car_data WHERE payment_id = {property.paymentId}"
             cardata.status.new: "SELECT * FROM car_data WHERE status = 'new'"
             clientsdata: "SELECT * FROM clients_data WHERE device_id = '${body.deviceId}'"
     update:
         cardata:
             status:
-                paid: "UPDATE car_data SET status = 'paid' WHERE payment_id = ${property.paymentId}"
-                pending: "UPDATE car_data SET status = 'pending' WHERE payment_id = :#payment_id"
-                rejected: "UPDATE car_data SET status = 'rejected' WHERE payment_id = ${property.paymentId}"
+                paid: "UPDATE car_data SET status = 'paid' WHERE payment_id = {property.paymentId}"
+                pending: "UPDATE car_data SET status = 'pending' WHERE payment_id = {property.payment_id}"
+                rejected: "UPDATE car_data SET status = 'rejected' WHERE payment_id = {property.paymentId}"
     user:
         host: "user:8889/userResponse"
 

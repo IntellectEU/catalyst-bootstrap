@@ -8,6 +8,7 @@ import org.apache.camel.LoggingLevel;
 import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -33,15 +34,15 @@ public class LedgerSqlRoutes extends RouteBuilder {
         .to("log:error?showCaughtException=true&showStackTrace=true");
 
 // @formatter:off
-    from("timer://foo?fixedRate=true&amp;period=5000")
-        .id("fromLedgerToInsuranceDB")
+    from("timer://foo?fixedRate=true&period=5000")
+        .routeId("fromLedgerToInsuranceDB")
         .process(fromLedgerToInsuranceDB)
         .choice()
           .when(body().isNotNull())
             .split(body())
               .process(setInLedgerStatus)
               .log("${body}   ---  write to insurance DB")
-              .to("sql:{{insert.into.cardata}}?dataSource=insuranceDataSource");
+              .to("insuranceSqlComponent:INSERT INTO car_data(car_id,user_id,miles,price) VALUES(:#${body.carId},:#${body.carId},:#${body.deltaMiles},:#${body.premium})");
 // @formatter:on
   }
 }

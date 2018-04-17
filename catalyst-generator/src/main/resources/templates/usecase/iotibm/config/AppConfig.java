@@ -19,6 +19,7 @@ import static <%packageName%>.config.Constants.SET_FUNCTION;
 import <%packageName%>.domain.CarData;
 import <%packageName%>.domain.InsuranceData;
 import <%packageName%>.service.BlockchainConnector;
+import <%packageName%>.service.impl.BlockchainConnectorImpl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -32,12 +33,19 @@ import org.apache.camel.Processor;
 import org.apache.camel.component.gson.GsonDataFormat;
 import org.apache.camel.processor.aggregate.AggregationStrategy;
 import org.apache.camel.spi.DataFormat;
+import org.springframework.boot.configurationprocessor.json.JSONArray;
+import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.ResponseEntity;
 
 @Configuration
 public class AppConfig {
+
+  @Bean
+  ObjectMapper objectMapper() {
+    return new ObjectMapper();
+  }
 
   @Bean
   Processor convertJsonArrayProcessor() {
@@ -133,12 +141,16 @@ public class AppConfig {
     return exchange -> {
       ResponseEntity<String> response = blockchainConnector
           .query(HOST, CHANNEL, CHAINCODE, GET_FUNCTION, OWNER, PEER, "", String.class);
-      String result = (String) objectMapper.readValue(response.getBody(), HashMap.class)
-          .get("result");
-      if (!result.isEmpty()) {
-        List<InsuranceData> list = Arrays
-            .asList(objectMapper.readValue(result, InsuranceData[].class));
+      JSONObject jsonObject = new JSONObject(response.getBody());
+
+      try {
+        List<InsuranceData> list = objectMapper.readValue(
+            jsonObject.getJSONArray("result").toString(),
+            new TypeReference<List<InsuranceData>>() {});
         exchange.getIn().setBody(list);
+      }
+      catch (Exception e) {
+        exchange.getIn().setBody(null);
       }
     };
   }
