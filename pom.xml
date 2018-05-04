@@ -270,12 +270,12 @@
     </profile>
   </profiles>
 
-  <!--<distributionManagement>-->
-  <!--<snapshotRepository>-->
-  <!--<id>snapshots</id>-->
-  <!--<name>intellecteu-snapshots</name>-->
-  <!--<url>https://intellecteu.jfrog.io/intellecteu/libs-snapshot-local</url>-->
-  <!--</snapshotRepository>-->
-  <!--</distributionManagement>-->
+  <distributionManagement>
+    <snapshotRepository>
+      <id>snapshots</id>
+      <name>intellecteu-snapshots</name>
+      <url>https://intellecteu.jfrog.io/intellecteu/libs-snapshot-local</url>
+    </snapshotRepository>
+  </distributionManagement>
 
 </project>
