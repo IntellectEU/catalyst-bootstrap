@@ -21,7 +21,7 @@ before_script:
   - echo "MAVEN_OPTS='-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn'" > ~/.mavenrc
 
 script:
-  - mvn clean install deploy -B -V -Pfull #-Dusername=${ARTIFACTORY_USERNAME} -Dpassword=${ARTIFACTORY_PASSWORD}
+  - mvn clean install deploy -B -V -Pfull -Dusername=${ARTIFACTORY_USERNAME} -Dpassword=${ARTIFACTORY_PASSWORD}
 # Use these for maven wrapper - git strips the wrapper jar file so we have to force its download during the build.
 #  - mvn -N io.takari:maven:wrapper
 #  - ./mvnw install -Dmaven.javadoc.skip=true -B -V -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
