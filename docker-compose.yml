@@ -1,0 +1,7 @@
+version: '3.4'
+services:
+    catalyst-bootstrap:
+        image: intellecteu-docker-local.jfrog.io/catalyst-bootstrap:latest
+        ports:
+        - 5000:5000
+        restart: always
