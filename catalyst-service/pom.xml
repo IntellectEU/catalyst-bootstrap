@@ -11,6 +11,10 @@
   <artifactId>catalyst-service</artifactId>
   <name>Catalyst bootstrap service</name>
 
+  <properties>
+    <start-class>catalyst-bootstrap.com.intellecteu.catalyst.service.CatalystService</start-class>
+  </properties>
+
   <dependencies>
     <dependency>
       <groupId>org.springframework.boot</groupId>
