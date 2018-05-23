@@ -41,6 +41,7 @@
     <module>catalyst-generator</module>
     <module>catalyst-web</module>
     <module>catalyst-aggregate</module>
+    <module>catalyst-service</module>
   </modules>
 
   <dependencyManagement>
@@ -264,9 +265,6 @@
   <profiles>
     <profile>
       <id>full</id>
-      <modules>
-        <module>catalyst-service</module>
-      </modules>
     </profile>
   </profiles>
 
