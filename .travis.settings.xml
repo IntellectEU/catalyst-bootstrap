@@ -18,6 +18,10 @@
     <profile>
       <repositories>
         <repository>
+          <id>maven-central</id>
+          <url>https://repo1.maven.org/maven2/</url>
+        </repository>
+        <repository>
           <snapshots>
             <enabled>false</enabled>
           </snapshots>
@@ -26,7 +30,7 @@
           <url>https://intellecteu.jfrog.io/intellecteu/libs-release</url>
         </repository>
         <repository>
-          <snapshots/>
+          <snapshots />
           <id>snapshots</id>
           <name>libs-snapshot</name>
           <url>https://intellecteu.jfrog.io/intellecteu/libs-snapshot</url>
@@ -42,7 +46,7 @@
           <url>https://intellecteu.jfrog.io/intellecteu/libs-release</url>
         </pluginRepository>
         <pluginRepository>
-          <snapshots/>
+          <snapshots />
           <id>snapshots</id>
           <name>libs-snapshot</name>
           <url>https://intellecteu.jfrog.io/intellecteu/libs-snapshot</url>
