@@ -342,8 +342,9 @@ public class ProjectGenerator {
    */
   private File processDestinationPath(ProjectRequest request, File root, String destPath,
       Map<String, Object> model) {
-    String packageFolder = request.getPackageName().replace(".", "/");
-    String packageFolderWithLang = request.getLanguage() + "/" + packageFolder;
+    String separator = File.separator;
+    String packageFolder = request.getPackageName().replace(".", separator);
+    String packageFolderWithLang = request.getLanguage() + separator + packageFolder;
     File destFile;
     if (destPath.contains("{sources}")) {
       destPath = destPath.replace("{sources}",
@@ -371,7 +372,7 @@ public class ProjectGenerator {
   private void addFullPackageToModel(Map<String, Object> model, String packageFolder, File dest) {
     String parentFolder = dest.getParentFile().getPath();
     String fullPackageName = parentFolder.substring(parentFolder.indexOf(packageFolder))
-        .replace("/", ".");
+        .replace(File.separator, ".");
     model.put("fullPackageName", fullPackageName);
   }
 
