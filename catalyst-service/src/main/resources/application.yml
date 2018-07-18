@@ -189,6 +189,24 @@ initializr:
           links:
             - rel: guide
               href: http://camel.apache.org/crypto.html
+        - name: Rest Client
+          id: restclient
+          description: How to call a REST service via HTTP
+          category: nodep
+          dependsOn:
+            - camel
+            - lombok
+            - camel-jackson-starter
+            - camel-restlet-starter
+          facets:
+           - "usecase/restclient/model/Starship.java,{sources}/model/Starship.java"
+           - "usecase/restclient/model/StarWarsCharacter.java,{sources}/model/StarWarsCharacter.java"
+           - "usecase/restclient/service/StarWarsCharacterService.java,{sources}/service/StarWarsCharacterService.java"
+           - "usecase/restclient/RestServerRoute.java,{sources}/RestServerRoute.java"
+           - "usecase/restclient/RestServiceRoute.java,{sources}/RestServiceRoute.java"
+          links:
+            - rel: guide
+              href: http://camel.apache.org/rest-dsl.html
     - name: Modules
       bom: camel
       content:
@@ -283,6 +301,25 @@ initializr:
           dependsOn:
             - camel
           version: ${camel.version}
+        - name: Camel Jackson
+          id: camel-jackson-starter
+          description: Camel Jackson is used to marshall a POJO to JSON.
+          groupId: org.apache.camel
+          artifactId: camel-jackson-starter
+          dependsOn:
+          - camel
+          version: ${camel.version}
+        - name: Camel Restlet
+          id: camel-restlet-starter
+          description: The Restlet component provides Restlet based endpoints for consuming and producing RESTful resources.
+          groupId: org.apache.camel
+          artifactId: camel-restlet-starter
+          dependsOn:
+          - camel
+          version: ${camel.version}
+          links:
+            - rel: guide
+              href: http://camel.apache.org/restlet.html
     - name: Core
       content:
         - name: DevTools
