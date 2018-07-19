@@ -198,12 +198,16 @@ initializr:
             - lombok
             - camel-jackson-starter
             - camel-restlet-starter
+            - camel-test
+            - jackson-annotations
+            - jackson-databind
           facets:
            - "usecase/restclient/model/Starship.java,{sources}/model/Starship.java"
            - "usecase/restclient/model/StarWarsCharacter.java,{sources}/model/StarWarsCharacter.java"
            - "usecase/restclient/service/StarWarsCharacterService.java,{sources}/service/StarWarsCharacterService.java"
            - "usecase/restclient/RestServerRoute.java,{sources}/RestServerRoute.java"
            - "usecase/restclient/RestServiceRoute.java,{sources}/RestServiceRoute.java"
+           - "usecase/restclient/tests/Tests.java,{tests}/Tests.java"
           links:
             - rel: guide
               href: http://camel.apache.org/rest-dsl.html
@@ -320,6 +324,27 @@ initializr:
           links:
             - rel: guide
               href: http://camel.apache.org/restlet.html
+        - name: Camel test
+          id: camel-test
+          description: Tool for tests creation
+          groupId: org.apache.camel
+          artifactId: camel-test
+          dependsOn:
+          - camel
+          version: ${camel.version}
+          scope: test
+        - name: Jackson Databind
+          id: jackson-databind
+          description: A high-performance JSON processor for Java
+          groupId: com.fasterxml.jackson.core
+          artifactId: jackson-databind
+          version: 2.9.6
+        - name: Jackson annotations
+          id: jackson-annotations
+          description: Jackson properties used to indicate smth
+          groupId: com.fasterxml.jackson.core
+          artifactId: jackson-annotations
+          version: 2.9.6
     - name: Core
       content:
         - name: DevTools
