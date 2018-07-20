@@ -189,9 +189,9 @@ initializr:
           links:
             - rel: guide
               href: http://camel.apache.org/crypto.html
-        - name: Rest Service
-          id: restservice
-          description: How to use a REST service via HTTP
+        - name: Rest Connector
+          id: restconnector
+          description: How to make and listen to REST requests via HTTP
           category: nodep
           dependsOn:
             - camel
