@@ -88,7 +88,7 @@ See https://stackoverflow.com/questions/11042926/how-does-one-use-a-literal-in-a
 == Use cases
 There are various types of use cases that are used to generate a project.
 
-=== REST Service
+=== REST Connector
 This use case includes a basic REST client part and server part implemented with a help of camel restlet component.
 You'll get a project with a service that accepts HTTP GET requests with `id` parameter in the query string at
 ----
