@@ -2,16 +2,13 @@
 
     <%license%>
 
-    package <%fullPackageName%>;
+package <%fullPackageName%>;
 
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.dataformat.JsonLibrary;
 import org.springframework.stereotype.Component;
 import <%fullPackageName%>.model.StarWarsCharacter;
 
-/**
- * Created by tonya on 7/18/2018.
- */
 @Component
 public class RestServiceRoute extends RouteBuilder {
 

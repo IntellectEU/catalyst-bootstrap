@@ -2,25 +2,22 @@
 
     <%license%>
 
-    package <%fullPackageName%>;
+package <%fullPackageName%>;
 
 import static org.apache.camel.Exchange.HTTP_RESPONSE_CODE;
 import static org.hamcrest.Matchers.is;
 
 import <%packageName%>.model.StarWarsCharacter;
 import <%packageName%>.model.Starship;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Arrays;
+
 import org.apache.camel.Exchange;
 import org.apache.camel.test.junit4.CamelTestSupport;
 import org.junit.Test;
 
-/**
- * Created by tonya on 7/18/2018.
- */
-
 public class Tests extends CamelTestSupport {
-
 
   private static final Starship[] starShips = {
       new Starship("X-wing", "T-65 X-wing", "Starfighter"),

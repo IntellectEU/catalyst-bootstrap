@@ -2,17 +2,18 @@
 
     <%license%>
 
-    package <%fullPackageName%>;
+package <%fullPackageName%>;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.Serializable;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * Starship model represents a single transport craft that has hyperdrive capability.
+ * Starship model represents a single transport craft.
  */
 @Data
 @NoArgsConstructor

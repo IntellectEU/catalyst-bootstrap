@@ -2,16 +2,14 @@
 
     <%license%>
 
-    package <%fullPackageName%>;
+package <%fullPackageName%>;
 
 import java.util.Arrays;
 import org.springframework.stereotype.Component;
+
 import <%packageName%>.model.StarWarsCharacter;
 import <%packageName%>.model.Starship;
 
-/**
- * Created by tonya on 7/18/2018.
- */
 @Component
 public class StarWarsCharacterService {
 

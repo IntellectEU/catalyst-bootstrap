@@ -85,6 +85,38 @@ other Spring Boot app from the `catalyst-service` directory:
 in code when Camel {{}} properties are used, Mustache delimiters are temporary replaced.
 See https://stackoverflow.com/questions/11042926/how-does-one-use-a-literal-in-a-mustache-template
 
+== Use cases
+There are various types of use cases that are used to generate a project.
+
+=== REST Client
+This use case includes a basic REST client part and server part implemented with a help of camel restlet component.
+You'll get a project with a service that accepts HTTP GET requests with `id` parameter in the query string at
+----
+http://localhost:8080/people/{id}
+----
+and respond with a JSON representation of a person
+----
+{
+    "name": "Luke Skywalker",
+    "gender": "male",
+    "height": "172",
+    "birth_year": "19BBY",
+    "hair_color": "blond",
+    "homeworld": "Tatooine",
+    "starships": [
+        {
+            "name": "X-wing",
+            "model": "T-65 X-wing",
+            "starship_class": "Starfighter"
+        },
+        {
+            "name": "Imperial shuttle",
+            "model": "Lambda-class T-4a shuttle",
+            "starship_class": "Armed government transport"
+        }
+    ]
+}
+----
 
 == License
 Catalyst is Open Source software released under the
