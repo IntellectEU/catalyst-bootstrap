@@ -4,6 +4,7 @@
 
 package <%fullPackageName%>;
 
+import org.apache.camel.Exchange;
 import static org.apache.camel.Exchange.HTTP_RESPONSE_CODE;
 import static org.hamcrest.Matchers.is;
 
@@ -13,10 +14,14 @@ import <%packageName%>.model.Starship;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Arrays;
 
-import org.apache.camel.Exchange;
 import org.apache.camel.test.junit4.CamelTestSupport;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = DemoApplication.class)
 public class Tests extends CamelTestSupport {
 
   private static final Starship[] starShips = {

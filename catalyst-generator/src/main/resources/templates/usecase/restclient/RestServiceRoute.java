@@ -14,7 +14,7 @@ public class RestServiceRoute extends RouteBuilder {
 
   @Override
   public void configure() {
-    from("rest:http://localhost:8080/people/1").unmarshal().json(JsonLibrary.Jackson, StarWarsCharacter.class);
+    from("restlet:http://localhost:8080/people/1").unmarshal().json(JsonLibrary.Jackson, StarWarsCharacter.class);
   }
 }
 <%={{ }}=%>
