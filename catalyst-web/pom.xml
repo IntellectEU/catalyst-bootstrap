@@ -3,11 +3,11 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>com.intellecteu.catalyst</groupId>
-		<artifactId>catalyst</artifactId>
+		<artifactId>catalyst-bootstrap</artifactId>
 		<version>0.6.0.BUILD-SNAPSHOT</version>
 	</parent>
 	<artifactId>catalyst-web</artifactId>
-	<name>Catalyst :: Web</name>
+	<name>Catalyst Bootstrap :: Web</name>
 
 	<dependencies>
 		<dependency>

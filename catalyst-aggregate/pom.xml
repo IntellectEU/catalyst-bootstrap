@@ -23,13 +23,13 @@
 
   <parent>
     <groupId>com.intellecteu.catalyst</groupId>
-    <artifactId>catalyst</artifactId>
+    <artifactId>catalyst-bootstrap</artifactId>
     <version>0.6.0.BUILD-SNAPSHOT</version>
   </parent>
 
   <artifactId>catalyst-aggregate</artifactId>
   <packaging>pom</packaging>
-  <name>Catalyst :: Jacoco-aggregate</name>
+  <name>Catalyst Bootstrap :: Jacoco-aggregate</name>
   <description>Aggregate module for jacoco test coverage reports.
     https://github.com/jacoco/jacoco/wiki/MavenMultiModule#strategy-module-with-dependencies
   </description>

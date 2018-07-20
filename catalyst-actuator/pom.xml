@@ -5,11 +5,11 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>com.intellecteu.catalyst</groupId>
-    <artifactId>catalyst</artifactId>
+    <artifactId>catalyst-bootstrap</artifactId>
     <version>0.6.0.BUILD-SNAPSHOT</version>
   </parent>
   <artifactId>catalyst-actuator</artifactId>
-  <name>Catalyst :: Actuator</name>
+  <name>Catalyst Bootstrap :: Actuator</name>
 
   <dependencies>
     <dependency>

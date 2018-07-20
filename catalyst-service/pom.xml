@@ -5,11 +5,11 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>com.intellecteu.catalyst</groupId>
-    <artifactId>catalyst</artifactId>
+    <artifactId>catalyst-bootstrap</artifactId>
     <version>0.6.0.BUILD-SNAPSHOT</version>
   </parent>
   <artifactId>catalyst-service</artifactId>
-  <name>Catalyst bootstrap service</name>
+  <name>Catalyst Bootstrap :: Service</name>
 
   <properties>
     <start-class>catalyst-bootstrap.com.intellecteu.catalyst.service.CatalystService</start-class>
