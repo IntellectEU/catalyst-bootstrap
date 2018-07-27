@@ -86,7 +86,6 @@ initializr:
           facets:
           - "usecase/mqtt/model/CarData.java,{sources}/model/CarData.java"
           - "usecase/mqtt/Processors.java,{sources}/Processors.java"
-          - "usecase/mqtt/DemoApplication.java,{sources}/DemoApplication.java"
           - "usecase/mqtt/Router.java,{sources}/Router.java"
           - "usecase/mqtt/test/DemoApplicationTests.java,{tests}/DemoApplicationTests.java"
           - "usecase/mqtt/resources/test-compose.yml,{resources}/test-compose.yml"
