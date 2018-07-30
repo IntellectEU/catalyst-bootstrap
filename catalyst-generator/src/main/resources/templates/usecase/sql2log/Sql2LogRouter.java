@@ -30,10 +30,10 @@ public class Sql2LogRouter extends RouteBuilder {
           .to("log:error?showCaughtException=true&showStackTrace=true");
 
         // Consume files from sql.query
-        from("sql:{{sql.query}}?onConsumeBatchComplete={{sql.onConsume}}").id("ReadSQlRoute")
-                .autoStartup("{{sql.enabled}}")
+        from("sql:{{catalyst.sql.query}}?onConsumeBatchComplete={{catalyst.sql.onConsume}}").id("ReadSQlRoute")
+                .autoStartup("{{catalyst.sql.enabled}}")
                 
-                .log("Received data from [{{sql.query}}].")
+                .log("Received data from [{{catalyst.sql.query}}].")
                 
                 .log("TODO: Implement your routing");
     }
