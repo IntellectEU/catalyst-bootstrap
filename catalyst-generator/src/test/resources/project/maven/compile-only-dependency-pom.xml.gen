@@ -65,6 +65,7 @@
 					</buildArgs>
 				</configuration>
 			</plugin>
+
 		</plugins>
 	</build>
 

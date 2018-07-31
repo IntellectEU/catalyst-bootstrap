@@ -229,7 +229,7 @@
 				</dependencies>
 			</plugin>
 			{{/kotlin}}
-			{customPlugins}
+{customPlugins}
 		</plugins>
 	</build>
 {{#hasRepositories}}
