@@ -39,7 +39,15 @@ import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -259,7 +267,7 @@ public class ProjectGenerator {
       String pom = new String(doGenerateMavenPom(model));
       StringBuilder pomBuilder = new StringBuilder(pom);
       int idx = pomBuilder.indexOf("{customPlugins}");
-      pomBuilder.replace(idx, idx+15, resolveCustomPlugins(request, 3));
+      pomBuilder.replace(idx, idx + 15, resolveCustomPlugins(request, 3));
       writeText(new File(dir, "pom.xml"), pomBuilder.toString());
       writeMavenWrapper(dir);
     }
@@ -689,33 +697,38 @@ public class ProjectGenerator {
    * @param indent tabs amount of plugin section in pom
    * @return code of needed maven plugins
    */
-  private String resolveCustomPlugins(ProjectRequest request, int indent){
+  private String resolveCustomPlugins(ProjectRequest request, int indent) {
     StringBuilder plugins = new StringBuilder();
     HashSet<String> pluginNames = new HashSet<>();
 
-    for(Dependency dependency: request.getResolvedDependencies())
-        if (dependency.getGroupId() == null){
-            String[] namesList = PluginBinding.getPlugins(dependency.getId());
-            if(namesList != null && namesList.length > 0){
-                pluginNames.addAll(Arrays.asList(namesList));
-            }
+    for (Dependency dependency : request.getResolvedDependencies()) {
+      if (dependency.getGroupId() == null) {
+        String[] namesList = PluginBinding.getPlugins(dependency.getId());
+        if (namesList != null && namesList.length > 0) {
+          pluginNames.addAll(Arrays.asList(namesList));
         }
+      }
+    }
 
-    for(String name: pluginNames){
-        String plugin = "";
-        try {
-            plugin = new String(Files.readAllBytes(Paths.get("catalyst-generator/src/main/resources/templates/plugin/"+name+".xml")));
-        } catch (IOException e) { e.printStackTrace(); }
-        if(!plugin.isEmpty()){
-            plugins.append(plugin).append("\n");
-        }
+    for (String name : pluginNames) {
+      String plugin = "";
+      try {
+        plugin = new String(Files.readAllBytes(
+            Paths.get("catalyst-generator/src/main/resources/templates/plugin/" + name + ".xml")));
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+      if (!plugin.isEmpty()) {
+        plugins.append(plugin).append("\n");
+      }
     }
 
     String result = plugins.toString();
     StringBuilder tabs = new StringBuilder();
-    for (int i = 0; i < indent; i++)
+    for (int i = 0; i < indent; i++) {
       tabs.append("\t");
-    result = result.replaceAll("\n", "\n"+tabs);
+    }
+    result = result.replaceAll("\n", "\n" + tabs);
 
     return result;
   }
