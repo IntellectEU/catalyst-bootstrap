@@ -12,9 +12,10 @@
 	<description>{{description}}</description>
 
 	<parent>
-		<groupId>com.intellecteu.catalyst</groupId>
-		<artifactId>custom-dependencies</artifactId>
-		<version>1.0.0</version>
+    <groupId>{{mavenParentGroupId}}</groupId>
+    <artifactId>{{mavenParentArtifactId}}</artifactId>
+    <version>{{mavenParentVersion}}</version>
+    <relativePath/>
 	</parent>
 
 	<properties>
