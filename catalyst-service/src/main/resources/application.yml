@@ -1007,6 +1007,20 @@ initializr:
           id: remote-shell
           description: CRaSH shell integration
           versionRange: "[1.0.0.RELEASE,1.5.0.RC1)"
+    - name: Maven Plugins
+      content:
+        - name: Build helper
+          id: build-helper-maven-plugin
+          description: This plugin contains various small independent goals to assist with Maven build lifecycle
+          category: plugin
+          facets:
+            - "plugin/build-helper-maven-plugin.xml"
+        - name: JAX WS
+          id: jaxws-maven-plugin
+          description: Maven plugin for JAX-WS RI
+          category: plugin
+          facets:
+          - "plugin/jaxws-maven-plugin.xml"
   types:
     - name: Maven Project
       id: maven-project

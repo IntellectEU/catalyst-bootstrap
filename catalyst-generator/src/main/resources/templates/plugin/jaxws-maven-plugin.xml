@@ -1,0 +1,19 @@
+
+<plugin>
+    <groupId>org.codehaus.mojo</groupId>
+    <artifactId>jaxws-maven-plugin</artifactId>
+    <version>2.5</version>
+    <configuration>
+        <wsdlDirectory>${project.basedir}/src/main/resources/wsdl</wsdlDirectory>
+        <packageName>model</packageName>
+        <keep>true</keep>
+        <sourceDestDir>${project.basedir}/target/generated-sources</sourceDestDir>
+    </configuration>
+    <executions>
+        <execution>
+            <goals>
+                <goal>wsimport</goal>
+            </goals>
+        </execution>
+    </executions>
+</plugin>

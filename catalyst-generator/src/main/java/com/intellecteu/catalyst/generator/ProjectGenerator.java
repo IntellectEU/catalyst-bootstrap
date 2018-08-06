@@ -25,6 +25,7 @@ import com.intellecteu.catalyst.metadata.Dependency;
 import com.intellecteu.catalyst.metadata.InitializrConfiguration.Env.Maven.ParentPom;
 import com.intellecteu.catalyst.metadata.InitializrMetadata;
 import com.intellecteu.catalyst.metadata.InitializrMetadataProvider;
+import com.intellecteu.catalyst.metadata.Plugin;
 import com.intellecteu.catalyst.util.TemplateRenderer;
 import com.intellecteu.catalyst.util.Version;
 import com.intellecteu.catalyst.util.VersionProperty;
@@ -521,6 +522,12 @@ public class ProjectGenerator {
         filterDependencies(dependencies, Dependency.SCOPE_PROVIDED));
     model.put("testDependencies",
         filterDependencies(dependencies, Dependency.SCOPE_TEST));
+
+    List<Plugin> plugins = dependencies.stream()
+        .filter(dep -> Dependency.CATEGORY_PLUGIN.equals(dep.getCategory()))
+        .map(Plugin::new)
+        .collect(Collectors.toList());
+    model.put("customPlugins", plugins);
 
     request.getBoms().forEach((k, v) -> {
       if (v.getVersionProperty() != null) {
