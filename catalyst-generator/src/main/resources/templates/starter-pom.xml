@@ -15,7 +15,7 @@
     <groupId>{{mavenParentGroupId}}</groupId>
     <artifactId>{{mavenParentArtifactId}}</artifactId>
     <version>{{mavenParentVersion}}</version>
-    <relativePath/>
+    <relativePath/> <!-- lookup parent from repository -->
 	</parent>
 
 	<properties>
