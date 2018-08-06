@@ -43,6 +43,7 @@ public class Dependency extends MetadataElement implements Describable {
   public static final String SCOPE_PROVIDED = "provided";
   public static final String SCOPE_TEST = "test";
   public static final String CATEGORY_NO_DEPENDENCY = "nodep";
+  public static final String CATEGORY_PLUGIN = "plugin";
   private static final List<String> SCOPE_ALL = Arrays.asList(SCOPE_COMPILE,
       SCOPE_RUNTIME, SCOPE_COMPILE_ONLY, SCOPE_PROVIDED, SCOPE_TEST);
 
@@ -165,7 +166,7 @@ public class Dependency extends MetadataElement implements Describable {
    * Check if the dependency can have no groi=upId and artifactId by design
    */
   public boolean shouldAlwaysHaveArtifactCoordinates() {
-    return !Dependency.CATEGORY_NO_DEPENDENCY.equals(getCategory());
+    return !(Dependency.CATEGORY_NO_DEPENDENCY.equals(getCategory()) || Dependency.CATEGORY_PLUGIN.equals(getCategory()));
   }
 
   /**

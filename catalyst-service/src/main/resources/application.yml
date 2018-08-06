@@ -70,48 +70,28 @@ initializr:
   dependencies:
     - name: Use Cases
       content:
-        - name: Connecting IoT dongles to IBM Blockchain network
-          id: iotibm
-          description: "IBM Think Demo for connecting IoT dongles to IBM Blockchain Platform"
+        - name: MQTT
+          id: mqtt
+          description: "Mqtt component usage"
           category: nodep
           dependsOn:
-            - camel
-            - camel-jsonpath
-            - camel-gson
-            - camel-mqtt-endpoint
-            - camel-rest-endpoint
-            - camel-sql-endpoint
-            - configuration-processor
-            - web
-            - lombok
+          - camel
+          - camel-mqtt-endpoint
+          - configuration-processor
+          - camel-test
+          - camel-test-spring
+          - testcontainers
+          - web
+          - lombok
           facets:
-            - "usecase/iotibm/IotIbm.yml,{properties}"
-            # Routes
-            - "usecase/iotibm/routes/BankApprovesPaymentRoutes.java,{sources}/routes/BankApprovesPaymentRoutes.java"
-            - "usecase/iotibm/routes/LedgerSqlRoutes.java,{sources}/routes/LedgerSqlRoutes.java"
-            - "usecase/iotibm/routes/MqttSqlRoutes.java,{sources}/routes/MqttSqlRoutes.java"
-            - "usecase/iotibm/routes/SetPaymentStatusRoutes.java,{sources}/routes/SetPaymentStatusRoutes.java"
-            - "usecase/iotibm/routes/UserApprovesPaymentRoutes.java,{sources}/routes/UserApprovesPaymentRoutes.java"
-            # Config
-            - "usecase/iotibm/config/AppConfig.java,{sources}/config/AppConfig.java"
-            - "usecase/iotibm/config/Constants.java,{sources}/config/Constants.java"
-            - "usecase/iotibm/config/DatasourceConfig.java,{sources}/config/DatasourceConfig.java"
-            # Domain
-            - "usecase/iotibm/domain/CarData.java,{sources}/domain/CarData.java"
-            - "usecase/iotibm/domain/InsuranceData.java,{sources}/domain/InsuranceData.java"
-            - "usecase/iotibm/domain/PaymentResponse.java,{sources}/domain/PaymentResponse.java"
-            # Exception
-            - "usecase/iotibm/exception/TokenReceiverException.java,{sources}/exception/TokenReceiverException.java"
-            # Service
-            - "usecase/iotibm/service/BlockchainConnector.java,{sources}/service/BlockchainConnector.java"
-            - "usecase/iotibm/service/impl/BlockchainConnectorImpl.java,{sources}/service/impl/BlockchainConnectorImpl.java"
-            # Util
-            - "usecase/iotibm/util/TokenReceiver.java,{sources}/util/TokenReceiver.java"
+          - "usecase/mqtt/model/CarData.java,{sources}/model/CarData.java"
+          - "usecase/mqtt/Processors.java,{sources}/Processors.java"
+          - "usecase/mqtt/Router.java,{sources}/Router.java"
+          - "usecase/mqtt/test/DemoApplicationTests.java,{tests}/DemoApplicationTests.java"
+          - "usecase/mqtt/resources/test-compose.yml,{resources}/test-compose.yml"
           links:
-            - rel: guide
-              href: http://camel.apache.org/rest-dsl.html
-            - rel: guide
-              href: http://camel.apache.org/sql-component.html
+          - rel: guide
+            href: http://camel.apache.org/mqtt.html
         - name: File and Sftp
           id: filesftp
           description: "Simple File to/from Sftp server route"
@@ -132,20 +112,6 @@ initializr:
               href: http://camel.apache.org/file2.html
             - rel: sftp guide
               href: http://camel.apache.org/ftp2.html
-        - name: Rest to Direct
-          id: rest2Direct
-          description: Simple Rest to Direct route
-          category: nodep
-          dependsOn:
-            - camel
-            - camel-rest-endpoint
-            - lombok
-          facets:
-            - "usecase/rest2direct/Rest2Direct.yml,{properties}"
-            - "usecase/rest2direct/Rest2DirectRouter.java,{sources}/Rest2DirectRouter.java"
-          links:
-            - rel: guide
-              href: http://camel.apache.org/rest-dsl.html
         - name: Sql to Log
           id: sql2Log
           description: Simple Sql to Log route, using MySQL database as example
@@ -269,7 +235,7 @@ initializr:
           links:
             - rel: guide
               href: http://camel.apache.org/ftp2.html
-        - name: IBM Blockchain Connector
+        - name: HTTP Connector
           id: camel-rest-endpoint
           description: "REST styled DSL to allow defining REST services with verbs such as GET, POST, DELETE etc"
           groupId: org.apache.camel
@@ -358,6 +324,15 @@ initializr:
           - camel
           version: ${camel.version}
           scope: test
+        - name: Camel test Spring
+          id: camel-test-spring
+          description: Tool for Spring tests creation
+          groupId: org.apache.camel
+          artifactId: camel-test-spring
+          dependsOn:
+          - camel
+          version: ${camel.version}
+          scope: test
         - name: Jackson Databind
           id: jackson-databind
           description: A high-performance JSON processor for Java
@@ -434,6 +409,13 @@ initializr:
           links:
            - rel: guide
              href: https://docs.spring.io/spring-boot/docs/current/reference/html/getting-started-first-application.html
+        - name: Test Containers
+          id: testcontainers
+          description: Tool for using Docker containers inside tests
+          groupId: org.testcontainers
+          artifactId: testcontainers
+          version: 1.8.1
+          scope: test
     - name: Core
       content:
         - name: DevTools
@@ -1114,6 +1096,20 @@ initializr:
           id: remote-shell
           description: CRaSH shell integration
           versionRange: "[1.0.0.RELEASE,1.5.0.RC1)"
+    - name: Maven Plugins
+      content:
+        - name: Build helper
+          id: build-helper-maven-plugin
+          description: This plugin contains various small independent goals to assist with Maven build lifecycle
+          category: plugin
+          facets:
+            - "plugin/build-helper-maven-plugin.xml"
+        - name: JAX WS
+          id: jaxws-maven-plugin
+          description: Maven plugin for JAX-WS RI
+          category: plugin
+          facets:
+          - "plugin/jaxws-maven-plugin.xml"
   types:
     - name: Maven Project
       id: maven-project

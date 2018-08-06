@@ -18,12 +18,6 @@ import org.springframework.context.annotation.Configuration;
 public class Sql2LogConfig {
 
   @Bean
-  @ConfigurationProperties("spring.datasource")
-  public DataSourceProperties dataSourceProperties() {
-    return new DataSourceProperties();
-  }
-
-  @Bean
   @ConfigurationProperties("spring.datasource.hikari")
   public HikariDataSource dataSource(DataSourceProperties dataSourceProperties) {
     return (HikariDataSource) dataSourceProperties

@@ -10,7 +10,8 @@ spring:
       maximum-pool-size: 50
       pool-name: appConnectionPool
 
-sql:
+catalyst:
+  sql:
     onConsume: ''
     query: ''
-    enabled: ''
+    enabled: false
