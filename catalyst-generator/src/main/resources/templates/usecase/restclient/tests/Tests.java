@@ -4,9 +4,12 @@
 
 package <%fullPackageName%>;
 
+import org.apache.camel.EndpointInject;
 import org.apache.camel.Exchange;
 import static org.apache.camel.Exchange.HTTP_RESPONSE_CODE;
 import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 import <%packageName%>.model.StarWarsCharacter;
 import <%packageName%>.model.Starship;
@@ -14,15 +17,18 @@ import <%packageName%>.model.Starship;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Arrays;
 
-import org.apache.camel.test.junit4.CamelTestSupport;
+import org.apache.camel.ProducerTemplate;
+import org.apache.camel.test.spring.CamelSpringBootRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 
-@RunWith(SpringRunner.class)
+@RunWith(CamelSpringBootRunner.class)
 @SpringBootTest
-public class Tests extends CamelTestSupport {
+public class Tests {
+
+  @EndpointInject(uri = "restlet")
+  protected ProducerTemplate template;
 
   private static final Starship[] starShips = {
       new Starship("X-wing", "T-65 X-wing", "Starfighter"),

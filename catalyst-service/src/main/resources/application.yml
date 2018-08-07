@@ -21,7 +21,7 @@ spring:
           enabled: true
 
 # Temporary fix till camel 2.22 with spring boot 2 support
-camel.version: 2.20.2
+camel.version: 2.22.0
 
 initializr:
   env:
@@ -35,6 +35,8 @@ initializr:
             version: 2.18.5
           - versionRange: "[1.5.0.RELEASE,2.0.0.RELEASE]"
             version: 2.20.2
+          - versionRange: "[2.0.0.RELEASE,2.0.4.RELEASE]"
+            version: 2.22.0
       codecentric-spring-boot-admin:
         groupId: de.codecentric
         artifactId: spring-boot-admin-dependencies
@@ -165,6 +167,7 @@ initializr:
             - camel-jackson-starter
             - camel-restlet-starter
             - camel-test
+            - camel-test-spring
             - jackson-annotations
             - jackson-databind
           facets:
@@ -1074,6 +1077,6 @@ initializr:
       id: java
       default: true
   bootVersions:
-    - name: 1.5.10
-      id: 1.5.10.RELEASE
+    - name: 2.0.1
+      id: 2.0.1.RELEASE
       default: true
