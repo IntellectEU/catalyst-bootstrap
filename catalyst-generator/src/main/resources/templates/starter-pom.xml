@@ -12,10 +12,10 @@
 	<description>{{description}}</description>
 
 	<parent>
-    <groupId>{{mavenParentGroupId}}</groupId>
-    <artifactId>{{mavenParentArtifactId}}</artifactId>
-    <version>{{mavenParentVersion}}</version>
-    <relativePath/> <!-- lookup parent from repository -->
+		<groupId>{{mavenParentGroupId}}</groupId>
+		<artifactId>{{mavenParentArtifactId}}</artifactId>
+		<version>{{mavenParentVersion}}</version>
+		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 
 	<properties>
