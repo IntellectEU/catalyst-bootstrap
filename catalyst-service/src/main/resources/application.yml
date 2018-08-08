@@ -20,9 +20,6 @@ spring:
         content:
           enabled: true
 
-# Temporary fix till camel 2.22 with spring boot 2 support
-camel.version: 2.22.0
-
 initializr:
   env:
     boms:
@@ -188,7 +185,6 @@ initializr:
           description: Core Camel dependency. Required for all endpoints
           groupId: org.apache.camel
           artifactId: camel-spring-boot-starter
-          version: ${camel.version}
           links:
             - rel: guide
               href: http://camel.apache.org/spring-boot
@@ -209,7 +205,6 @@ initializr:
           artifactId: camel-ftp
           dependsOn:
             - camel
-          version: ${camel.version}
           links:
             - rel: guide
               href: http://camel.apache.org/ftp2.html
@@ -220,7 +215,6 @@ initializr:
           artifactId: camel-http4-starter
           dependsOn:
             - camel
-          version: ${camel.version}
           links:
             - rel: guide
               href: http://camel.apache.org/rest-dsl.html
@@ -231,7 +225,6 @@ initializr:
           artifactId: camel-mqtt
           dependsOn:
             - camel
-          version: ${camel.version}
           links:
             - rel: guide
               href: http://camel.apache.org/mqtt.html
@@ -243,7 +236,6 @@ initializr:
           dependsOn:
             - camel
             - hikaricp
-          version: ${camel.version}
           links:
             - rel: guide
               href: http://camel.apache.org/sql-component.html
@@ -254,7 +246,6 @@ initializr:
           artifactId: camel-crypto
           dependsOn:
             - camel
-          version: ${camel.version}
           links:
             - rel: guide
               href: http://camel.apache.org/crypto.html
@@ -265,7 +256,6 @@ initializr:
           artifactId: camel-jsonpath
           dependsOn:
             - camel
-          version: ${camel.version}
         - name: GSON
           id: camel-gson
           description: Gson is a Java library that can be used to convert Java Objects into their JSON representation
@@ -273,7 +263,6 @@ initializr:
           artifactId: camel-gson
           dependsOn:
             - camel
-          version: ${camel.version}
         - name: Camel Jackson
           id: camel-jackson-starter
           description: Camel Jackson is used to marshall a POJO to JSON.
@@ -281,7 +270,6 @@ initializr:
           artifactId: camel-jackson-starter
           dependsOn:
           - camel
-          version: ${camel.version}
         - name: Camel Restlet
           id: camel-restlet-starter
           description: The Restlet component provides Restlet based endpoints for consuming and producing RESTful resources.
@@ -289,7 +277,6 @@ initializr:
           artifactId: camel-restlet-starter
           dependsOn:
           - camel
-          version: ${camel.version}
           links:
             - rel: guide
               href: http://camel.apache.org/restlet.html
@@ -300,7 +287,6 @@ initializr:
           artifactId: camel-test
           dependsOn:
           - camel
-          version: ${camel.version}
           scope: test
         - name: Camel test Spring
           id: camel-test-spring
@@ -309,7 +295,6 @@ initializr:
           artifactId: camel-test-spring
           dependsOn:
           - camel
-          version: ${camel.version}
           scope: test
         - name: Jackson Databind
           id: jackson-databind
@@ -1077,6 +1062,6 @@ initializr:
       id: java
       default: true
   bootVersions:
-    - name: 2.0.1
-      id: 2.0.1.RELEASE
+    - name: 2.0.4
+      id: 2.0.4.RELEASE
       default: true
