@@ -44,6 +44,7 @@ public class Dependency extends MetadataElement implements Describable {
   public static final String SCOPE_TEST = "test";
   public static final String CATEGORY_NO_DEPENDENCY = "nodep";
   public static final String CATEGORY_PLUGIN = "plugin";
+  public static final String CATEGORY_EXTENSION = "extension";
   private static final List<String> SCOPE_ALL = Arrays.asList(SCOPE_COMPILE,
       SCOPE_RUNTIME, SCOPE_COMPILE_ONLY, SCOPE_PROVIDED, SCOPE_TEST);
 
@@ -167,6 +168,10 @@ public class Dependency extends MetadataElement implements Describable {
    */
   public boolean shouldAlwaysHaveArtifactCoordinates() {
     return !(Dependency.CATEGORY_NO_DEPENDENCY.equals(getCategory()) || Dependency.CATEGORY_PLUGIN.equals(getCategory()));
+  }
+
+  public boolean isExtention(){
+    return Dependency.CATEGORY_EXTENSION.equals(getCategory());
   }
 
   /**

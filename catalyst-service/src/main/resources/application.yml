@@ -177,6 +177,24 @@ initializr:
           links:
             - rel: guide
               href: http://camel.apache.org/rest-dsl.html
+        - name: gRPC
+          id: grpc
+          description: "gRPC component usage"
+          category: nodep
+          dependsOn:
+          - camel
+          - camel-grpc-starter
+          - camel-test-spring
+          - grpc-all
+          - protobuf-maven-plugin
+          - os-maven-plugin
+          facets:
+          - "usecase/grpc/server/HelloCamelServer.java,{sources}/server/HelloCamelServer.java"
+          - "usecase/grpc/DemoApplication.java,{sources}/DemoApplication.java"
+          - "usecase/grpc/GRpcRoute.java,{sources}/GRpcRoute.java"
+          - "usecase/grpc/test/DemoApplicationTests.java,{tests}/DemoApplicationTests.java"
+          - "usecase/grpc/proto/hellocamel.proto,{proto}/hellocamel.proto"
+          - "usecase/grpc/Readme.adoc,/Readme.adoc"
     - name: Modules
       bom: camel
       content:
@@ -327,6 +345,20 @@ initializr:
           artifactId: testcontainers
           version: 1.8.1
           scope: test
+        - name: Camel gRPC Starter
+          id: camel-grpc-starter
+          description: The gRPC component is using for calling remote procedures via HTTP/2
+          groupId: org.apache.camel
+          artifactId: camel-grpc-starter
+          dependsOn:
+          - camel
+          version: ${camel.version}
+        - name: gRPC All
+          id: grpc-all
+          description: The gRPC core public API
+          groupId: io.grpc
+          artifactId: grpc-all
+          version: 1.14.0
     - name: Core
       content:
         - name: DevTools
@@ -1021,6 +1053,21 @@ initializr:
           category: plugin
           facets:
           - "plugin/jaxws-maven-plugin.xml"
+        - name: Protobuf Maven plugin
+          id: protobuf-maven-plugin
+          description: Plugin for generating Java source files from .proto (protocol buffer definition) files for the specified project
+          category: plugin
+          facets:
+              - "plugin/protobuf-maven-plugin"
+    - name: Maven Extensions
+      content:
+        - name: OS Maven Plugin
+          id: os-maven-plugin
+          description: A Maven plugin that sets various useful properties detected from {os.name} and {os.arch} properties
+          category: extension
+          groupId: kr.motd.maven
+          artifactId: os-maven-plugin
+          version: 1.6.0
   types:
     - name: Maven Project
       id: maven-project

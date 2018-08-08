@@ -233,6 +233,17 @@
       {{{body}}}
       {{/customPlugins}}
 		</plugins>
+		<extensions>
+		{{#extensions}}
+			<extension>
+				<groupId>{{groupId}}</groupId>
+				<artifactId>{{artifactId}}</artifactId>
+				{{#version}}
+				<version>{{version}}</version>
+				{{/version}}
+			</extension>
+		{{/extensions}}
+		</extensions>
 	</build>
 {{#hasRepositories}}
 
