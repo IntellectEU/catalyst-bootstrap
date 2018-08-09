@@ -60,6 +60,9 @@ public class Dependency extends MetadataElement implements Describable {
   private String versionRange;
 
   @JsonIgnore
+  private String extension;
+
+  @JsonIgnore
   private String versionRequirement;
 
   @JsonIgnore
@@ -170,7 +173,7 @@ public class Dependency extends MetadataElement implements Describable {
     return !(Dependency.CATEGORY_NO_DEPENDENCY.equals(getCategory()) || Dependency.CATEGORY_PLUGIN.equals(getCategory()));
   }
 
-  public boolean isExtention(){
+  public boolean isExtension(){
     return Dependency.CATEGORY_EXTENSION.equals(getCategory());
   }
 

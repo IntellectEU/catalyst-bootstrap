@@ -146,7 +146,7 @@ public class ProjectGenerator {
     return dependencies.stream()
         .filter(dep -> scope.equals(dep.getScope()))
         .filter(dep -> dep.shouldAlwaysHaveArtifactCoordinates())
-        .filter(dep -> !dep.isExtention())
+        .filter(dep -> !dep.isExtension())
         .sorted(DependencyComparator.INSTANCE)
         .collect(Collectors.toList());
   }
