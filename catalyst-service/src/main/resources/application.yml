@@ -20,9 +20,6 @@ spring:
         content:
           enabled: true
 
-# Temporary fix till camel 2.22 with spring boot 2 support
-camel.version: 2.20.2
-
 initializr:
   env:
     boms:
@@ -35,6 +32,8 @@ initializr:
             version: 2.18.5
           - versionRange: "[1.5.0.RELEASE,2.0.0.RELEASE]"
             version: 2.20.2
+          - versionRange: "[2.0.0.RELEASE,2.0.4.RELEASE]"
+            version: 2.22.0
       codecentric-spring-boot-admin:
         groupId: de.codecentric
         artifactId: spring-boot-admin-dependencies
@@ -165,6 +164,7 @@ initializr:
             - camel-jackson-starter
             - camel-restlet-starter
             - camel-test
+            - camel-test-spring
             - jackson-annotations
             - jackson-databind
           facets:
@@ -212,7 +212,6 @@ initializr:
           description: Core Camel dependency. Required for all endpoints
           groupId: org.apache.camel
           artifactId: camel-spring-boot-starter
-          version: ${camel.version}
           links:
             - rel: guide
               href: http://camel.apache.org/spring-boot
@@ -233,7 +232,6 @@ initializr:
           artifactId: camel-ftp
           dependsOn:
             - camel
-          version: ${camel.version}
           links:
             - rel: guide
               href: http://camel.apache.org/ftp2.html
@@ -244,7 +242,6 @@ initializr:
           artifactId: camel-http4-starter
           dependsOn:
             - camel
-          version: ${camel.version}
           links:
             - rel: guide
               href: http://camel.apache.org/rest-dsl.html
@@ -255,7 +252,6 @@ initializr:
           artifactId: camel-mqtt
           dependsOn:
             - camel
-          version: ${camel.version}
           links:
             - rel: guide
               href: http://camel.apache.org/mqtt.html
@@ -267,7 +263,6 @@ initializr:
           dependsOn:
             - camel
             - hikaricp
-          version: ${camel.version}
           links:
             - rel: guide
               href: http://camel.apache.org/sql-component.html
@@ -278,7 +273,6 @@ initializr:
           artifactId: camel-crypto
           dependsOn:
             - camel
-          version: ${camel.version}
           links:
             - rel: guide
               href: http://camel.apache.org/crypto.html
@@ -289,7 +283,6 @@ initializr:
           artifactId: camel-jsonpath
           dependsOn:
             - camel
-          version: ${camel.version}
         - name: GSON
           id: camel-gson
           description: Gson is a Java library that can be used to convert Java Objects into their JSON representation
@@ -297,7 +290,6 @@ initializr:
           artifactId: camel-gson
           dependsOn:
             - camel
-          version: ${camel.version}
         - name: Camel Jackson
           id: camel-jackson-starter
           description: Camel Jackson is used to marshall a POJO to JSON.
@@ -305,7 +297,6 @@ initializr:
           artifactId: camel-jackson-starter
           dependsOn:
           - camel
-          version: ${camel.version}
         - name: Camel Restlet
           id: camel-restlet-starter
           description: The Restlet component provides Restlet based endpoints for consuming and producing RESTful resources.
@@ -313,7 +304,6 @@ initializr:
           artifactId: camel-restlet-starter
           dependsOn:
           - camel
-          version: ${camel.version}
           links:
             - rel: guide
               href: http://camel.apache.org/restlet.html
@@ -324,7 +314,6 @@ initializr:
           artifactId: camel-test
           dependsOn:
           - camel
-          version: ${camel.version}
           scope: test
         - name: Jackson Databind
           id: jackson-databind
@@ -369,7 +358,6 @@ initializr:
           id: camel-soap
           groupId: org.apache.camel
           artifactId: camel-soap
-          version: ${camel.version}
           description: SOAP is a Data Format which uses JAXB2 and JAX-WS annotations to marshal and unmarshal SOAP payloads.
           links:
            - rel: guide
@@ -387,7 +375,6 @@ initializr:
           id: camel-test-spring
           groupId: org.apache.camel
           artifactId: camel-test-spring
-          version: ${camel.version}
           scope: test
           description: Camel unit testing with Spring
           links:
@@ -1156,6 +1143,6 @@ initializr:
       id: java
       default: true
   bootVersions:
-    - name: 1.5.10
-      id: 1.5.10.RELEASE
+    - name: 2.0.4
+      id: 2.0.4.RELEASE
       default: true
