@@ -1,0 +1,19 @@
+== gRPC Connector
+This use case includes a basic gRPC client part and server part.
+It uses Protobuf for service description. Read more: https://github.com/google/protobuf/wiki
+
+It is simple example with server, which getting <message> in request and returns *Hello <message>* in reply.
+
+The client (Camel route) 5 times sends request with name _Camel_ and getting reply, logs it.
+
+=== Running guide
+Firstly, you need generate needed classes from file *hellocamel.proto* using special Maven plugin:
+
+    mvn clean install
+
+Run server and client separately:
+
+    - run *HelloCamelServer.java* as simple Java application
+    - run spring boot application, which will run only client
+
+        mvn spring-boot:run

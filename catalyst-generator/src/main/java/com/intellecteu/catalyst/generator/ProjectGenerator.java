@@ -146,6 +146,7 @@ public class ProjectGenerator {
     return dependencies.stream()
         .filter(dep -> scope.equals(dep.getScope()))
         .filter(dep -> dep.shouldAlwaysHaveArtifactCoordinates())
+        .filter(dep -> !dep.isExtension())
         .sorted(DependencyComparator.INSTANCE)
         .collect(Collectors.toList());
   }
@@ -338,7 +339,7 @@ public class ProjectGenerator {
   }
 
   /**
-   * Process path. Creates sub folders. Replaces {sources}, {tests}, {resources} with appropriate
+   * Process path. Creates sub folders. Replaces {sources}, {tests}, {resources}, {proto} with appropriate
    * locations.
    */
   private File processDestinationPath(ProjectRequest request, File root, String destPath,
@@ -359,6 +360,9 @@ public class ProjectGenerator {
       addFullPackageToModel(model, packageFolder, destFile);
     } else if (destPath.contains("{resources}")) {
       destPath = destPath.replace("{resources}", "src/main/resources");
+      destFile = new File(root, destPath);
+    } else if (destPath.contains("{proto}")){
+      destPath = destPath.replace("{proto}", "src/main/proto");
       destFile = new File(root, destPath);
     } else {
       destFile = new File(root, destPath);
@@ -528,6 +532,12 @@ public class ProjectGenerator {
         .map(Plugin::new)
         .collect(Collectors.toList());
     model.put("customPlugins", plugins);
+
+    List<Dependency> extensions = dependencies.stream()
+        .filter(dependency -> Dependency.CATEGORY_EXTENSION.equals(dependency.getCategory()))
+        .map(Dependency::new)
+        .collect(Collectors.toList());
+    model.put("extensions", extensions);
 
     request.getBoms().forEach((k, v) -> {
       if (v.getVersionProperty() != null) {
