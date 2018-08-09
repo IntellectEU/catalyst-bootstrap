@@ -59,6 +59,8 @@
 				</configuration>
 			</plugin>
 		</plugins>
+		<extensions>
+		</extensions>
 	</build>
 
 

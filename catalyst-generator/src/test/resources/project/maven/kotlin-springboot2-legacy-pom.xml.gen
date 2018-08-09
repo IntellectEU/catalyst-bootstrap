@@ -107,6 +107,8 @@
 				</dependencies>
 			</plugin>
 		</plugins>
+		<extensions>
+		</extensions>
 	</build>
 
 	<repositories>

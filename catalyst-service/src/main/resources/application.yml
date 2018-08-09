@@ -190,7 +190,6 @@ initializr:
           - os-maven-plugin
           facets:
           - "usecase/grpc/server/HelloCamelServer.java,{sources}/server/HelloCamelServer.java"
-          - "usecase/grpc/DemoApplication.java,{sources}/DemoApplication.java"
           - "usecase/grpc/GRpcRoute.java,{sources}/GRpcRoute.java"
           - "usecase/grpc/test/DemoApplicationTests.java,{tests}/DemoApplicationTests.java"
           - "usecase/grpc/proto/hellocamel.proto,{proto}/hellocamel.proto"
@@ -340,15 +339,6 @@ initializr:
           description: Tool for tests creation
           groupId: org.apache.camel
           artifactId: camel-test
-          dependsOn:
-          - camel
-          version: ${camel.version}
-          scope: test
-        - name: Camel test Spring
-          id: camel-test-spring
-          description: Tool for Spring tests creation
-          groupId: org.apache.camel
-          artifactId: camel-test-spring
           dependsOn:
           - camel
           version: ${camel.version}

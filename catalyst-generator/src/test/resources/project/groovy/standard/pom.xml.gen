@@ -80,6 +80,8 @@
 				</executions>
 			</plugin>
 		</plugins>
+		<extensions>
+		</extensions>
 	</build>
 
 

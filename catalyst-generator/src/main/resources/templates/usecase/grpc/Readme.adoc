@@ -8,20 +8,12 @@ The client (Camel route) 5 times sends request with name _Camel_ and getting rep
 
 === Running guide
 Firstly, you need generate needed classes from file *hellocamel.proto* using special Maven plugin:
-----
-mvn clean install
-----
 
-Then You have two ways:
+    mvn clean install
 
- * Simply run spring boot app (server will up automatically)
+Run server and client separately:
 
-
-    mvn spring-boot:run
-
-
- * Run server and client separately:
-    - delete string _HelloCamelServer.main(args)_ in *DemoApplication.java*
-    - recompile project
     - run *HelloCamelServer.java* as simple Java application
     - run spring boot application, which will run only client
+
+        mvn spring-boot:run
