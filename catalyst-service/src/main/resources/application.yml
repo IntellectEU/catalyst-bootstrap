@@ -315,14 +315,6 @@ initializr:
           dependsOn:
           - camel
           scope: test
-        - name: Camel test Spring
-          id: camel-test-spring
-          description: Tool for Spring tests creation
-          groupId: org.apache.camel
-          artifactId: camel-test-spring
-          dependsOn:
-          - camel
-          scope: test
         - name: Jackson Databind
           id: jackson-databind
           description: A high-performance JSON processor for Java
@@ -366,7 +358,6 @@ initializr:
           id: camel-soap
           groupId: org.apache.camel
           artifactId: camel-soap
-          version: ${camel.version}
           description: SOAP is a Data Format which uses JAXB2 and JAX-WS annotations to marshal and unmarshal SOAP payloads.
           links:
            - rel: guide
@@ -384,7 +375,6 @@ initializr:
           id: camel-test-spring
           groupId: org.apache.camel
           artifactId: camel-test-spring
-          version: ${camel.version}
           scope: test
           description: Camel unit testing with Spring
           links:
