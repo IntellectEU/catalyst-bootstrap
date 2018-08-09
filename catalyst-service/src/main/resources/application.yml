@@ -177,6 +177,33 @@ initializr:
           links:
             - rel: guide
               href: http://camel.apache.org/rest-dsl.html
+        - name: SOAP Connector
+          id: soapconnector
+          description: The SOAP connector is used to invoke a web service and listen to requests by using SOAP 1.1 .
+          category: nodep
+          dependsOn:
+            - camel
+            - spring-boot-starter-web
+            - spring-boot-starter-jetty
+            - cxf-rt-transports-http-jetty
+            - camel-cxf
+            - camel-soap
+            - camel-test
+            - camel-test-spring
+            - spring-boot-starter-test
+            - jaxws-maven-plugin
+            - build-helper-maven-plugin
+          facets:
+           - "usecase/soapconnector/ClientRoute.java,{sources}/ClientRoute.java"
+           - "usecase/soapconnector/ServerRoute.java,{sources}/ServerRoute.java"
+           - "usecase/soapconnector/tests/ClientTests.java,{tests}/ClientTests.java"
+           - "usecase/soapconnector/tests/ServerTests.java,{tests}/ServerTests.java"
+           - "usecase/soapconnector/resources/wsdl/celsiumToFahrenheit.wsdl,{resources}/wsdl/celsiumToFahrenheit.wsdl"
+          links:
+            - rel: Camel Jetty Component
+              href: http://camel.apache.org/jetty.html
+            - rel: Camel SOAP DataFormat
+              href: http://camel.apache.org/soap.html
     - name: Modules
       bom: camel
       content:
@@ -300,6 +327,70 @@ initializr:
           groupId: com.fasterxml.jackson.core
           artifactId: jackson-annotations
           version: 2.9.6
+        - name: SpringBoot Starter for Jetty
+          id: spring-boot-starter-jetty
+          groupId: org.springframework.boot
+          artifactId: spring-boot-starter-jetty
+          version: 1.5.10.RELEASE
+          description: Apache CXF Spring Boot Starter JAX-WS
+          links:
+            - rel: reference
+              href: https://docs.spring.io/spring-boot/docs/current/reference/html/howto-embedded-web-servers.html
+        - name: Apache CXF Runtime HTTP Jetty Transport
+          id: cxf-rt-transports-http-jetty
+          groupId: org.apache.cxf
+          artifactId: cxf-rt-transports-http-jetty
+          version: 3.2.5
+          description: Jetty provides a Web server and javax.servlet container for CXF services.
+          links:
+            - rel: guide
+              href: http://cxf.apache.org/docs/transports.html
+        - name: Camel CXF
+          id: camel-cxf
+          groupId: org.apache.camel
+          artifactId: camel-cxf
+          version: 2.18.0
+          description: The cxf component provides integration with Apache CXF for connecting to JAX-WS services hosted in CXF.
+          links:
+           - rel: CXF component Guide
+             href: http://camel.apache.org/cxf.html
+        - name: Camel SOAP
+          id: camel-soap
+          groupId: org.apache.camel
+          artifactId: camel-soap
+          version: ${camel.version}
+          description: SOAP is a Data Format which uses JAXB2 and JAX-WS annotations to marshal and unmarshal SOAP payloads.
+          links:
+           - rel: guide
+             href: http://camel.apache.org/soap.html
+        - name: Spring Boot Starter Test
+          id: spring-boot-starter-test
+          groupId: org.springframework.boot
+          artifactId: spring-boot-starter-test
+          scope: test
+          description: Starter for testing Spring Boot applications with libraries including JUnit, Hamcrest and Mockito.
+          links:
+           - rel: reference
+             href: https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-testing.html
+        - name: Camel Test Spring
+          id: camel-test-spring
+          groupId: org.apache.camel
+          artifactId: camel-test-spring
+          version: ${camel.version}
+          scope: test
+          description: Camel unit testing with Spring
+          links:
+           - rel: guide
+             href: http://camel.apache.org/spring-testing.html
+        - name: Spring Boot Starter Web
+          id: spring-boot-starter-web
+          groupId: org.springframework.boot
+          artifactId: spring-boot-starter-web
+          version: 1.5.10.RELEASE
+          description: Starter for building web
+          links:
+           - rel: guide
+             href: https://docs.spring.io/spring-boot/docs/current/reference/html/getting-started-first-application.html
         - name: Test Containers
           id: testcontainers
           description: Tool for using Docker containers inside tests

@@ -121,6 +121,56 @@ and respond with a JSON representation of a person
 Follow link for more details
 http://camel.apache.org/restlet.html
 
+=== SOAP Connector
+The use case defines best practices of SOAP usage.
+
+It includes server and client part.
+SOAP server performs temperature conversions from Celsium to Fahrenheit.
+A Client is configured to send requests to this server.
+Both client and server use camel routes to do their functions.
+A celsiumToFahrenheit.wsdl file which is located under resources/wsdl contains the full definition
+of the service, XML request and response types.
+
+Before running a Spring Boot application, please, execute
+----
+mvn clean compile
+----
+Maven plugin *jaxws-maven-plugin* that is included in project's pom file will generate POJO
+objects required for SOAP service from the aforementioned wsdl and put them into 'model' package.
+This package can be found under 'target\generated-sources' folder.
+
+To run the application, please, execute
+----
+mvn spring-boot:run
+----
+Now your service is available at http://localhost:9090/intellecteu/catalyst/convert
+Use SoapUI to send a request to this service. To create a project in SoapUI, please, use the
+celsiumToFahrenheit.wsdl file and put request.
+
+Sample of request:
+----
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:con="http://intellecteu.com/types/convert">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <con:celsiumTemperature>
+         <con:celsium>81</con:celsium>
+      </con:celsiumTemperature>
+   </soapenv:Body>
+</soapenv:Envelope>
+----
+
+After sending this request, you will get the following response:
+
+----
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+   <soap:Body>
+      <fahrenheitTemperature xmlns="http://intellecteu.com/types/convert">
+         <fahrenheit>177.8</fahrenheit>
+      </fahrenheitTemperature>
+   </soap:Body>
+</soap:Envelope>
+----
+
 == License
 Catalyst is Open Source software released under the
 http://www.apache.org/licenses/LICENSE-2.0.html[Apache 2.0 license].
