@@ -288,14 +288,6 @@ initializr:
           dependsOn:
           - camel
           scope: test
-        - name: Camel test Spring
-          id: camel-test-spring
-          description: Tool for Spring tests creation
-          groupId: org.apache.camel
-          artifactId: camel-test-spring
-          dependsOn:
-          - camel
-          scope: test
         - name: Jackson Databind
           id: jackson-databind
           description: A high-performance JSON processor for Java
