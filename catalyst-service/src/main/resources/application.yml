@@ -420,7 +420,6 @@ initializr:
           artifactId: camel-grpc-starter
           dependsOn:
           - camel
-          version: ${camel.version}
         - name: gRPC All
           id: grpc-all
           description: The gRPC core public API
