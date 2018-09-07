@@ -3,6 +3,7 @@
 <%license%>
 
 package <%fullPackageName%>;
+    
 import catalyst.example.canonical.Beneficiary;
 import catalyst.example.canonical.OrderingCustomer;
 import catalyst.example.canonical.PaymentInstruction;
