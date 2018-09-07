@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema
+        xmlns="urn:catalyst:example:canonical"
+        xmlns:xs="http://www.w3.org/2001/XMLSchema"
+        targetNamespace="urn:catalyst:example:canonical"
+        elementFormDefault="qualified">
+
+    <xs:element name="Payment" type="PaymentInstruction"/>
+
+    <xs:complexType name="PaymentInstruction">
+
+        <xs:sequence>
+            <!--Block 1-->
+            <xs:element name="SenderBIC" type="BICIdentifier"/>
+            <xs:element name="SenderLT" type="LogicalTerminal"/>
+            
+            <!--Block 2-->
+            <xs:element name="ReceiverBIC" type="BICIdentifier"/>
+            <xs:element name="ReceiverLT" type="LogicalTerminal"/>
+            
+            <!--Block 4-->
+            <xs:element name="SendersReference" type="Max16Text"/>
+            <xs:element name="BankOperationalCode" type="OperationalCode"/>
+            <xs:element name="ValueDate" type="xs:date" minOccurs="1"/>
+            <xs:element name="Currency" type="Currency" minOccurs="1"/>
+            <xs:element name="Amount" type="Amount" minOccurs="1"/>
+            <xs:element name="OrderingCustomer" type="OrderingCustomer" minOccurs="1"/>
+            <xs:element name="Beneficiary" type="Beneficiary" minOccurs="1"/>
+            <xs:element name="DetailsOfCharges" type="Charges" minOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:simpleType name="BICIdentifier">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="[A-Z]{6,6}[A-Z2-9][A-NP-Z0-9]([A-Z0-9]{3,3}){0,1}"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="LogicalTerminal">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="[A-Z]"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="Max16Text">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+            <xs:maxLength value="16"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="Max30Text">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+            <xs:maxLength value="30"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="Max34Text">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+            <xs:maxLength value="34"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="Max35Text">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+            <xs:maxLength value="35"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="OperationalCode">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="CRED"/>
+            <xs:enumeration value="CRTS"/>
+            <xs:enumeration value="SPAY"/>
+            <xs:enumeration value="SPRI"/>
+            <xs:enumeration value="SSTD"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="Amount">
+        <xs:restriction base="xs:decimal">
+            <xs:fractionDigits value="3"/>
+            <xs:totalDigits value="15"/>
+            <xs:minInclusive value="0"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="Currency">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="[A-Z]{3}"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="CountryCode">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="[A-Z]{2}"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+
+    <xs:complexType name="OrderingCustomer">
+        <xs:sequence>
+            <xs:element name="BIC" type="BICIdentifier" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="Account" type="Max34Text" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="Name" type="Max35Text" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="Address" type="Max35Text" minOccurs="0" maxOccurs="2"/>
+            <xs:element name="Town" type="Max30Text" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="Country" type="CountryCode" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="Beneficiary">
+        <xs:sequence>
+            <xs:element name="BIC" type="BICIdentifier" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="Account" type="Max34Text" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="Name" type="Max35Text" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="Address" type="Max35Text" minOccurs="0" maxOccurs="3"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:simpleType name="Charges">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="BEN"/>
+            <xs:enumeration value="SHA"/>
+            <xs:enumeration value="OUR"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+</xs:schema>

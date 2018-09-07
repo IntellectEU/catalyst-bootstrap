@@ -26,15 +26,7 @@ public class SwiftTransformationRoutes extends RouteBuilder {
     @Override
     public void configure() throws Exception {
         DataFormat canonical = new JaxbDataFormat("catalyst.example.canonical");
-
-        from("direct:traceTransformCanonicalToMt103")
-                .log("Start transforming canonical message to MT103...")
-                .to("txfrmr:com.intellecteu.transformations/transformCanonicalToMT103")
-                .log("Transformation done.")
-                .log("\n***Created MT: \n${body}")
-                .to("mock:mt103TraceTransformGenerated");
-
-
+        
         from("direct:canonicalToMt103")
                 .log("Unmarshalling canonical...")
                 .unmarshal(canonical)
@@ -51,7 +43,7 @@ public class SwiftTransformationRoutes extends RouteBuilder {
                 .log("Converting MT103 to canonical message...")
 
                 .bean(mt103ToCanonical)
-                .log("Transformation done: \n ${body}")
+                .log("Transformation done.")
 
                 .log("Marshalling canonical...")
                 .marshal(canonical)

@@ -1,4 +1,8 @@
-package com.intellecteu.catalyst.swift.transformer.mt;
+{{=<% %>=}}
+
+<%license%>
+
+package <%fullPackageName%>;
 
 import com.intellecteu.catalyst.swift.converter.MTUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -19,14 +23,14 @@ public class MT103Builder {
         fin = new MT103Type();
     }
     
-    public static com.intellecteu.catalyst.swift.transformer.mt.MT103Builder core() {
-        return new com.intellecteu.catalyst.swift.transformer.mt.MT103Builder();
+    public static MT103Builder core() {
+        return new MT103Builder();
     }
 
     /**
      * Field :20:
      */
-    public com.intellecteu.catalyst.swift.transformer.mt.MT103Builder sendersReference(String reference) {
+    public MT103Builder sendersReference(String reference) {
         MT103F20AType f20A = new MT103F20AType();
         f20A.setF20(reference);
         fin.setF20A(f20A);
@@ -37,7 +41,7 @@ public class MT103Builder {
      * Field :23B:
      * 
      */
-    public com.intellecteu.catalyst.swift.transformer.mt.MT103Builder bankOperationCode(String value) {
+    public MT103Builder bankOperationCode(String value) {
         return bankOperationCode(BankOperationsCode.valueOf(value));
     }
 
@@ -45,7 +49,7 @@ public class MT103Builder {
      * Field :23B:
      *
      */
-    public com.intellecteu.catalyst.swift.transformer.mt.MT103Builder bankOperationCode(BankOperationsCode code) {
+    public MT103Builder bankOperationCode(BankOperationsCode code) {
         MT103F23A1Type f23A1 = new MT103F23A1Type();
         f23A1.setF23B(Code4Ec211Type.fromValue(code.value()));
         fin.setF23A1(f23A1);
@@ -56,7 +60,7 @@ public class MT103Builder {
      * Field :32A:
      *
      */
-    public com.intellecteu.catalyst.swift.transformer.mt.MT103Builder dateCurrencyAmount(LocalDate date, String currency, String amount) {
+    public MT103Builder dateCurrencyAmount(LocalDate date, String currency, String amount) {
         MT103F32AType f32a = new MT103F32AType();
         F32AType value = new F32AType();
         value.setDate(MTUtils.FIN_FORMATTER.format(date));
@@ -71,7 +75,7 @@ public class MT103Builder {
      * Field :50A:
      *
      */
-    public com.intellecteu.catalyst.swift.transformer.mt.MT103Builder orderingCustomerIdCode(String idCode) {
+    public MT103Builder orderingCustomerIdCode(String idCode) {
         return orderingCustomerIdCodeAndAccount(idCode, null);
     }
 
@@ -79,7 +83,7 @@ public class MT103Builder {
      * Field :50A: with account
      *
      */
-    public com.intellecteu.catalyst.swift.transformer.mt.MT103Builder orderingCustomerIdCodeAndAccount(String idCode, String account) {
+    public MT103Builder orderingCustomerIdCodeAndAccount(String idCode, String account) {
         MT103F50AType orderingCustomer = new MT103F50AType();
         
         F50A2Type f50A = new F50A2Type();
@@ -97,7 +101,7 @@ public class MT103Builder {
      * Field :59:
      *
      */
-    public com.intellecteu.catalyst.swift.transformer.mt.MT103Builder beneficiaryCustomerNameAndAddress(String nameAndAddress) {
+    public MT103Builder beneficiaryCustomerNameAndAddress(String nameAndAddress) {
         Pattern p = Pattern.compile("\\G\\s*(.{1,"+ MAX_35_CHARS +"})(?=\\s|$)", Pattern.DOTALL);
         Matcher m = p.matcher(nameAndAddress.replaceAll("\r", "").replaceAll("\n", ""));
 
@@ -114,7 +118,7 @@ public class MT103Builder {
      * Field :59:
      *
      */
-    public com.intellecteu.catalyst.swift.transformer.mt.MT103Builder beneficiaryCustomerNameAndAddress(List<String> nameAndAddress) {
+    public MT103Builder beneficiaryCustomerNameAndAddress(List<String> nameAndAddress) {
         TextFIN4M35XType nameAndAddressField = new TextFIN4M35XType();
         nameAndAddress.forEach(s -> nameAndAddressField.getLine().add(s));
         
@@ -138,7 +142,7 @@ public class MT103Builder {
      * Field :71A:
      *
      */
-    public com.intellecteu.catalyst.swift.transformer.mt.MT103Builder charges(ChargeDetails charges) {
+    public MT103Builder charges(ChargeDetails charges) {
         MT103F71A1Type f71A1 = new MT103F71A1Type();
         f71A1.setF71A(Code3Ea26Type.fromValue(charges.value()));
         fin.setF71A1(f71A1);
@@ -149,7 +153,7 @@ public class MT103Builder {
      * Field :71A:
      *
      */
-    public com.intellecteu.catalyst.swift.transformer.mt.MT103Builder charges(String charges) {
+    public MT103Builder charges(String charges) {
         return charges(ChargeDetails.valueOf(charges));
     }
 
@@ -228,3 +232,5 @@ public class MT103Builder {
     }
     
 }
+
+<%={{ }}=%>

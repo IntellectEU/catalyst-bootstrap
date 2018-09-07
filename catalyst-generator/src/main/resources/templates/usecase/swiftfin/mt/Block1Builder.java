@@ -1,4 +1,8 @@
-package com.intellecteu.catalyst.swift.transformer.mt;
+{{=<% %>=}}
+
+<%license%>
+
+package <%fullPackageName%>;
 
 import swift.xsd.mtmsg.Block1FinType;
 import swift.xsd.mtmsg.Code1Ea15Type;
@@ -13,8 +17,8 @@ public class Block1Builder {
         block1 = new Block1FinType();
     }
     
-    public static com.intellecteu.catalyst.swift.transformer.mt.Block1Builder forBIC(String bic) {
-        com.intellecteu.catalyst.swift.transformer.mt.Block1Builder builder = new com.intellecteu.catalyst.swift.transformer.mt.Block1Builder();
+    public static Block1Builder forBIC(String bic) {
+        Block1Builder builder = new Block1Builder();
         
         builder.block1.setApplicationIdentifier(Code1Ea15Type.F);
         builder.block1.setServiceIdentifier("01");
@@ -30,3 +34,5 @@ public class Block1Builder {
     }
 
 }
+
+<%={{ }}=%>

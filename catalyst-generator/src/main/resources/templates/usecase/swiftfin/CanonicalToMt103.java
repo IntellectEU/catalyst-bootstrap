@@ -9,9 +9,9 @@ import catalyst.example.canonical.PaymentInstruction;
 import com.intellecteu.catalyst.swift.converter.CatalystMtXmlConverter;
 import com.intellecteu.catalyst.swift.converter.MTMessage;
 import com.intellecteu.catalyst.swift.converter.MTUtils;
-import com.intellecteu.catalyst.swift.transformer.mt.Block1Builder;
-import com.intellecteu.catalyst.swift.transformer.mt.Block2Builder;
-import com.intellecteu.catalyst.swift.transformer.mt.MT103Builder;
+import <%fullPackageName%>.mt.Block1Builder;
+import <%fullPackageName%>.mt.Block2Builder;
+import <%fullPackageName%>.mt.MT103Builder;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.Handler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -113,3 +113,5 @@ public class CanonicalToMt103 {
     }
 
 }
+
+<%={{ }}=%>

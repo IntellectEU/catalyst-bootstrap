@@ -1,4 +1,8 @@
-package com.intellecteu.catalyst.swift.transformer.mt;
+{{=<% %>=}}
+
+<%license%>
+
+package <%fullPackageName%>;
 
 import com.intellecteu.catalyst.swift.converter.MTUtils;
 import swift.xsd.mtmsg.Block2FinType;
@@ -13,8 +17,8 @@ public class Block2Builder {
         block2 = new Block2FinType();
     }
 
-    public static com.intellecteu.catalyst.swift.transformer.mt.Block2Builder input(String bic) {
-        com.intellecteu.catalyst.swift.transformer.mt.Block2Builder builder = new com.intellecteu.catalyst.swift.transformer.mt.Block2Builder();
+    public static Block2Builder input(String bic) {
+        Block2Builder builder = new Block2Builder();
         
         builder.block2.setInputIdentifier(Code1Ea16Type.I);
         builder.block2.setInMessageType("103");
@@ -28,3 +32,5 @@ public class Block2Builder {
         return block2;
     }
 }
+
+<%={{ }}=%>

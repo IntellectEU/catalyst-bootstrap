@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Payment xmlns="urn:catalyst:example:canonical">
+    <SenderBIC>CITYUS30</SenderBIC>
+    <SenderLT>X</SenderLT>
+    <ReceiverBIC>SPXBUAU0</ReceiverBIC>
+    <ReceiverLT>X</ReceiverLT>
+    <SendersReference>TestCanonical</SendersReference>
+    <BankOperationalCode>CRTS</BankOperationalCode>
+    <ValueDate>2007-10-26+03:00</ValueDate>
+    <Currency>USD</Currency>
+    <Amount>1000.25</Amount>
+    <OrderingCustomer>
+        <BIC>SPXBUAUK</BIC>
+        <Account>1000TESTACCOUNT</Account>
+    </OrderingCustomer>
+    <Beneficiary>
+        <Name>Vanilla Guy</Name>
+        <Address>123 Main Ave</Address>
+        <Address>Office 777</Address>
+        <Address>Kyiv, Ukraine</Address>
+    </Beneficiary>
+    <DetailsOfCharges>SHA</DetailsOfCharges>
+</Payment>
