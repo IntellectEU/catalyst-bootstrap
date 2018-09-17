@@ -361,6 +361,9 @@ public class ProjectGenerator {
     } else if (destPath.contains("{resources}")) {
       destPath = destPath.replace("{resources}", "src/main/resources");
       destFile = new File(root, destPath);
+    } else if (destPath.contains("{test-resources}")) {
+      destPath = destPath.replace("{test-resources}", "src/test/resources");
+      destFile = new File(root, destPath);
     } else if (destPath.contains("{proto}")){
       destPath = destPath.replace("{proto}", "src/main/proto");
       destFile = new File(root, destPath);

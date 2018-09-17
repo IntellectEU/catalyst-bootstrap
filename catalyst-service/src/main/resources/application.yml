@@ -221,6 +221,57 @@ initializr:
               href: http://camel.apache.org/jetty.html
             - rel: Camel SOAP DataFormat
               href: http://camel.apache.org/soap.html
+        - name: SWIFT FIN Transformations
+          id: swiftfin
+          description: "Creating SWIFT FIN messages from XML and JSON and vise versa"
+          category: nodep
+          dependsOn:
+          - camel
+          - catalyst-fin-converter
+          - camel-jackson-starter
+          - jackson-datatype-jsr310
+          - camel-jaxb-starter
+          - jaxb2-maven-plugin
+          - configuration-processor
+          - camel-test-spring
+          - lombok
+          facets:
+          - "usecase/swiftfin/SwiftFin.yml,{properties}"
+          - "usecase/swiftfin/mt/Block1Builder.java,{sources}/mt/Block1Builder.java"
+          - "usecase/swiftfin/mt/Block2Builder.java,{sources}/mt/Block2Builder.java"
+          - "usecase/swiftfin/mt/MT103Builder.java,{sources}/mt/MT103Builder.java"
+          - "usecase/swiftfin/model/Fin103Dto.java,{sources}/model/Fin103Dto.java"
+          - "usecase/swiftfin/CanonicalToMt103.java,{sources}/CanonicalToMt103.java"
+          - "usecase/swiftfin/Mt103ToCanonical.java,{sources}/Mt103ToCanonical.java"
+          - "usecase/swiftfin/JsonSwiftTransformationRoutes.java,{sources}/JsonSwiftTransformationRoutes.java"
+          - "usecase/swiftfin/MT103toJsonProcessor.java,{sources}/MT103toJsonProcessor.java"
+          - "usecase/swiftfin/JsonToMT103Processor.java,{sources}/JsonToMT103Processor.java"
+          - "usecase/swiftfin/SwiftTransformationRoutes.java,{sources}/SwiftTransformationRoutes.java"
+          - "usecase/swiftfin/resources/xsd/canonical103.xsd,{resources}/xsd/canonical103.xsd"
+          - "usecase/swiftfin/test/JsonSwiftTransformationRoutesTest.java,{tests}/JsonSwiftTransformationRoutesTest.java"
+          - "usecase/swiftfin/test/SwiftFinTransformationRoutesTest.java,{tests}/SwiftFinTransformationRoutesTest.java"
+          - "usecase/swiftfin/test-resources/MT103_Expected.fin,{test-resources}/MT103_Expected.fin"
+          - "usecase/swiftfin/test-resources/canonical103.xml,{test-resources}/canonical103.xml"
+          - "usecase/swiftfin/test-resources/canonicalFrom103.xml,{test-resources}/canonicalFrom103.xml"
+          links:
+          - rel: handbook
+            href: https://www2.swift.com/uhbonline/books/hub/home.htm
+        - name: Trace Transformer
+          id: trace-transformer
+          description: "Transformation from Canonical XML to FIN using Trace Transformer"
+          category: nodep
+          dependsOn:
+          - camel
+          - trace-transformer-camel
+          - trace-transformer-example
+          - catalyst-fin-converter
+          - camel-test-spring
+          - lombok
+          facets:
+          - "usecase/trace-transformer/TraceTransformerRoute.java,{sources}/TraceTransformerRoute.java"
+          - "usecase/trace-transformer/test/TraceTransformerRouteTests.java,{tests}/TraceTransformerRouteTests.java"
+          - "usecase/trace-transformer/test-resources/MT103_Expected_Trace.fin,{test-resources}/MT103_Expected_Trace.fin"
+          - "usecase/trace-transformer/test-resources/canonical103.xml,{test-resources}/canonical103.xml"
     - name: Modules
       bom: camel
       content:
@@ -300,6 +351,30 @@ initializr:
           artifactId: camel-jsonpath
           dependsOn:
             - camel
+        - name: Trace Transformer Support
+          id: trace-transformer-camel
+          description: The huge range of ready-built validation, parsing and mapping functions provided in Transformer allow solutions to be built quickly and with no need for program code, even in the most complex cases.
+          groupId: com.intellecteu.catalyst
+          artifactId: trace-transformer-spring-boot-starter
+          version: 1.0.0
+          dependsOn:
+            - camel
+        - name: Example Trace Transformation
+          id: trace-transformer-example
+          description: Example transformations for trace Transformer Use Case
+          groupId: com.intellecteu
+          artifactId: transformations
+          version: 1.0
+          dependsOn:
+            - trace-transformer-camel
+        - name: SWIFT FIN Converter
+          id: catalyst-fin-converter
+          description: Allows parsing, validation and creation of SWIFT FIN messages and work with FIN messages as JAXB objects.
+          groupId: com.intellecteu.catalyst
+          artifactId: fin-converter-spring-boot-starter
+          version: 1.0.1
+          dependsOn:
+            - camel
         - name: GSON
           id: camel-gson
           description: Gson is a Java library that can be used to convert Java Objects into their JSON representation
@@ -312,6 +387,20 @@ initializr:
           description: Camel Jackson is used to marshall a POJO to JSON.
           groupId: org.apache.camel
           artifactId: camel-jackson-starter
+          dependsOn:
+          - camel
+        - name: Jackson Java Date Support
+          id: jackson-datatype-jsr310
+          description: Support marshalling of Java 8 Date and Time.
+          groupId: com.fasterxml.jackson.datatype
+          artifactId: jackson-datatype-jsr310
+          dependsOn:
+          - camel-jackson-starter
+        - name: Camel JAXB
+          id: camel-jaxb-starter
+          description: Camel JAXB is used to marshall a POJO to XML.
+          groupId: org.apache.camel
+          artifactId: camel-jaxb-starter
           dependsOn:
           - camel
         - name: Camel Restlet
@@ -1119,7 +1208,13 @@ initializr:
           description: Maven plugin for JAX-WS RI
           category: plugin
           facets:
-          - "plugin/jaxws-maven-plugin.xml"
+            - "plugin/jaxws-maven-plugin.xml"
+        - name: JAXB Maven Plugin
+          id: jaxb2-maven-plugin
+          description: Maven plugin for JAXB
+          category: plugin
+          facets:
+            - "plugin/jaxb2-maven-plugin.xml"
         - name: Protobuf Maven plugin
           id: protobuf-maven-plugin
           description: Plugin for generating Java source files from .proto (protocol buffer definition) files for the specified project
